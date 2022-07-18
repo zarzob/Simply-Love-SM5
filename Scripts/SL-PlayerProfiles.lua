@@ -46,6 +46,9 @@ local permitted_profile_settings = {
 	RunTimer             = "boolean",
 	MeasureCounterLookahead = "number",
 	
+	RainbowMax           = "boolean",
+	ResponsiveColors     = "boolean",
+	
 	MiniIndicator		 = "string",
 	MiniIndicatorColor	 = "string",
 
@@ -61,6 +64,7 @@ local permitted_profile_settings = {
 	ErrorBar             = "string",
 	ErrorBarUp           = "boolean",
 	ErrorBarMultiTick    = "boolean",
+	ErrorBarCap    		 = "number",
 
 	ShowFaPlusWindow = "boolean",
 	ShowEXScore      = "boolean",
