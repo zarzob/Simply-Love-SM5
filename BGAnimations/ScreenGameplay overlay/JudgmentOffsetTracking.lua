@@ -10,6 +10,7 @@ if SL.Global.GameMode == "Casual" then return end
 
 local player = ...
 local sequential_offsets = {}
+local sequential_arrows = {}
 local worst_window = 1
 
 return Def.Actor{
@@ -27,6 +28,12 @@ return Def.Actor{
 					worst_window = window
 				end
 			end
+			
+			if params.#Notes == 1 then
+				sequential_arrows[#sequential_arrows+1] = params.Notes[1]
+			else
+				sequential_arrows[#sequential_arrows+1] = 0
+			end
 
 			-- Store judgment offsets (including misses) in an indexed table as they occur.
 			-- Also store the CurMusicSeconds for Evaluation's scatter plot.
@@ -36,6 +43,7 @@ return Def.Actor{
 	OffCommand=function(self)
 		local storage = SL[ToEnumShortString(player)].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1]
 		storage.sequential_offsets = sequential_offsets
+		storage.sequential_arrows = sequential_arrows
 		storage.worst_window = worst_window
 	end
 }
