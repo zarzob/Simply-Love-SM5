@@ -603,20 +603,32 @@ for player in ivalues(PlayerNumber) do
 			SL[playerNum].comboBonus = 0
 			
 			if playerScore ~= nil then
-				if playerScore:GetTapNoteScore('TapNoteScore_W4') + playerScore:GetTapNoteScore('TapNoteScore_W5') + playerScore:GetTapNoteScore('TapNoteScore_Miss') == 0 then
-					if playerScore:GetTapNoteScore('TapNoteScore_W3') + playerScore:GetTapNoteScore('TapNoteScore_W2') == 0 then
+				local ex_cnt, gr_cnt, de_cnt, wo_cnt 
+				if SL.Global.GameMode == "FA+" then
+					ex_cnt = playerScore:GetTapNoteScore('TapNoteScore_W3')
+					gr_cnt = playerScore:GetTapNoteScore('TapNoteScore_W4')
+					de_cnt = playerScore:GetTapNoteScore('TapNoteScore_W5')
+					wo_cnt = 0
+				else
+					ex_cnt = playerScore:GetTapNoteScore('TapNoteScore_W2')
+					gr_cnt = playerScore:GetTapNoteScore('TapNoteScore_W3')
+					de_cnt = playerScore:GetTapNoteScore('TapNoteScore_W4')
+					wo_cnt = playerScore:GetTapNoteScore('TapNoteScore_W5')
+				end
+				if de_cnt + wo_cnt + playerScore:GetTapNoteScore('TapNoteScore_Miss') == 0 then
+					if gr_cnt + ex_cnt == 0 then
 						self:settext("****"):diffuse(color("#21CCE8")):visible(true)
 						SL[playerNum].comboBonus = 400
-					elseif playerScore:GetTapNoteScore('TapNoteScore_W3') == 0 then
+					elseif gr_cnt == 0 then
 						self:settext("FEC"):diffuse(Color.Yellow):visible(true)
-						if playerScore:GetTapNoteScore('TapNoteScore_W2') <= 10 then
-							self:settext(playerScore:GetTapNoteScore('TapNoteScore_W2').."E")
+						if ex_cnt <= 10 then
+							self:settext(ex_cnt.."E")
 						end
 						SL[playerNum].comboBonus = 200
 					else
 						self:settext("FC"):diffuse(color("#00FF00")):visible(true)
-						if playerScore:GetTapNoteScore('TapNoteScore_W3') <= 10 then
-							self:settext(playerScore:GetTapNoteScore('TapNoteScore_W3').."G")
+						if gr_cnt <= 10 then
+							self:settext(gr_cnt.."G")
 						end
 						SL[playerNum].comboBonus = 100
 					end
