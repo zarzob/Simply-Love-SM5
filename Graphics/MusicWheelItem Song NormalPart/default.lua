@@ -76,7 +76,7 @@ for player in ivalues(PlayerNumber) do
 						if SL[pn].ITLData["hashMap"][hash] ~= nil then
 							self:settext(tostring(("%.2f"):format(SL[pn].ITLData["hashMap"][hash]["ex"] / 100)))
 							 if (GAMESTATE:GetNumSidesJoined() == 1 and PROFILEMAN:IsPersistentProfile(player)) then 
-							 	self:settext(SL[pn].ITLData["hashMap"][hash]["points"])
+							 	self:settext(SL[pn].ITLData["hashMap"][hash]["points"] .. "/" .. tostring(SL[pn].ITLData["hashMap"][hash]["maxPoints"]))
 							 end
 							self:visible(true)
 							return
