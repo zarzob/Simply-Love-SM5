@@ -598,6 +598,19 @@ IsW0Judgment = function(params, player)
 		if offset <= W0 then
 			return true
 		end
+	elseif params.TapNoteScore == "TapNoteScore_W1" and SL.Global.GameMode == "FA+" then
+		local prefs = SL.Preferences["FA+"]
+		local scale = PREFSMAN:GetPreference("TimingWindowScale")
+		local pn = ToEnumShortString(player)
+		local W0 = prefs["TimingWindowSecondsW1"] * scale + prefs["TimingWindowAdd"]
+		if SL[pn].ActiveModifiers.SmallerWhite then
+			W0 = 0.0085 * scale + prefs["TimingWindowAdd"]
+		end
+		
+		local offset = math.abs(params.TapNoteOffset)
+		if offset <= W0 then
+			return true
+		end
 	end
 	return false
 end
@@ -645,6 +658,9 @@ end
 --          "Rolls" -> total number of rolls held
 --     "totalRolls" -> total number of rolls in the chart
 -- }
+--
+-- Note: The returned table can't be used directly into CalculateExScore because the keys
+-- "HitMine", "Held", and "LetGo" aren't calculated here.
 GetExJudgmentCounts = function(player)
 	local pn = ToEnumShortString(player)
 	local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
@@ -665,8 +681,23 @@ GetExJudgmentCounts = function(player)
 			
 			-- Get the count.
 			local number = stats:GetTapNoteScores( "TapNoteScore_"..window )
+			-- 10ms check
+			if window == "W1" then
+				local faPlus = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts.W0
+				local faPlus15 = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts.W015
+				local fa = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts.W1
+				-- Subtract white count from blue count
+				local fa15 = fa - faPlus15 + faPlus
+				
+				-- Populate the two numbers.
+				counts["W0"] = faPlus
+				counts["W015"] = faPlus15
+				counts["W1"] = fa
+				counts["W115"] = fa15
+			elseif window == "W2" then
+				local x=0
 			-- For the last window (Decent) in FA+ mode...
-			if window == "W5" then
+			elseif window == "W5" then
 				-- Only populate if the window is still active.
 				if SL[pn].ActiveModifiers.TimingWindows[5] then
 					counts[adjusted_window] = number

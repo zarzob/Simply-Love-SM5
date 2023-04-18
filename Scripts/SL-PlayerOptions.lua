@@ -396,7 +396,7 @@ local Overrides = {
 		SelectType = "SelectMultiple",
 		Values = function()
 			if SL.Global.GameMode == "FA+" then
-				return { "ShowEXScore" }
+				return { "ShowEXScore", "SmallerWhite" }
 			end
 			return { "ShowFaPlusWindow", "ShowEXScore", "ShowFaPlusPane", "SmallerWhite" }
 		end,
@@ -404,7 +404,7 @@ local Overrides = {
 			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
 			if SL.Global.GameMode == "FA+" then
 				list[1] = mods.ShowEXScore or false
-				list[4] = false
+				list[2] = mods.SmallerWhite or false
 				return list
 			end
 
@@ -418,11 +418,11 @@ local Overrides = {
 			local sl_pn = SL[ToEnumShortString(pn)]
 			local mods = sl_pn.ActiveModifiers
 			if SL.Global.GameMode == "FA+" then
-				 -- always disable in FA+ mode since it's handled engine side.
+				-- always disable in FA+ mode since it's handled engine side.
 				mods.ShowFaPlusWindow = false
 				mods.ShowEXScore = list[1]
 				-- mods.ShowFaPlusPane = list[3]
-				mods.SmallerWhite = false
+				mods.SmallerWhite = list[2]
 				return
 			end
 			mods.ShowFaPlusWindow = list[1]
@@ -489,6 +489,17 @@ local Overrides = {
 			end
 
 			return choices
+		end,
+	},
+	-------------------------------------------------------------------------
+	StepStatsInfo = {
+		SelectType = "SelectMultiple",
+		Values = function()
+			values = { "PackBanner", "StepInfo" }
+			if IsServiceAllowed(SL.GrooveStats.GetScores) then
+				table.insert(values, "DisplayScorebox")
+			end
+			return values
 		end,
 	},
 	-------------------------------------------------------------------------
@@ -562,12 +573,9 @@ local Overrides = {
 			local vals = {}
 			if IsUsingWideScreen() then
 				vals = { "JudgmentTilt", "ColumnCues", "ColumnCountdown", "ShowHeldMiss" }
-				if IsServiceAllowed(SL.GrooveStats.GetScores) then
-					vals[#vals+1] = "DisplayScorebox"
-				end
 			else
 				-- Add in the two removed options if not in WideScreen.
-				vals = { "MissBecauseHeld", "NPSGraphAtTop", "JudgmentTilt", "ColumnCues", "ColumnCountdown", "ShowHeldMiss" }
+				vals = { "MissBecauseHeld", "NPSGraphAtTop", "JudgmentTilt", "ColumnCues" }
 			end
 			return vals
 		end
@@ -576,8 +584,8 @@ local Overrides = {
 		SelectType = "SelectMultiple",
 		Values = function()
 			local vals = {}
-			if not IsUsingWideScreen() and IsServiceAllowed(SL.GrooveStats.GetScores) then
-				vals = { "DisplayScorebox" }
+			if not IsUsingWideScreen() then
+				vals = { "ColumnCountdown", "ShowHeldMiss" }
 			end
 			return vals
 		end
@@ -685,9 +693,14 @@ local Overrides = {
 			local tns = "TapNoteScore" .. (SL.Global.GameMode=="ITG" and "" or SL.Global.GameMode)
 			local t = {THEME:GetString("SLPlayerOptions","None")}
 			-- assume pluralization via terminal s
-			t[2] = THEME:GetString(tns,"W5").."s"
-			t[3] = THEME:GetString(tns,"W4").."s + "..t[2]
-			t[4] = THEME:GetString(tns,"W1").."s + "..THEME:GetString(tns,"W2").."s"
+			local idx = 2
+			t[idx] = THEME:GetString(tns,"W5").."s"
+			idx = idx + 1
+			if SL.Global.GameMode=="ITG" then
+				t[idx] = THEME:GetString(tns,"W4").."s + "..t[idx-1]
+				idx = idx + 1
+			end
+			t[idx] = THEME:GetString(tns,"W1").."s + "..THEME:GetString(tns,"W2").."s"
 			return t
 		end,
 		LoadSelections = function(self, list, pn)
@@ -758,9 +771,9 @@ local Overrides = {
 		Choices = { 0.25, 0.5, 1, 1.5, 2, 2.5, 3 },
 	},
 	-------------------------------------------------------------------------
-	Experimental = {
+	ExtraAesthetics = {
 		SelectType = "SelectMultiple",
-		Choices = { "FAPlusGradual", "JudgmentBack" },
+		Values = { "JudgmentBack", "ErrorMSDisplay" }
 	},
 	-------------------------------------------------------------------------
 	ScreenAfterPlayerOptions = {

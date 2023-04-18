@@ -185,6 +185,14 @@ local LeaderboardRequestProcessor = function(res, master)
 
 			if data[playerStr]["itl"]["itlLeaderboard"] then
 				for entry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
+					if entry["isSelf"] then
+						UpdateItlExScore(player, SL[pn].Streams.Hash, entry["score"])
+						SL["P"..n].itlScore = entry["score"]
+						local stepartist = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("StepArtistAF_P"..n)
+						if stepartist ~= nil then
+						  stepartist:queuecommand("ITL")
+						end
+					end
 					numEntries = numEntries + 1
 					SetScoreData(3, numEntries,
 									tostring(entry["rank"]),
@@ -350,7 +358,9 @@ local af = Def.ActorFrame{
 			end
 		end,
 		ChartParsedCommand=function(self)
-			self:queuecommand("MakeRequest")
+			if not self.leaving_screen then
+				self:queuecommand("MakeRequest")
+			end
 		end,
 		MakeRequestCommand=function(self)				
 			local sendRequest = false
@@ -395,6 +405,10 @@ local af = Def.ActorFrame{
 				self:GetParent():GetChild("ITLLogo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("Outline"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("Background"):diffusealpha(0):visible(false)
+				
+				if IsItlSong(player) then
+					UpdatePathMap(player, SL[pn].Streams.Hash)
+				end
 				
 				self:playcommand("MakeGrooveStatsRequest", {
 					endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
@@ -468,7 +482,7 @@ local af = Def.ActorFrame{
 			end
 		end,
 		ResetCommand=function(self) self:stoptweening() end,
-		OffCommand=function(self) self:stoptweening() end
+		OffCommand=function(self) self:stoptweening():stopeffect() end
 	},
 	-- SRPG Logo
 	Def.Sprite{

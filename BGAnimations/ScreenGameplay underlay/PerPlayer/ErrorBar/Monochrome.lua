@@ -39,11 +39,6 @@ local tickWidth = 2
 local tickDuration = 0.75
 local numTicks = mods.ErrorBarMultiTick and 15 or 1
 local currentTick = 1
-local judgmentToTrim = {
-    TapNoteScore_W3 = mods.ErrorBarTrim and SL.Global.GameMode == "ITG",
-    TapNoteScore_W4 = mods.ErrorBarTrim,
-    TapNoteScore_W5 = mods.ErrorBarTrim
-}
 
 -- Find out maximum timing window for error bar
 local maxError = mods.ErrorBarCap < NumJudgmentsAvailable() and mods.ErrorBarCap or NumJudgmentsAvailable()
@@ -70,7 +65,6 @@ local af = Def.ActorFrame{
         if params.Player ~= player then return end
         if params.HoldNoteScore then return end
         if not judgmentColors[params.TapNoteScore] then return end
-        if judgmentToTrim[params.TapNoteScore] then return end
 
         if params.TapNoteOffset then
             local tick = self:GetChild("Tick" .. currentTick)
@@ -86,7 +80,7 @@ local af = Def.ActorFrame{
             local color = judgmentColors[params.TapNoteScore] 
 
             -- Check if we need to adjust the color for the white fantastic window.
-            if mods.ShowFaPlusWindow and ToEnumShortString(params.TapNoteScore) == "W1" and
+            if (mods.ShowFaPlusWindow or (mods.SmallerWhite and SL.Global.GameMode == "FA+")) and ToEnumShortString(params.TapNoteScore) == "W1" and
                 not IsW0Judgment(params, player) then
                 color = SL.JudgmentColors["FA+"][2]
             end
@@ -166,7 +160,7 @@ local timing = {}
 for i = 1, #enabledTimingWindows do
     local wi = enabledTimingWindows[i]
     
-    if mods.ShowFaPlusWindow and wi == 1 then
+    if (mods.ShowFaPlusWindow or (mods.SmallerWhite and SL.Global.GameMode == "FA+")) and wi == 1 then
         -- Split the Fantastic window
         timing[#timing + 1] = GetTimingWindow(1, "FA+", mods.SmallerWhite)
         timing[#timing + 1] = GetTimingWindow(2, "FA+")
