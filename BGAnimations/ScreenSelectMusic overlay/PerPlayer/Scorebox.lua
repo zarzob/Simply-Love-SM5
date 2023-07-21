@@ -122,12 +122,12 @@ local LeaderboardRequestProcessor = function(res, master)
 	if boogie then 
 		if logo_curr ~= logo_bs then 
 			style_color[0] = BoogieStatsPurple 
-			gsBox:Load(THEME:GetPathG("", "BoogieStats.png"))
+			gsBox:Load(logo_bs)
 		end		
 	else 
 		if logo_curr ~= logo_gs then 
 			style_color[0] = GrooveStatsBlue 
-			gsBox:Load(THEME:GetPathG("", "GrooveStats.png"))
+			gsBox:Load(logo_gs)
 		end		
 	end
 	
