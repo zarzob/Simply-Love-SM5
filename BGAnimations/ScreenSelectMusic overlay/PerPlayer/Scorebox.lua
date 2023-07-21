@@ -114,7 +114,6 @@ local LeaderboardRequestProcessor = function(res, master)
 	if headers["bs-leaderboard-player-" .. n] == "BS" then
 		boogie = true 
 	end
-	boogie = true
 	local gsBox = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("ScoreBox" .. pn):GetChild("GrooveStatsLogo")
 	local logo_curr = gsBox:GetTexture():GetPath()
 	local logo_gs = THEME:GetPathG("", "GrooveStats.png")
