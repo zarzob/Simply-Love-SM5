@@ -115,20 +115,16 @@ local LeaderboardRequestProcessor = function(res, master)
 		boogie = true 
 	end
 	local gsBox = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("ScoreBox" .. pn):GetChild("GrooveStatsLogo")
-	local logo_curr = gsBox:GetTexture():GetPath()
-	local logo_gs = THEME:GetPathG("", "GrooveStats.png")
-	local logo_bs = THEME:GetPathG("", "BoogieStats.png")
+	local bsBox = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("ScoreBox" .. pn):GetChild("BoogieStatsLogo")
 
 	if boogie then 
-		if logo_curr ~= logo_bs then 
 			style_color[0] = BoogieStatsPurple 
-			gsBox:Load(logo_bs)
-		end		
+			bsBox:visible(true)
+			gsBox:visible(false)
 	else 
-		if logo_curr ~= logo_gs then 
 			style_color[0] = GrooveStatsBlue 
-			gsBox:Load(logo_gs)
-		end		
+			bsBox:visible(false)
+			gsBox:visible(true)
 	end
 	
 
@@ -333,6 +329,7 @@ local af = Def.ActorFrame{
 		self:GetChild("Rank4"):visible(true)
 		self:GetChild("Rank5"):visible(true)
 		self:GetChild("GrooveStatsLogo"):stopeffect()
+		self:GetChild("BoogieStatsLogo"):stopeffect()
 		self:GetChild("SRPG7Logo"):visible(true)
 		self:GetChild("ITLLogo"):visible(true)
 		self:GetChild("Outline"):visible(true)
@@ -429,7 +426,8 @@ local af = Def.ActorFrame{
 				self:GetParent():GetChild("Rank3"):settext(""):visible(false)
 				self:GetParent():GetChild("Rank4"):settext(""):visible(false)
 				self:GetParent():GetChild("Rank5"):settext(""):visible(false)
-				self:GetParent():GetChild("GrooveStatsLogo"):diffusealpha(0.5):glowshift({color("#C8FFFF"), color("#6BF0FF")})
+				self:GetParent():GetChild("GrooveStatsLogo"):visible(true):diffusealpha(0.5):glowshift({color("#C8FFFF"), color("#6BF0FF")})
+				self:GetParent():GetChild("BoogieStatsLogo"):visible(false)
 				self:GetParent():GetChild("SRPG7Logo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("ITLLogo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("Outline"):diffusealpha(0):visible(false)
@@ -500,6 +498,23 @@ local af = Def.ActorFrame{
 	Def.Sprite{
 		Texture=THEME:GetPathG("", "GrooveStats.png"),
 		Name="GrooveStatsLogo",
+		InitCommand=function(self)
+			self:zoom(0.8):diffusealpha(0.5)
+		end,
+		LoopScoreboxCommand=function(self)
+			if cur_style == 0 then
+				self:sleep(transition_seconds/2):linear(transition_seconds/2):diffusealpha(0.5)
+			else
+				self:linear(transition_seconds/2):diffusealpha(0)
+			end
+		end,
+		ResetCommand=function(self) self:stoptweening() end,
+		OffCommand=function(self) self:stoptweening():stopeffect() end
+	},
+	-- BoogieStats Logo
+	Def.Sprite{
+		Texture=THEME:GetPathG("", "BoogieStats.png"),
+		Name="BoogieStatsLogo",
 		InitCommand=function(self)
 			self:zoom(0.8):diffusealpha(0.5)
 		end,
