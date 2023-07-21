@@ -27,6 +27,7 @@ local GrooveStatsBlue = color("#007b85")
 local RpgYellow = color("1,0.972,0.792,1")
 local ItlPink = color("1,0.2,0.406,1")
 local BoogieStatsPurple = color("#8000ff")
+local logo_current = "GS"
 
 local isRanked = false
 
@@ -107,18 +108,29 @@ local LeaderboardRequestProcessor = function(res, master)
 	-- BoogieStats integration
 	-- Find out whether this chart is ranked on GrooveStats. 
 	-- If it is unranked, alter groovestats logo and the box border color to the BoogieStats theme
+
+	
 	local headers = res.headers
 	local boogie = false
 	if headers["bs-leaderboard-player-" .. n] == "BS" then
 		boogie = true 
 	end
 	boogie = true
-	local gsBox = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("ScoreBox" .. pn)
+	local gsBox = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("ScoreBox" .. pn):GetChild("GrooveStatsLogo")
 	if boogie then 
-		style_color[0] = BoogieStatsPurple 
-		gsBox:queuecommand("BoogieStats")
+		if logo_current ~= "BS" then 
+			style_color[0] = BoogieStatsPurple 
+			gsBox:Load(THEME:GetPathG("", "BoogieStats.png"))
+			logo_current = "BS"
+		end		
+	else 
+		if logo_current ~= "GS" then 
+			style_color[0] = GrooveStatsBlue 
+			gsBox:Load(THEME:GetPathG("", "GrooveStats.png"))
+			logo_current = "GS"
+		end		
 	end
-
+	
 
 	-- First check to see if the leaderboard even exists.
 	if data and data[playerStr] then
@@ -490,9 +502,6 @@ local af = Def.ActorFrame{
 		Name="GrooveStatsLogo",
 		InitCommand=function(self)
 			self:zoom(0.8):diffusealpha(0.5)
-		end,
-		BoogieStatsCommand=function(self)
-			self:Load(THEME:GetPathG("", "BoogieStats.png"))
 		end,
 		LoopScoreboxCommand=function(self)
 			if cur_style == 0 then
