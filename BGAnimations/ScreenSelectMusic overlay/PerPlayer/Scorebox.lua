@@ -27,7 +27,6 @@ local GrooveStatsBlue = color("#007b85")
 local RpgYellow = color("1,0.972,0.792,1")
 local ItlPink = color("1,0.2,0.406,1")
 local BoogieStatsPurple = color("#8000ff")
-local logo_current = "GS"
 
 local isRanked = false
 
@@ -117,17 +116,19 @@ local LeaderboardRequestProcessor = function(res, master)
 	end
 	boogie = true
 	local gsBox = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("ScoreBox" .. pn):GetChild("GrooveStatsLogo")
+	local logo_curr = gsBox:GetTexture():GetPath()
+	local logo_gs = THEME:GetPathG("", "GrooveStats.png")
+	local logo_bs = THEME:GetPathG("", "BoogieStats.png")
+
 	if boogie then 
-		if logo_current ~= "BS" then 
+		if logo_curr ~= logo_bs then 
 			style_color[0] = BoogieStatsPurple 
 			gsBox:Load(THEME:GetPathG("", "BoogieStats.png"))
-			logo_current = "BS"
 		end		
 	else 
-		if logo_current ~= "GS" then 
+		if logo_curr ~= logo_gs then 
 			style_color[0] = GrooveStatsBlue 
 			gsBox:Load(THEME:GetPathG("", "GrooveStats.png"))
-			logo_current = "GS"
 		end		
 	end
 	
