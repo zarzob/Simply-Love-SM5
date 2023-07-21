@@ -274,7 +274,7 @@ SL_CustomPrefs.Get = function()
 		-- - - - - - - - - - - - - - - - - - - -
 		EnableGrooveStats = {
 			Default = false,
-			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
+			Choices =  { THEME:GetString("ThemePrefs","BoogieStats"), THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values  = { true, false }
 		},
 
