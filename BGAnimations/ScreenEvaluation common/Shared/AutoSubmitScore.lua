@@ -129,6 +129,8 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 	-- Hijack the leaderboard pane to display the GrooveStats leaderboards.
 	if panes then
 		local data = JsonDecode(res.body)
+		local headers = res.headers
+	
 		for i=1,2 do
 			local playerStr = "player"..i
 			local entryNum = 1
@@ -140,6 +142,15 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 			local RPGPane = panes:GetChild("Pane9_SideP"..i):GetChild("")
 			local ITLPane = panes:GetChild("Pane10_SideP"..i):GetChild("")
 
+			local boogie = false
+			if headers["bs-leaderboard-player-" .. i] == "BS" then
+				boogie = true 
+			end
+						
+			if boogie then 
+				MESSAGEMAN:Broadcast("BoogieLogo",{ player = i })
+			end
+		
 			-- If only one player is joined, we then need to update both panes with only
 			-- one players' data.
 			local side = i
