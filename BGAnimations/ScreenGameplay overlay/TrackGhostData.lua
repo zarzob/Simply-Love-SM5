@@ -46,37 +46,43 @@ local valid_hns = {
 
 local currentScore
 local TargetScore
+local possible
 local ghost
 
-if mods.TargetScore == "Ghost Data" then	
-	local profile_slot = {
-		[PLAYER_1] = "ProfileSlot_Player1",
-		[PLAYER_2] = "ProfileSlot_Player2"
-	}
-
-	local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
-	-- We require an explicit profile to be loaded.
-	if not dir or #dir == 0 then return end
-
-	local path = dir .. "GhostData/" .. songHash .. ".json"
-
-	local f = RageFileUtil:CreateRageFile()
-	if FILEMAN:DoesFileExist(path) then
-		if f:Open(path, 1) then			
-			ghost = f:Read()
-			ghost = JsonDecode(ghost)
-
-			-- Get ghost data for the scoring system in use
-			if mods.ShowEXScore then ghost = ghost["ex"] else ghost = ghost["itg"] end
-
-			f:Close()
-		end
-		f:destroy()
-	end
-end
-
+local ghostdata = true
 
 return Def.Actor{
+	OnCommand=function(self)
+		if mods.TargetScore == "Ghost Data" then	
+			local profile_slot = {
+				[PLAYER_1] = "ProfileSlot_Player1",
+				[PLAYER_2] = "ProfileSlot_Player2"
+			}
+		
+			local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
+			-- We require an explicit profile to be loaded.
+			if not dir or #dir == 0 then return end
+		
+			local path = dir .. "GhostData/" .. songHash .. ".json"
+		
+			local f = RageFileUtil:CreateRageFile()
+			if FILEMAN:DoesFileExist(path) then
+				if f:Open(path, 1) then			
+					ghost = f:Read()
+					ghost = JsonDecode(ghost)
+		
+					-- Get ghost data for the scoring system in use
+					if mods.ShowEXScore then ghost = ghost["ex"] else ghost = ghost["itg"] end
+		
+					f:Close()
+				end
+				f:destroy()
+			else
+				ghostdata = false
+				MESSAGEMAN:Broadcast("NoGhostData",{player=player})
+			end
+		end
+	end,
 	JudgmentMessageCommand=function(self, params)
 		if params.Player ~= player then return end
 		if IsAutoplay(player) then return end
@@ -158,19 +164,18 @@ return Def.Actor{
 			end
 		end
 		-- If the user is doing Ghost Data, also calculate pace against ghost because we're already doing the calculations here
-		if mods.TargetScore == "Ghost Data" then
-			local a,b,possibleex = CalculateExScore(player)
-
+		if mods.TargetScore == "Ghost Data" and ghostdata then
 			if mods.ShowEXScore then
 				currentScore = currentdp_ex
 				TargetScore = ghost[#ex]
+				local a,b,possibleex = CalculateExScore(player)
 				possible = possibleex
 			else 
 				currentScore = currentdp_itg
 				TargetScore = ghost[#itg]
-				possible = stats.GetPossibleDancePoints()
+				possible = stats:GetPossibleDancePoints()
 			end
-			MESSAGEMAN:Broadcast("GhostDataUpdated",{current=currentScore,target=TargetScore})
-		end
+			MESSAGEMAN:Broadcast("GhostDataUpdated",{player=params.Player,current=currentScore,target=TargetScore,possible=possible})
+		end		
 	end,
 }
