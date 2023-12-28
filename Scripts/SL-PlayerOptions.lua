@@ -588,7 +588,7 @@ local Overrides = {
 	},
 	-------------------------------------------------------------------------
 	TargetScore = {
-		Values = { "SpecifiedValue", "Machine best", "Personal best" }
+		Values = { "SpecifiedValue", "Machine best", "Personal best", "Ghost Data" }
 	},
 	-------------------------------------------------------------------------
 	TargetScoreNumber = {
