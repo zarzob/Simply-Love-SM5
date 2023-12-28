@@ -98,6 +98,8 @@ return Def.Actor{
 					currentdp_ex = currentdp_ex + SL["ExWeights"][HNS]
 				end
 			end
+			itg[#itg+1] = currentdp_itg
+			ex[#ex+1] = currentdp_ex
 		-- HNS also contain TNS. We don't want to double count so add an else if.
 		elseif params.TapNoteScore then
 			local TNS = ToEnumShortString(params.TapNoteScore)
@@ -159,10 +161,11 @@ return Def.Actor{
 						end
 					end
 				end
-				itg[#itg+1] = currentdp_itg
-				ex[#ex+1] = currentdp_ex
 			end
+			itg[#itg+1] = currentdp_itg
+			ex[#ex+1] = currentdp_ex
 		end
+
 		-- If the user is doing Ghost Data, also calculate pace against ghost because we're already doing the calculations here
 		if mods.TargetScore == "Ghost Data" and ghostdata then
 			if mods.ShowEXScore then

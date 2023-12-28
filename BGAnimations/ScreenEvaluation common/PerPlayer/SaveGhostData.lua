@@ -60,7 +60,6 @@ WriteGhostData = function(player, songHash)
 	local f = RageFileUtil:CreateRageFile()
 	if updateitg or updateex then
 		if f:Open(path, 2) then		
-			SM("Updated")
 			f:Write(JsonEncode(array))
 			f:Close()		
 		end
