@@ -108,7 +108,7 @@ bmt.InitCommand=function(self)
 end
 
 bmt.JudgmentMessageCommand=function(self, params)
-	if player == params.Player and not mods.ShowEXScore then
+	if player == params.Player and not mods.ShowEXScore and mods.TargetScore ~= "Ghost Data"  then
 		tns = ToEnumShortString(params.TapNoteScore)
 		hns = params.HoldNoteScore and ToEnumShortString(params.HoldNoteScore)
 		self:queuecommand("SetScore")
@@ -117,7 +117,7 @@ end
 
 
 bmt.ExCountsChangedMessageCommand=function(self, params)
-	if player == params.Player and mods.ShowEXScore then
+	if player == params.Player and mods.ShowEXScore and mods.TargetScore ~= "Ghost Data" then
 		local possible_ex_score, current_possible = GetPossibleExScore(params.ExCounts)
 
 		local total_possible = params.actual_possible
@@ -368,6 +368,23 @@ bmt.SetScoreCommand=function(self, params)
 		
 		-- Dim mini-indicator if target score can no longer be met.
 		if ((current_possible_dp - actual_dp) > (possible_dp * (1 - target_score))) and mods.ActionOnMissedTarget == "DimSScore" then self:diffusealpha(0.65) end
+	end
+end
+
+bmt.GhostDataUpdatedMessageCommand=function(self,params)
+	-- Don't need mods check as it won't broadcast this message if ghost data is not enabled
+	display = (params.current - params.target)/possible
+	display = math.floor(display*10000)/100
+
+	if display > 0 then	
+		self:settext("+" .. ("%.2f%%"):format(display))
+		self:diffuse(Color.Green)
+	elseif display == 0 then		
+		self:settext(("%.2f%%"):format(display))
+		self:diffuse(Color.White)
+	else 
+		self:settext(("%.2f%%"):format(display))
+		self:diffuse(Color.Red)
 	end
 end
 
