@@ -92,6 +92,9 @@ for player in ivalues(Players) do
 	-- Generate the .rpg file for the player to keep track of best rate mod on the songwheel
 	-- When the event isn't active, this actor is nil.
 	t[#t+1] = LoadActor("./PerPlayer/RpgRatemod.lua", player)
+
+	-- Saving of Ghost Data
+	t[#t+1] = LoadActor("./PerPlayer/SaveGhostData.lua", player)
 	
 end
 
