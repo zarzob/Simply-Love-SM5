@@ -3,7 +3,7 @@ local pn = ToEnumShortString(player)
 
 -- We only want to count it if the user didn't fail
 local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player) 
---if stats:GetFailed() then return end -- TODO commented out while testing
+if stats:GetFailed() then return end
 
 local itg = SL[ToEnumShortString(player)].CurrentSongJudgments.ITG
 local ex = SL[ToEnumShortString(player)].CurrentSongJudgments.EX
