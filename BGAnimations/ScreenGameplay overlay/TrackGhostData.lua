@@ -51,15 +51,13 @@ local ghost
 
 local ghostdata = true
 
-local a,b,possibleex = CalculateExScore(player)
 local possible = stats:GetPossibleDancePoints()
 
 
 return Def.Actor{
 	OnCommand=function(self)
-
-
 		if mods.TargetScore == "Ghost Data" then	
+			a,b,possibleex = CalculateExScore(player)
 			local profile_slot = {
 				[PLAYER_1] = "ProfileSlot_Player1",
 				[PLAYER_2] = "ProfileSlot_Player2"

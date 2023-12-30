@@ -378,18 +378,18 @@ end
 bmt.GhostDataUpdatedMessageCommand=function(self,params)
 	if params.player == player then
 		-- Don't need mods check as it won't broadcast this message if ghost data is not enabled
-		display = (params.current - params.target)/params.possible
-		display = math.floor(display*10000)/100
+		display = math.max(0, math.floor(params.current-params.target/params.possible * 10000) / 100)
 
 		if display > 0 then	
 			self:settext("+" .. ("%.2f%%"):format(display))
 			self:diffuse(Color.Green)
-		elseif display == 0 then		
+		else
 			self:settext(("%.2f%%"):format(display))
-			self:diffuse(Color.White)
-		else 
-			self:settext(("%.2f%%"):format(display))
-			self:diffuse(Color.Red)
+			if display == 0 then		
+				self:diffuse(Color.White)
+			else 
+				self:diffuse(Color.Red)
+			end
 		end
 	end
 end
