@@ -23,6 +23,10 @@ function GetHexColor( n, decorative, ITGdiff )
 		colorTable = SL.DDRDiffColors
 	end
 
+	if ITGdiff == "WF" then
+		colorTable = SL.WFDiffColors
+	end
+
 	-- use the number passed in to lookup a color in the corresponding color table
 	-- ensure the index is kept in bounds via modulo operation
 	local clr = ((n - 1) % #colorTable) + 1
@@ -71,7 +75,7 @@ function DifficultyColor( difficulty, decorative )
 	-- to map a difficulty string to a number
 	-- SM's enums are 0 indexed, so Beginner is 0, Challenge is 4, and Edit is 5
 	local clr = SL.Global.ActiveColorIndex + (Difficulty:Reverse()[difficulty] - 4)
-	if useITGcolors == "ITG" or "DDR" then
+	if useITGcolors == "ITG" or "DDR" or "WF" then
 		clr = Difficulty:Reverse()[difficulty] - 5
 	end
 	return GetHexColor(clr, decorative, useITGcolors)

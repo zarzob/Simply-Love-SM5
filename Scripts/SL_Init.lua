@@ -212,6 +212,14 @@ SL = {
 		"#e900ff", --challenge
 		"#F7F7F7", --edit
 	},
+	WFDiffColors = {
+		"#80FFFF", --beginner
+		"#80FF80", --easy
+		"#FFFF80", --medium
+		"#FF8080", --hard
+		"#FF80FF", --expert
+		"#B4B7BA", --edit
+	},
 	-- These are the original SL colors. They're used for decorative (non-text) elements, like the background hearts:
 	DecorativeColors = {
 		"#FF3C23",

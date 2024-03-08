@@ -327,7 +327,7 @@ SL_CustomPrefs.Get = function()
 		ITGDiffColors =
 		{
 			Default = "Simply Love",
-			Choices = { "Simply Love", "ITG", "DDR" }
+			Choices = { "Simply Love", "ITG", "DDR", "WF" }
 		},
 		AnimateBanners =
 		{
