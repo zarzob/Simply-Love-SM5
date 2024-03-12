@@ -8,9 +8,6 @@ IsItlSong = function(player)
 end
 
 UpdatePathMap = function(player, hash)
-	SM("---------------")
-	SM("UpdatePathMap")
-	SM("---------------")
 	local song = GAMESTATE:GetCurrentSong()
 	local song_dir = song:GetSongDir()
 	if song_dir ~= nil and #song_dir ~= 0 then
@@ -73,9 +70,6 @@ end
 
 -- Takes the ITLData loaded in memory and writes it to the local profile.
 WriteItlFile = function(player)
-	SM("---------------")
-	SM("WriteItlFile")
-	SM("---------------")
 	local pn = ToEnumShortString(player)
 	-- No data to write, return early.
 	if (not TableContainsData(SL[pn].ITLData["pathMap"]) and
@@ -104,9 +98,6 @@ end
 
 -- EX score is a number like 92.67
 local GetPointsForSong = function(maxPoints, exScore)
-	SM("---------------")
-	SM("GetPointsForSong")
-	SM("---------------")
 	local thresholdEx = 50.0
 	local percentPoints = 40.0
 
@@ -145,9 +136,6 @@ end
 -- Generally to be called only once when a profile is loaded.
 -- This parses the ITL data file and stores it in memory for the song wheel to reference.
 ReadItlFile = function(player)
-	SM("---------------")
-	SM("ReadItlFile")
-	SM("---------------")
 	local profile_slot = {
 		[PLAYER_1] = "ProfileSlot_Player1",
 		[PLAYER_2] = "ProfileSlot_Player2"
@@ -261,6 +249,8 @@ ReadItlFile = function(player)
 		itlData["fixedPoints"] = true
 	end
 
+	-- As of ITL 2024, there is a separate ranking for singles and doubles.
+	-- Old json file didn't store stepsType, so do a one time sweep to populate
 	if itlData["fixedStepsType"] == nil then
 		-- Loop through pathMap to find the stepsType of all the songs, and update it in the hashMap		
 		local pathMap = itlData["pathMap"]
@@ -288,9 +278,6 @@ end
 
 -- EX score is a number like 92.67
 GetITLPointsForSong = function(maxPoints, exScore)
-	SM("---------------")
-	SM("GetITLPointsForSong")
-	SM("---------------")
 	local thresholdEx = 50.0
 	local percentPoints = 40.0
 
@@ -329,9 +316,6 @@ end
 -- Helper function used within UpdateItlData() below.
 -- Curates all the ITL data to be written to the ITL file for the played song.
 local DataForSong = function(player, prevData)
-	SM("---------------")
-	SM("DataForSong")
-	SM("---------------")
 	local GetClearType = function(judgments)
 		-- 1 = Pass
 		-- 2 = FGC
@@ -445,9 +429,6 @@ end
 -- Calculate ITL Stats
 -- Returns TP, RP, and songs played
 CalculateITLStats = function(player)
-	SM("---------------")
-	SM("CalculateITLStats")
-	SM("---------------")
     local pn = ToEnumShortString(player)
     
     -- Grab data from memory
@@ -470,17 +451,14 @@ end
 
 -- Calculate Song Ranks
 CalculateITLSongRanks = function(player)
-	SM("---------------")
-	SM("CalculateITLSongRanks")
-	SM("---------------")
 	local pn = ToEnumShortString(player)
 	
 	-- Grab data from memory
 	itlData = SL[pn].ITLData
 	local songHashes = itlData["hashMap"]
 
-	-- Create and populate tables to rank each hash score
-	--TODO: separate into doubles and singles points values
+	--TODO: delete this once it's confirmed working
+	-- Create and populate tables to rank each hash score	
 	local points = {}
 	local songPoints = {}
 	for key in pairs(songHashes) do
@@ -505,15 +483,57 @@ CalculateITLSongRanks = function(player)
 	-- Write song scores sorted by point value descending into json
 	itlData["points"] = points
 
+	-- Create and populate tables to rank each hash score by stepsType
+	local pointsSingle = {}
+	local pointsDouble = {}
+	
+	local songPointsSingle = {}
+	local songPointsDouble = {}
+	for key in pairs(songHashes) do
+		if songHashes[key]["stepsType"] == "single" then			
+			songPointsSingle[key] = songHashes[key]["points"]
+			table.insert(pointsSingle,songHashes[key]["points"])
+		else -- don't need to specify doubles right? unless there will ITL Couples will become a thing lol
+			songPointsDouble[key] = songHashes[key]["points"]
+			table.insert(pointsDouble,songHashes[key]["points"])
+		end
+	end		 
+	-- Reverse sort points values
+	table.sort(pointsSingle,function(a,b) return a > b end)
+	table.sort(pointsDouble,function(a,b) return a > b end)
+
+	for k, v in pairs(pointsSingle) do
+		for key in pairs(songHashes) do
+			if songHashes[key]["points"] == v then
+				songHashes[key]["rank"] = k
+				break
+			end
+		end
+	end
+
+	for k, v in pairs(pointsDouble) do
+		for key in pairs(songHashes) do
+			if songHashes[key]["points"] == v then
+				songHashes[key]["rank"] = k
+				break
+			end
+		end
+	end
+
+	itlData["hashMap"] = songHashes
+
+	-- Write song scores sorted by point value descending into json
+	itlData["points"] = points
+
+	itlData["pointsSingle"] = pointsSingle
+	itlData["pointsDouble"] = pointsDouble
+
 	-- Rewrite the data in memory
 	SL[pn].ITLData = itlData
 end
 
 -- Quick function that overwrites EX score entry if the score found is higher than what is found locally
 UpdateItlExScore = function(player, hash, exscore)
-	SM("---------------")
-	SM("UpdateItlExScore")
-	SM("---------------")
 	local pn = ToEnumShortString(player)
 	local hashMap = SL[pn].ITLData["hashMap"]
 	if hashMap[hash] == nil then
@@ -581,9 +601,6 @@ end
 -- Should be called during ScreenEvaluation to update the ITL data loaded.
 -- Will also write the contents to the file.
 UpdateItlData = function(player)
-	SM("---------------")
-	SM("UpdateItlData")
-	SM("---------------")
 	local pn = ToEnumShortString(player)
 	local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 		
