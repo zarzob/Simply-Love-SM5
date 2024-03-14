@@ -82,6 +82,9 @@ for player in ivalues(Players) do
 	-- Generate the .itl file for the player.
 	-- When the event isn't active, this actor is nil.
 	t[#t+1] = LoadActor("./PerPlayer/ItlFile.lua", player)
+
+	-- Save ghost data to json file if upscored
+	t[#t+1] = LoadActor("./PerPlayer/SaveGhostData.lua", player)	
 end
 
 -- -----------------------------------------------------------------------
