@@ -80,9 +80,60 @@ return Def.Actor{
 			end
 			
 
+			if offset ~= "Miss" then
+				local window = DetermineTimingWindow(offset)
+				if window > worst_window then
+					worst_window = window
+				end
+			end
+			
+			-- Store which arrow the tap was on
+			local arrow = 0
+			for col,tapnote in pairs(params.Notes) do
+				local tnt = ToEnumShortString(tapnote:GetTapNoteType())
+				if tnt == "Tap" or tnt == "HoldHead" or tnt == "Lift" then
+					local tns = ToEnumShortString(params.TapNoteScore)
+					arrow = arrow + col
+					
+					if arrow == 1 then
+						foot=true
+					elseif arrow == 4 then
+						foot=false
+					else
+						foot = not foot
+					end
+				end
+			end
+			
+			-- If current step is part of a stream, store which foot the tap was on
+			local isStream = false
+			if streams.Measures and #streams.Measures > 0 then
+				local currMeasure = (math.floor(PlayerState:GetSongPosition():GetSongBeatVisible()))/4
+				for i=1,#streams.Measures do
+					run = streams.Measures[i]
+					if currMeasure >= run.streamStart and currMeasure <= run.streamEnd and not run.isBreak then
+						isStream = true
+						break
+					elseif currMeasure < run.streamStart then
+						break
+					end
+				end
+			end
+			
+			local courseOffset = 0
+			if GAMESTATE:IsCourseMode() then
+				local curCourseSong = GAMESTATE:GetCourseSongIndex()
+				local curCourse = GAMESTATE:GetCurrentCourse()
+				local courseEntries = curCourse:GetCourseEntries()
+				
+				for i=1,curCourseSong do
+					courseOffset = courseOffset + courseEntries[i]:GetSong():GetLastSecond()
+				end
+			end
+
 			-- Store judgment offsets (including misses) in an indexed table as they occur.
 			-- Also store the CurMusicSeconds for Evaluation's scatter plot.
-			sequential_offsets[#sequential_offsets+1] = { GAMESTATE:GetCurMusicSeconds(), offset, arrow, isStream, foot, hitEarly, earlyOffset }
+			sequential_offsets[#sequential_offsets+1] = { courseOffset + GAMESTATE:GetCurMusicSeconds(), offset, arrow, isStream, foot, hitEarly, earlyOffset }
 			hitEarly = false
 			earlyOffset = 0
 		end
