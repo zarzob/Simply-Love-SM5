@@ -123,8 +123,7 @@ return Def.Actor{
 			local courseOffset = 0
 			if GAMESTATE:IsCourseMode() then
 				local curCourseSong = GAMESTATE:GetCourseSongIndex()
-				local curCourse = GAMESTATE:GetCurrentCourse()
-				local courseEntries = curCourse:GetCourseEntries()
+				local courseEntries = GAMESTATE:GetCurrentTrail(ToEnumShortString(player)):GetTrailEntries()
 				
 				for i=1,curCourseSong do
 					courseOffset = courseOffset + courseEntries[i]:GetSong():GetLastSecond()

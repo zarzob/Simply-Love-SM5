@@ -70,6 +70,15 @@ if not GAMESTATE:IsCourseMode() then
 			self:queuecommand("Redraw")
 		end,
 	}
+else
+	af[#af+1] = NPS_Histogram_Static_Course(player, GraphWidth, GraphHeight, 0.5)..{
+		Name="DensityGraph",
+		OnCommand=function(self)
+			self:addx(-GraphWidth/2):addy(GraphHeight)
+			-- Lower the opacity otherwise some of the scatter plot points might become hard to see.
+			self:diffusealpha(0.5)
+		end,
+	}
 end
 
 af[#af+1] = LoadActor("./ScatterPlot.lua", {player=player, GraphWidth=GraphWidth, GraphHeight=GraphHeight} )
