@@ -63,7 +63,8 @@ if file_to_load == "None" then
 		InitCommand=function(self) self:visible(false) end,
 		JudgmentMessageCommand=function(self,param)
 			if ToEnumShortString(param.TapNoteScore) == "W1" and mods.ShowFaPlusWindow then
-				if not IsW0Judgment(param, player) and not IsAutoplay(player) then
+				local is_W0 = IsW010Judgment(param, player) or (not mods.SmallerWhite and IsW0Judgment(param, player))
+				if not is_W0 and not IsAutoplay(player) then
 					frame = 1
 					
 					for col,tapnote in pairs(param.Notes) do
