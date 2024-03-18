@@ -39,6 +39,20 @@ local function GetLamp(song)
 	
 	if steps == nil then return nil end
 	
+	-- Check ITL File
+	local itl_lamp = nil
+	local song_dir = song:GetSongDir()
+	if song_dir ~= nil and #song_dir ~= 0 then
+		if SL[pn].ITLData["pathMap"][song_dir] ~= nil then
+			local hash = SL[pn].ITLData["pathMap"][song_dir]
+			if SL[pn].ITLData["hashMap"][hash] ~= nil then
+				if SL[pn].ITLData["hashMap"][hash]["clearType"] == 5 then
+					return 0
+				end
+			end
+		end
+	end
+	
 	local profile = PROFILEMAN:GetProfile(player)
 	local high_score_list = profile:GetHighScoreListIfExists(song, steps)
 			
