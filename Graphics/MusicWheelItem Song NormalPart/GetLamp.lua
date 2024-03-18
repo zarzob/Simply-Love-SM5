@@ -65,7 +65,9 @@ local function GetLamp(song)
 			best_lamp = math.min(best_lamp and best_lamp or 999, AwardMap[award])
 		end
 		
-		if best_lamp == nil then
+		if best_lamp == 1 and score:GetScore() == 0 then
+			best_lamp = 0
+		elseif best_lamp == nil then
 			if score:GetGrade() == "Grade_Failed" then best_lamp = 52
 			else best_lamp = 51 end
 		end
@@ -178,6 +180,13 @@ return Def.ActorFrame{
 					self:visible(true)
 					self:stopeffect()
 					self:diffuse(ClearLamp[lamp - 50])
+				elseif lamp == 0 then
+					-- Quinted, use a special color
+					self:visible(true)
+					local ItlPink = color("1,0.2,0.406,1")
+					self:diffuseshift():effectperiod(0.8)
+					self:effectcolor1(ItlPink)
+					self:effectcolor2(lerp_color(0.70, color("#ffffff"), ItlPink))
 				else
 					self:visible(true)
 					self:diffuseshift():effectperiod(0.8)
