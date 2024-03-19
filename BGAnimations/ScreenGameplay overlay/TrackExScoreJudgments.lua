@@ -112,7 +112,6 @@ return Def.Actor{
 						storage.ex_counts[TNS] = storage.ex_counts[TNS] + 1
 						count_updated = true
 					end
-					storage.ex_counts[TNS] = storage.ex_counts[TNS] + 1
 				end
 			end
 		end
