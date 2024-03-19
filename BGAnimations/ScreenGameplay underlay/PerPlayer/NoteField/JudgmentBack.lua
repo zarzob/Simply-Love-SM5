@@ -89,12 +89,13 @@ return Def.ActorFrame{
 			if sprite:GetNumStates() == 7 or sprite:GetNumStates() == 14 then
 				if ToEnumShortString(param.TapNoteScore) == "W1" then
 					if mods.ShowFaPlusWindow then
+						local is_W0 = IsW010Judgment(param, player) or (not mods.SmallerWhite and IsW0Judgment(param, player))
 						-- If this W1 judgment fell outside of the FA+ window, show the white window
 						--
 						-- Treat Autoplay specially. The TNS might be out of the range, but
 						-- it's a nicer experience to always just display the top window graphic regardless.
 						-- This technically causes a discrepency on the histogram, but it's likely okay.
-						if not IsW0Judgment(param, player) and not IsAutoplay(player) then
+						if not is_W0 and not IsAutoplay(player) then
 							frame = 1
 						end
 					end
@@ -148,12 +149,13 @@ return Def.ActorFrame{
 		if sprite:GetNumStates() == 7 or sprite:GetNumStates() == 14 then
 			if tns == "W1" then
 				if mods.ShowFaPlusWindow then
+					local is_W0 = IsW010Judgment(param, player) or (not mods.SmallerWhite and IsW0Judgment(param, player))
 					-- If this W1 judgment fell outside of the FA+ window, show the white window
 					--
 					-- Treat Autoplay specially. The TNS might be out of the range, but
 					-- it's a nicer experience to always just display the top window graphic regardless.
 					-- This technically causes a discrepency on the histogram, but it's likely okay.
-					if not IsW0Judgment(param, player) and not IsAutoplay(player) then
+					if not is_W0 and not IsAutoplay(player) then
 						frame = 1
 					end					
 				end
