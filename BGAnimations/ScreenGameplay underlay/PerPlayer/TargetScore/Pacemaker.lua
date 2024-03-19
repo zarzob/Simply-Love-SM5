@@ -22,7 +22,7 @@ local GetPossibleExScore = function(counts)
 				best_counts[key] = 0
 			-- Upgrade to FA+ window.
 			else
-				best_counts["W015"] = best_counts["W015"] + value
+				best_counts["W0"] = best_counts["W0"] + value
 			end
 		end
 	end
