@@ -405,7 +405,9 @@ local af = Def.ActorFrame{
 		self.isFirst = true
 	end,
 	CheckScoreboxCommand=function(self)
-		self:queuecommand("LoopScorebox")
+		if GAMESTATE:GetCurrentSong() and GAMESTATE:GetCurrentSteps(player) then
+			self:queuecommand("LoopScorebox")
+		end
 	end,
 	LoopScoreboxCommand=function(self)
 		self:visible(true)
