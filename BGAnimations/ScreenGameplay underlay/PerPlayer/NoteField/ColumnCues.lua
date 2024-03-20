@@ -145,6 +145,10 @@ for columnIndex=1,numColumns do
 					:setsize(width/numColumns, _screen.h - yOffset)
 					:fadebottom(0.333)
 
+				if GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Stage"):Hallway() == 1 then
+					self:skewx(0.03*(2.5-columnIndex)):addx(9*(2.5-columnIndex))
+				end
+				
 				if IsReversedColumn(player, columnIndex) then
 					self:rotationz(180)
 					self:y(yOffset * 2 + reverseOffset + (width/numColumns)/2)
@@ -188,6 +192,9 @@ for columnIndex=1,numColumns do
 					self:y(260)
 				else
 					self:y(80)
+				end
+				if GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Stage"):Hallway() == 1 then
+					self:skewx(0.03*(2.5-columnIndex)):addx(9*(2.5-columnIndex))
 				end
 					
 				text = self
