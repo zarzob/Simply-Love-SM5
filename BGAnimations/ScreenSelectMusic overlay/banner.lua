@@ -50,6 +50,25 @@ if PREFSMAN:GetPreference("ShowBanners") then
 	}
 end
 
+-- custom packs banner
+t[#t+1] = Def.Banner{
+	Name="CustomPackBanner",
+	Texture=banner_directory.."/banner"..SL.Global.ActiveColorIndex.." (doubleres).png",
+	InitCommand=function(self) self:setsize(bannerWidth, bannerHeight) end,
+	CurrentSongChangedMessageCommand=function(self) self:playcommand("Set") end,
+	
+	SetCommand=function(self)
+		if PREFSMAN:GetPreference("ShowBanners") == false or SongOrCourse then
+			self:visible(false)
+			return
+		end
+		
+		local group = SCREENMAN:GetTopScreen():GetMusicWheel():GetSelectedSection()
+		self:LoadFromSongGroup(group):setsize(bannerWidth, bannerHeight)
+		self:visible(true)
+	end
+}
+
 -- the MusicRate Quad and text
 t[#t+1] = Def.ActorFrame{
 	InitCommand=function(self)

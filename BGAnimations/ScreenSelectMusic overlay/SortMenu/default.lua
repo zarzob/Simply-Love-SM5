@@ -342,6 +342,12 @@ local t = Def.ActorFrame {
 				break
 			end
 		end
+		
+		-- Zankoku Custom Songwheels
+		table.insert(wheel_options, {"StaminaDesc", "StaminaSort"})
+		table.insert(wheel_options, {"TechDesc", "TechSort"})
+		table.insert(wheel_options, {"EventDesc", "EventSort"})
+		
 		-- Override sick_wheel's default focus_pos, which is math.floor(num_items / 2)
 		--
 		-- keep in mind that num_items is the number of Actors in the wheel (here, 7)

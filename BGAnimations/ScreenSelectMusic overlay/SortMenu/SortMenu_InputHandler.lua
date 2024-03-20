@@ -118,6 +118,27 @@ local input = function(event)
 					else
 						SM("No Favorites Available")
 					end
+				elseif focus.new_overlay == "CustomPacks" then
+					SM(getPackListFiles(event.PlayerNumber))
+					local getSort = generatePackList(event.PlayerNumber, "test")
+					SONGMAN:SetPreferredSongs(getSort, --[[isAbsolute=]]true);
+					overlay:queuecommand("DirectInputToEngine")
+					SCREENMAN:GetTopScreen():GetMusicWheel():ChangeSort("SortOrder_Preferred")
+				elseif focus.new_overlay == "StaminaSort" then
+					local getSort = generatePackList(event.PlayerNumber, "stam")
+					SONGMAN:SetPreferredSongs(getSort, --[[isAbsolute=]]true);
+					overlay:queuecommand("DirectInputToEngine")
+					SCREENMAN:GetTopScreen():GetMusicWheel():ChangeSort("SortOrder_Preferred")
+				elseif focus.new_overlay == "TechSort" then
+					local getSort = generatePackList(event.PlayerNumber, "tech")
+					SONGMAN:SetPreferredSongs(getSort, --[[isAbsolute=]]true);
+					overlay:queuecommand("DirectInputToEngine")
+					SCREENMAN:GetTopScreen():GetMusicWheel():ChangeSort("SortOrder_Preferred")
+				elseif focus.new_overlay == "EventSort" then
+					local getSort = generatePackList(event.PlayerNumber, "event")
+					SONGMAN:SetPreferredSongs(getSort, --[[isAbsolute=]]true);
+					overlay:queuecommand("DirectInputToEngine")
+					SCREENMAN:GetTopScreen():GetMusicWheel():ChangeSort("SortOrder_Preferred")
 				end
 			end
 
