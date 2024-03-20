@@ -316,8 +316,8 @@ SL_CustomPrefs.Get = function()
 
 		ThemeFont = {
 			Default = "Common",
-			Choices = { THEME:GetString("ThemePrefs","Wendy"), THEME:GetString("ThemePrefs", "Mega") },
-			Values = { "Common", "Mega" }
+			Choices = { THEME:GetString("ThemePrefs","Wendy"), THEME:GetString("ThemePrefs", "Mega"), THEME:GetString("ThemePrefs", "Unprofessional") },
+			Values = { "Common", "Mega", "Unprofessional" }
 		},
 		MusicWheelGS =
 		{
