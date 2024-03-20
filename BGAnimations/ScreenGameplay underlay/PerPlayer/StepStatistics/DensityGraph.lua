@@ -85,7 +85,7 @@ local histogram_amv = Scrolling_NPS_Histogram(player, width, height)..{
 }
 
 -- PeakNPS text
-local text = LoadFont("Common Normal")..{
+local text = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
 		self:zoom(0.5)
 		self:halign( PlayerNumber:Reverse()[OtherPlayer[player]] )

@@ -95,7 +95,7 @@ local wheel_item_mt = {
 
 			if style == "Gay" then
 				af[#af+1] = Def.BitmapText{
-					Font="Common Normal",
+					Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 					InitCommand=function(subself)
 						self.text = subself
 						subself:y(-6):diffuse(Color.Black):zoom(1.2)
@@ -204,7 +204,7 @@ local t = Def.ActorFrame{
 
 if style == "SRPG7" then
 	t[#t+1] = Def.BitmapText{
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		Text="Choose your faction!",
 		InitCommand=function(self)
 			self:xy(_screen.cx, 80)
@@ -215,7 +215,7 @@ if style == "SRPG7" then
 	}
 
 	t[#t+1] = Def.BitmapText{
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		Text="",
 		InitCommand=function(self)
 			factionBmt = self

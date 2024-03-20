@@ -473,7 +473,7 @@ if ThemePrefs.Get("RainbowMode") then
 	textColor = Color.Black
 end
 
-af[#af+1] = LoadFont("Common Normal").. {
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 	Name="P1SubmitText",
 	Text="",
 	InitCommand=function(self)
@@ -495,7 +495,7 @@ af[#af+1] = LoadFont("Common Normal").. {
 	end
 }
 
-af[#af+1] = LoadFont("Common Normal").. {
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 	Name="P2SubmitText",
 	Text="",
 	InitCommand=function(self)

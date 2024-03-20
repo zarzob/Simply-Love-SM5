@@ -57,7 +57,7 @@ local labels = { "Song", "Artist", "Pack", "Desc" }
 if not c and ar > 1.5 then -- only display labels if using widescreen and not using center 1 player
 	for i = 1, #labels do
 		af[#af+1] = Def.BitmapText{
-			Font="Common Normal",
+			Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 			OnCommand=function(self)
 				self:settext(labels[i])
 				self:y(row_height*i)
@@ -74,7 +74,7 @@ af[#af+1] = Def.ActorFrame {
 	end,
 	-- Song name
 	Def.BitmapText {
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		OnCommand=function(self)			
 			self:horizalign("left")
 			self:y(row_height)
@@ -87,7 +87,7 @@ af[#af+1] = Def.ActorFrame {
 	},
 	-- Artist name
 	Def.BitmapText{
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		OnCommand=function(self)
 			self:horizalign("left")
 			self:y(row_height*2)
@@ -100,7 +100,7 @@ af[#af+1] = Def.ActorFrame {
 	},
 	-- Pack name
 	Def.BitmapText{
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		OnCommand=function(self)
 			self:horizalign("left")
 			self:y(row_height*3)
@@ -113,7 +113,7 @@ af[#af+1] = Def.ActorFrame {
 	},
 	-- Author
 	Def.BitmapText{
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		OnCommand=function(self)
 			self:y(row_height*4)
 			self:horizalign("left")

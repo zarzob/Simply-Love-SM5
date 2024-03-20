@@ -45,7 +45,7 @@ local SingleBPMDisplay = function()
 	return Def.ActorFrame{
 		InitCommand=function(self) self:SetUpdateFunction(UpdateSingleBPM) end,
 
-		LoadFont("Common Normal")..{
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			Name="BPMDisplay",
 			InitCommand=function(self)
 				self:zoom(1)
@@ -59,14 +59,14 @@ local DualBPMDisplay = function()
 	return Def.ActorFrame{
 		InitCommand=function(self) self:SetUpdateFunction(Update2PBPM) end,
 
-		LoadFont("Common Normal")..{
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			Name="DisplayP1",
 			InitCommand=function(self)
 				self:x(-18):zoom(1):shadowlength(1)
 				dispP1 = self
 			end
 		},
-		LoadFont("Common Normal")..{
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			Name="DisplayP2",
 			InitCommand=function(self)
 				self:x(18):zoom(1):shadowlength(1)
@@ -95,7 +95,7 @@ local t = Def.ActorFrame{
 		end
 	end,
 
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="RatemodDisplay",
 		Text=MusicRate ~= 1 and MusicRate.."x rate" or "",
 		InitCommand=function(self)

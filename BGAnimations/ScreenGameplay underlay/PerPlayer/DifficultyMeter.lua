@@ -41,7 +41,7 @@ return Def.ActorFrame{
 		end
 	},
 
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		InitCommand=function(self)
 			self:diffuse( Color.Black )
 			self:y(9.5)

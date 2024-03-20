@@ -478,7 +478,7 @@ for player in ivalues(PlayerNumber) do
 			Name=item.name,
 
 			-- numerical value
-			LoadFont("Common Normal")..{
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				InitCommand=function(self)
 					self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
 					self:x(pos.col[col])
@@ -499,7 +499,7 @@ for player in ivalues(PlayerNumber) do
 			},
 
 			-- label
-			LoadFont("Common Normal")..{
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				Text=item.name,
 				InitCommand=function(self)
 					self:zoom(text_zoom):diffuse(Color.Black):horizalign(left)
@@ -511,7 +511,7 @@ for player in ivalues(PlayerNumber) do
 	end
 
 	-- Machine/World Record Machine Tag
-	af2[#af2+1] = LoadFont("Common Normal")..{
+	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="MachineHighScoreName",
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
@@ -536,7 +536,7 @@ for player in ivalues(PlayerNumber) do
 	}
 
 	-- Machine/World Record HighScore
-	af2[#af2+1] = LoadFont("Common Normal")..{
+	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="MachineHighScore",
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
@@ -564,7 +564,7 @@ for player in ivalues(PlayerNumber) do
 	}
 
 	-- Player Profile/GrooveStats Machine Tag
-	af2[#af2+1] = LoadFont("Common Normal")..{
+	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="PlayerHighScoreName",
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
@@ -588,7 +588,7 @@ for player in ivalues(PlayerNumber) do
 	}
 
 	-- Player Profile/GrooveStats HighScore
-	af2[#af2+1] = LoadFont("Common Normal")..{
+	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="PlayerHighScore",
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
@@ -614,7 +614,7 @@ for player in ivalues(PlayerNumber) do
 		end
 	}
 
-	af2[#af2+1] = LoadFont("Common Normal")..{
+	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Loading",
 		Text="Loading ... ",
 		InitCommand=function(self)
@@ -657,7 +657,7 @@ for player in ivalues(PlayerNumber) do
 	if ThemePrefs.Get("MusicWheelGS") == "Pane" then
 		for i=1,3 do
 			-- Rival Machine Tag
-			af2[#af2+1] = LoadFont("Common Normal")..{
+			af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				Name="Rival"..i.."Name",
 				InitCommand=function(self)
 					self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
@@ -673,7 +673,7 @@ for player in ivalues(PlayerNumber) do
 			}
 	
 			-- Rival HighScore
-			af2[#af2+1] = LoadFont("Common Normal")..{
+			af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				Name="Rival"..i.."Score",
 				InitCommand=function(self)
 					self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)

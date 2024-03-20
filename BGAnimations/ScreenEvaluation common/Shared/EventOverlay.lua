@@ -83,7 +83,7 @@ local BannerAndSong = function(x, y, zoom)
 			self:setsize(418, 164)
 		end
 	}
-	af[#af+1] = LoadFont("Common Normal")..{
+	af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="SongName",
 		InitCommand=function(self)
 			local songtitle = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse():GetDisplayFullTitle()) or GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
@@ -723,7 +723,7 @@ local af = Def.ActorFrame{
 	},
 
 	-- Press START to dismiss text.
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Text=THEME:GetString("Common", "PopupDismissText"),
 		InitCommand=function(self) self:xy(_screen.cx, _screen.h-50):zoom(1.1) end
 	}
@@ -877,7 +877,7 @@ for player in ivalues(PlayerNumber) do
 		},
 
 		-- Main Body Text
-		LoadFont("Common Normal").. {
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 			Name="BodyText",
 			Text="",
 			InitCommand=function(self)
@@ -899,7 +899,7 @@ for player in ivalues(PlayerNumber) do
 				self:y(paneHeight/2 - RowHeight/2)
 			end,
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="LeftIcon",
 				Text="&MENULEFT;",
 				InitCommand=function(self)
@@ -912,7 +912,7 @@ for player in ivalues(PlayerNumber) do
 				end,
 			},
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Text",
 				Text="More Information",
 				InitCommand=function(self)
@@ -920,7 +920,7 @@ for player in ivalues(PlayerNumber) do
 				end,
 			},
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="RightIcon",
 				Text="&MENURiGHT;",
 				InitCommand=function(self)
@@ -987,7 +987,7 @@ for player in ivalues(PlayerNumber) do
 				end
 			end,
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Rank",
 				Text="",
 				InitCommand=function(self)
@@ -997,7 +997,7 @@ for player in ivalues(PlayerNumber) do
 				end,
 			},
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Name",
 				Text="",
 				InitCommand=function(self)
@@ -1007,7 +1007,7 @@ for player in ivalues(PlayerNumber) do
 				end,
 			},
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Score",
 				Text="",
 				InitCommand=function(self)
@@ -1016,7 +1016,7 @@ for player in ivalues(PlayerNumber) do
 				end,
 			},
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Date",
 				Text="",
 				InitCommand=function(self)

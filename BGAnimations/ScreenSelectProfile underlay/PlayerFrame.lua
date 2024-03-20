@@ -141,7 +141,7 @@ return Def.ActorFrame{
 		Name='JoinFrame',
 		FrameBackground(Color.Black, player, frame.w*0.9),
 
-		LoadFont("Common Normal")..{
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			InitCommand=function(self)
 				self:diffuseshift():effectcolor1(1,1,1,1):effectcolor2(0.5,0.5,0.5,1)
 				self:diffusealpha(0):maxwidth(180)
@@ -282,7 +282,7 @@ return Def.ActorFrame{
 								self:align(0,0):zoom(0.09):diffusealpha(0.9):xy(13, 8)
 							end
 						},
-						LoadFont("Common Normal")..{
+						LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 							Text=THEME:GetString("ProfileAvatar","NoAvatar"),
 							InitCommand=function(self)
 								self:valign(0):zoom(0.815):diffusealpha(0.9):xy(self:GetWidth()*0.5 + 13, 67)
@@ -317,7 +317,7 @@ return Def.ActorFrame{
 				-- how many songs this player has completed in gameplay
 				-- failing a song will increment this count, but backing out will not
 
-				LoadFont("Common Normal")..{
+				LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 					Name="TotalSongs",
 					InitCommand=function(self)
 						self:align(0,0):xy(info.padding*1.25,0):zoom(0.65):vertspacing(-2)
@@ -373,7 +373,7 @@ return Def.ActorFrame{
 				-- (some of) the modifiers saved to this player's UserPrefs.ini file
 				-- if the list is long, it will line break and eventually be masked
 				-- to prevent it from visually spilling out of the FrameBackground
-				LoadFont("Common Normal")..{
+				LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 					Name="RecentMods",
 					InitCommand=function(self)
 						self:align(0,0):xy(info.padding*1.25,47):zoom(0.625)
@@ -410,7 +410,7 @@ return Def.ActorFrame{
 		end
 	},
 
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name='SelectedProfileText',
 		InitCommand=function(self)
 			self:settext(initial_data and initial_data.displayname or "")

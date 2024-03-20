@@ -45,7 +45,7 @@ return Def.ActorFrame{
 	},
 	
 	-- difficulty text ("beginner" or "expert" or etc.)
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		InitCommand=function(self)
 			self:y(_screen.cy-82)
 			self:x(149 * (player==PLAYER_1 and -1 or 1))
@@ -75,7 +75,7 @@ return Def.ActorFrame{
 		end
 	},
 	
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		InitCommand=function(self)
 			self:y(_screen.cy-82)
 			self:x(149 * (player==PLAYER_1 and -1 or 1))

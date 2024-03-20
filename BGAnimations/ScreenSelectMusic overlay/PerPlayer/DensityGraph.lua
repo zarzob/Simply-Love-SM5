@@ -163,7 +163,7 @@ af2[#af2+1] = NPS_Histogram(player, width, height)..{
 af2[#af2]["CurrentSteps"..pn.."ChangedMessageCommand"] = nil
 
 -- The Peak NPS text
-af2[#af2+1] = LoadFont("Common Normal")..{
+af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Name="NPS",
 	Text="",
 	InitCommand=function(self)
@@ -267,7 +267,7 @@ af2[#af2+1] = Def.ActorFrame{
 		end
 	},
 
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Text="",
 		Name="BreakdownText",
 		InitCommand=function(self)
@@ -370,7 +370,7 @@ local rowSpacing = 17
 
 for i, row in ipairs(layout) do
 	for j, col in pairs(row) do
-		af3[#af3+1] = LoadFont("Common normal")..{
+		af3[#af3+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			Text=col ~= "Total Stream" and "0" or "None (0.0%)",
 			Name=col .. "Value",
 			InitCommand=function(self)
@@ -406,7 +406,7 @@ for i, row in ipairs(layout) do
 			end
 		}
 
-		af3[#af3+1] = LoadFont("Common Normal")..{
+		af3[#af3+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			Text=col,
 			Name=col,
 			InitCommand=function(self)

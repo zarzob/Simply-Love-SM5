@@ -14,7 +14,7 @@ local t = Def.ActorFrame{
 -- -----------------------------------------------------------------------
 
 local function CreditsText( player )
-	return LoadFont("Common Normal") .. {
+	return LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal") .. {
 		InitCommand=function(self)
 			self:visible(false)
 			self:name("Credits" .. PlayerNumberToString(player))
@@ -479,7 +479,7 @@ t[#t+1] = Def.ActorFrame{
 		end
 	end,
 
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="GrooveStats",
 		Text="     GrooveStats",
 		InitCommand=function(self)
@@ -502,7 +502,7 @@ t[#t+1] = Def.ActorFrame{
 		end
 	},
 
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Service1",
 		Text="",
 		InitCommand=function(self)
@@ -513,7 +513,7 @@ t[#t+1] = Def.ActorFrame{
 		ResetCommand=function(self) self:settext("") end
 	},
 
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Service2",
 		Text="",
 		InitCommand=function(self)
@@ -524,7 +524,7 @@ t[#t+1] = Def.ActorFrame{
 		ResetCommand=function(self) self:settext("") end
 	},
 
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Service3",
 		Text="",
 		InitCommand=function(self)
@@ -599,7 +599,7 @@ t[#t+1] = Def.ActorFrame {
 	},
 
 	-- BitmapText for the SystemMessage
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Text",
 		InitCommand=function(self)
 			bmt = self

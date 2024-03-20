@@ -13,7 +13,7 @@ local af = Def.ActorFrame{
   end
 }
 
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
   Text=optionslist,
   InitCommand=function(self)
     self:y(15)
@@ -55,7 +55,7 @@ if tourneyPack
 			},
 			Def.BitmapText {
 				Name="CModWarningText",
-				Font="Common Normal",
+				Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 				Text="CMod On",
 				InitCommand=function(self)
 					self:zoom(1.5)

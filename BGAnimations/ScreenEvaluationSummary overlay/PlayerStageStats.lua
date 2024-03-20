@@ -52,7 +52,7 @@ local af = Def.ActorFrame{
 
 -- profile name (only if there were any profile switches happening this session)
 if displayProfileNames then
-	af[#af+1] = LoadFont("Common Normal")..{
+	af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		InitCommand=function(self) self:zoom(0.5):horizalign(align1):x(col1x):y(-43) end,
 		DrawStageCommand=function(self)
 			if playerStats and profile then
@@ -117,7 +117,7 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 
 -- stepchart style ("single" or "double" or etc.)
 -- difficulty text ("beginner" or "expert" or etc.)
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
 		self:y(17)
 		self:x(col1x + (player==PLAYER_1 and -1 or 1))
@@ -162,7 +162,7 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 }
 
 -- stepartist
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self) self:zoom(0.65):horizalign(align1):x(col1x):y(32) end,
 	DrawStageCommand=function(self)
 		if playerStats and stepartist then

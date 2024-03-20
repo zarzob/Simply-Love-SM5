@@ -189,7 +189,7 @@ if storage.DeathSecond ~= nil then
 				end
 			},
 		},
-		LoadFont("Common Normal")..{
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			InitCommand=function(self)
 				self:zoom(0.5)
 				self:diffuse(Color.Red)

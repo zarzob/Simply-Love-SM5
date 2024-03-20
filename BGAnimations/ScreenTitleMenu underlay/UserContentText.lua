@@ -51,7 +51,7 @@ local text = ("%s%s\n%s\n%s"):format(
 	song_stats
 )
 
-return LoadFont("Common Normal")..{
+return LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Text=text,
 	InitCommand=function(self)
 		self:zoom(0.8):y(-150):diffusealpha(0)

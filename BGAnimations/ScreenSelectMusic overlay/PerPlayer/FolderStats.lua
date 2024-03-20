@@ -159,7 +159,7 @@ af2[#af2+1] = Def.Quad {
 }
 
 -- Folder name
-af2[#af2+1] = LoadFont("Common Normal")..{
+af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Name="Folder",
 	Text="",
 	FolderSummaryCommand=function(self,params)
@@ -176,7 +176,7 @@ af2[#af2+1] = LoadFont("Common Normal")..{
 }
 
 -- Profile name
-af2[#af2+1] = LoadFont("Common Normal")..{
+af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Name="ProfileName",
 	Text="",
 	FolderSummaryCommand=function(self,params)
@@ -191,7 +191,7 @@ af2[#af2+1] = LoadFont("Common Normal")..{
 }
 
 -- Total Song Count
-af2[#af2+1] = LoadFont("Common Normal")..{
+af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Name="TotalSongs",
 	Text="",
 	FolderSummaryCommand=function(self,params)
@@ -208,7 +208,7 @@ af2[#af2+1] = LoadFont("Common Normal")..{
 -- Grades and grade count
 local columnWidth = IsNotWide and 75 or 100
 for i=1,4 do
-	af2[#af2+1] = LoadFont("Common Normal")..{
+	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Grade" ..i,
 		Text="",
 		FolderSummaryCommand=function(self,params)

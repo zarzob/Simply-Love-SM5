@@ -6,7 +6,7 @@ return Def.ActorFrame{
 		self:xy(_screen.cx, 175) 
 	end,
 	-- text for Song Length
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		InitCommand=function(self) 
 			self:zoom(0.6):maxwidth(418/0.875):x(145):horizalign("right") 
 		end,

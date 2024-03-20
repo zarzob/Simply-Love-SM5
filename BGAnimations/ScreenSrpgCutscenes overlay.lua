@@ -175,7 +175,7 @@ local af = Def.ActorFrame{
       self:stop()
     end,
   },
-  LoadFont("Common Normal")..{
+  LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
     Text=THEME:GetString("ScreenEvaluation", "PressStartToContinue"),
     InitCommand=function(self)
       self:xy(_screen.cx, 50):diffusealpha(0)

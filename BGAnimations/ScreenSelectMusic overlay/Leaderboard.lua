@@ -273,7 +273,7 @@ local af = Def.ActorFrame{
 	end,
 
 	Def.Quad{ InitCommand=function(self) self:FullScreen():diffuse(0,0,0,0.875) end },
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Text=THEME:GetString("Common", "PopupDismissText"),
 		InitCommand=function(self) self:xy(_screen.cx, _screen.h-50):zoom(1.1) end
 	},
@@ -492,7 +492,7 @@ for player in ivalues( PlayerNumber ) do
 				self:visible(false)
 			end,
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="LeftIcon",
 				Text="&MENULEFT;",
 				InitCommand=function(self)
@@ -505,7 +505,7 @@ for player in ivalues( PlayerNumber ) do
 				end,
 			},
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Text",
 				Text="More Leaderboards",
 				InitCommand=function(self)
@@ -513,7 +513,7 @@ for player in ivalues( PlayerNumber ) do
 				end,
 			},
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="RightIcon",
 				Text="&MENURiGHT;",
 				InitCommand=function(self)
@@ -546,7 +546,7 @@ for player in ivalues( PlayerNumber ) do
 				self:GetChild("Date"):visible(GAMESTATE:GetNumSidesJoined() == 1)
 			end,
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Rank",
 				Text="",
 				InitCommand=function(self)
@@ -561,7 +561,7 @@ for player in ivalues( PlayerNumber ) do
 				end
 			},
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Name",
 				Text=(i==1 and "Loading" or ""),
 				InitCommand=function(self)
@@ -576,7 +576,7 @@ for player in ivalues( PlayerNumber ) do
 				end
 			},
 
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Score",
 				Text="",
 				InitCommand=function(self)
@@ -589,7 +589,7 @@ for player in ivalues( PlayerNumber ) do
 					self:diffuse(Color.White)
 				end
 			},
-			LoadFont("Common Normal").. {
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Date",
 				Text="",
 				InitCommand=function(self)

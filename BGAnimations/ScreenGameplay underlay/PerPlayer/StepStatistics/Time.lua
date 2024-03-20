@@ -119,7 +119,7 @@ end
 
 -- -----------------------------------------------------------------------
 -- remaining time number
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
 		remBMT = self
 		self:x(0)
@@ -147,7 +147,7 @@ af[#af+1] = LoadFont("Common Normal")..{
 }
 
 -- remaining time label
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Text=("%s "):format( THEME:GetString("ScreenGameplay", "Remaining") ),
 	InitCommand=function(self)
 		self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
@@ -181,7 +181,7 @@ af[#af+1] = LoadFont("Common Normal")..{
 -- -----------------------------------------------------------------------
 -- total time number
 -- song duration in normal gameplay, overall course duration in CourseMode
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
 		self:xy(0,20)
 		self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
@@ -197,7 +197,7 @@ af[#af+1] = LoadFont("Common Normal")..{
 
 -- total time label
 -- "song" in normal gameplay, "course" in CourseMode
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
 		self:zoom(0.833)
 		self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
