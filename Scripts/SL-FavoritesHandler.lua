@@ -12,6 +12,57 @@ getFavoritesPath = function(player)
     return path;
 end
 
+getPackListFiles = function(player)
+	local profileName = PROFILEMAN:GetPlayerName(player) == "" and ToEnumShortString(player) or PROFILEMAN:GetPlayerName(player)
+	local path = PROFILEMAN:GetProfileDir(
+                     ProfileSlot[PlayerNumber:Reverse()[player] + 1])
+	local packLists = findFiles(path,"txt","packs-")
+	
+	return packLists
+end
+
+generatePackList = function(player, listName)
+	local profileName = PROFILEMAN:GetPlayerName(player) == "" and ToEnumShortString(player) or PROFILEMAN:GetPlayerName(player)
+    local path = PROFILEMAN:GetProfileDir(
+                     ProfileSlot[PlayerNumber:Reverse()[player] + 1]) ..
+                     "packs-" .. listName .. ".txt";
+	
+	local packsString = lua.ReadFile(path) or ""
+	
+	if packsString then
+		local strToWrite = ""
+		for line in packsString:gmatch("[^\r\n]+") do
+			local songs = SONGMAN:GetSongsInGroup(line)
+			if #songs > 0 then
+				strToWrite = strToWrite .. ("---%s\n"):format(line)
+				for i=1,#songs do
+					local songDir = songs[i]:GetSongDir()
+					local arr = split("/", songDir)
+					songDir = arr[3] .. "/" .. arr[4]
+					strToWrite = strToWrite .. ("%s\n"):format(songDir)
+				end
+			end
+		end
+		
+		if strToWrite ~= "" then
+			local tempPath = PROFILEMAN:GetProfileDir(
+								ProfileSlot[PlayerNumber:Reverse()[player] + 1]) ..
+								"temp-preferred.txt"
+			local file = RageFileUtil.CreateRageFile()
+			if file:Open(tempPath, 2) then
+				file:Write(strToWrite)
+				file:Close()
+				file:destroy()
+				
+				return tempPath
+			else
+				SM("Could not open '" .. tempPath ..
+					   "' to write current playing info.")
+			end
+		end
+	end
+end
+
 addOrRemoveFavorite = function(player)
     local profileName = PROFILEMAN:GetPlayerName(player) == "" and ToEnumShortString(player) or PROFILEMAN:GetPlayerName(player)
     local path = getFavoritesPath(player)

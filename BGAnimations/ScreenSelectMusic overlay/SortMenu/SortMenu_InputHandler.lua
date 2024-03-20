@@ -118,6 +118,12 @@ local input = function(event)
 					else
 						SM("No Favorites Available")
 					end
+				elseif focus.new_overlay == "CustomPacks" then
+					SM(getPackListFiles(event.PlayerNumber))
+					local getSort = generatePackList(event.PlayerNumber, "test")
+					SONGMAN:SetPreferredSongs(getSort, --[[isAbsolute=]]true);
+					overlay:queuecommand("DirectInputToEngine")
+					SCREENMAN:GetTopScreen():GetMusicWheel():ChangeSort("SortOrder_Preferred")
 				end
 			end
 

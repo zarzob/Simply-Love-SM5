@@ -2,13 +2,15 @@
 
 -- Returns an array of files in <directory> of <extension> (defaulting to ogg)
 -- Created to play random audio files for song pass/fail/pb/wr
-findFiles=function(dir,ext)
+findFiles=function(dir,ext,prefix)
 	local rawFiles = FILEMAN:GetDirListing(dir,false,true)
 	local files = {}
     local ext = ext or "ogg"
 	for file in ivalues(rawFiles) do
 		local filetype = file:match("[^.]+$"):lower()
-		if filetype == ext then table.insert(files,file) end
+		if not prefix or string.find(file, "/" .. prefix) ~= nil then
+			if filetype == ext then table.insert(files,file) end
+		end
 	end
     return files
 end
