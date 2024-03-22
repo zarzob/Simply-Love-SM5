@@ -35,11 +35,27 @@ generatePackList = function(player, listName)
 			local songs = SONGMAN:GetSongsInGroup(line)
 			if #songs > 0 then
 				strToWrite = strToWrite .. ("---%s\n"):format(line)
+				
+				-- compile songs in pack
+				local sortedSongs = {}
 				for i=1,#songs do
+					local entry = {}
 					local songDir = songs[i]:GetSongDir()
 					local arr = split("/", songDir)
 					songDir = arr[3] .. "/" .. arr[4]
-					strToWrite = strToWrite .. ("%s\n"):format(songDir)
+					entry[1] = songs[i]:GetDisplayFullTitle()
+					entry[2] = songDir
+					sortedSongs[#sortedSongs+1] = entry
+				end
+				
+				-- sort alphabetically by song title
+				table.sort(sortedSongs, function(a, b)
+					return a[1]:lower() < b[1]:lower()
+				end)
+				
+				-- write to file
+				for i=1,#sortedSongs do
+					strToWrite = strToWrite .. ("%s\n"):format(sortedSongs[i][2])
 				end
 			end
 		end
