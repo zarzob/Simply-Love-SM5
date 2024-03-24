@@ -513,7 +513,7 @@ CalculateITLSongRanks = function(player)
 
 	for k, v in pairs(pointsSingle) do
 		for key in pairs(songHashes) do
-			if songHashes[key]["points"] == v then
+			if songHashes[key]["stepsType"] == "single" and songHashes[key]["points"] == v then
 				songHashes[key]["rank"] = k
 				break
 			end
@@ -522,7 +522,7 @@ CalculateITLSongRanks = function(player)
 
 	for k, v in pairs(pointsDouble) do
 		for key in pairs(songHashes) do
-			if songHashes[key]["points"] == v then
+			if songHashes[key]["stepsType"] == "double" and songHashes[key]["points"] == v then
 				songHashes[key]["rank"] = k
 				break
 			end
