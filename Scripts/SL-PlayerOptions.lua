@@ -965,6 +965,10 @@ local Overrides = {
 		Values = { "Time", "Measures" }
 	},
 	-------------------------------------------------------------------------
+	RailBalance = {
+		Values = { "No", "What" }
+	},
+	-------------------------------------------------------------------------
 	ExtraAesthetics = {
 		SelectType = "SelectMultiple",
 		Values = { "JudgmentBack", "ErrorMSDisplay", "GhostFault", "BreakUI" }

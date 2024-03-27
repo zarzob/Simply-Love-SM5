@@ -73,6 +73,7 @@ local PlayerDefaults = {
 				ComboColors = "Glow",
 				ComboMode = "FullCombo",
 				TimerMode = "Time",
+				RailBalance = "No",
 
 				NoteFieldOffsetX = 0,
 				NoteFieldOffsetY = 0,
