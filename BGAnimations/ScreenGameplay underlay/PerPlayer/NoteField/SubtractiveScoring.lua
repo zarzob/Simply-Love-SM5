@@ -43,6 +43,9 @@ else
 	font = "_Combo Fonts/" .. font .. "/"
 end
 
+-- Ghost Data Flag
+local ghostdata = true
+
 -- -----------------------------------------------------------------------
 local GetPossibleExScore = function(counts)
 	local best_counts = {}
@@ -105,7 +108,7 @@ bmt.InitCommand=function(self)
 end
 
 bmt.JudgmentMessageCommand=function(self, params)
-	if player == params.Player and not mods.ShowEXScore then
+	if player == params.Player and not mods.ShowEXScore and (mods.TargetScore ~= "Ghost Data" or (mods.TargetScore == "Ghost Data" and not ghostdata)) then
 		tns = ToEnumShortString(params.TapNoteScore)
 		hns = params.HoldNoteScore and ToEnumShortString(params.HoldNoteScore)
 		self:queuecommand("SetScore")
@@ -114,7 +117,7 @@ end
 
 
 bmt.ExCountsChangedMessageCommand=function(self, params)
-	if player == params.Player and mods.ShowEXScore then
+	if player == params.Player and mods.ShowEXScore  and (mods.TargetScore ~= "Ghost Data" or (mods.TargetScore == "Ghost Data" and not ghostdata)) then
 		local possible_ex_score, current_possible = GetPossibleExScore(params.ExCounts)
 
 		local total_possible = params.actual_possible
@@ -276,96 +279,126 @@ bmt.SetScoreCommand=function(self, params)
 		local score = current_possible_dp - actual_dp
 		score = math.floor(((possible_dp - score) / possible_dp) * 10000) / 100
 
-		-- specify percent away from 100%
-		if mods.MiniIndicator == "SubtractiveScoring" then
-			if mods.MiniIndicatorColor == "Default" then
-				if score >= 96 then
-					self:diffuse(color("#21CCE8"))
-				elseif score >= 89 then
-					self:diffuse(color("#e29c18"))
-				elseif score >= 80 then
-					self:diffuse(color("#66c955"))
-				elseif score >= 68 then
-					self:diffuse(color("#b45cff"))
-				else
-					self:diffuse(Color.Red)
-				end				
-			end
-			self:settext( ("-%.2f%%"):format(100-score) )
-		elseif mods.MiniIndicator == "PredictiveScoring" then
-			if mods.MiniIndicatorColor == "Default" then
-				if score >= 96 then
-					self:diffuse(color("#21CCE8"))
-				elseif score >= 89 then
-					self:diffuse(color("#e29c18"))
-				elseif score >= 80 then
-					self:diffuse(color("#66c955"))
-				elseif score >= 68 then
-					self:diffuse(color("#b45cff"))
-				else
-					self:diffuse(Color.Red)
-				end				
-			end
-			self:settext( ("%.2f%%"):format(score) )
-		elseif mods.MiniIndicator == "PaceScoring" then
-			local pace = math.floor((actual_dp / current_possible_dp) * 10000) / 100
-			if mods.MiniIndicatorColor == "Default" then
-				if pace >= 96 then
-					self:diffuse(color("#21CCE8"))
-				elseif pace >= 89 then
-					self:diffuse(color("#e29c18"))
-				elseif pace >= 80 then
-					self:diffuse(color("#66c955"))
-				elseif pace >= 68 then
-					self:diffuse(color("#b45cff"))
-				else
-					self:diffuse(Color.Red)
-				end				
-			end
-			self:settext( ("%.2f%%"):format(pace) )
-		elseif mods.MiniIndicator == "RivalScoring" then
-			local pace = math.floor((actual_dp / possible_dp) * 10000) / 100
-			local rivalPace = math.floor((current_possible_dp / possible_dp) * 10000 * SL[pn].Rival.Score) / 10000
-			if SL[pn].Rival.Score == 0 then
-				rivalPace = math.floor((current_possible_dp / possible_dp) * 10000 * SL[pn].Rival.WRScore) / 10000
-			end
-			if mods.MiniIndicatorColor == "Default" then self:diffuse(1-(pace-rivalPace), 0.5-(rivalPace-pace), 1-(rivalPace-pace), 1) end
-			if pace < rivalPace then
-				self:settext( ("-%.2f%%"):format(rivalPace - pace) )
-			else
-				self:settext( ("+%.2f%%"):format(pace - rivalPace) )
-			end
-		elseif mods.MiniIndicator == "Pacemaker" then
-			local pace = math.floor((actual_dp / possible_dp) * 10000)
-			local rivalPace = math.floor((current_possible_dp / possible_dp) * 1000000 * target_score) / 100
-			if mods.MiniIndicatorColor == "Default" then
-				self:diffuse(1-(pace-rivalPace)/100, 0.5-(rivalPace-pace)/100, 1-(rivalPace-pace)/100, 1)
-			end
-			if pace < rivalPace then
-				self:settext( ("-%.2f%%"):format(math.floor(rivalPace - pace) / 100) )
-			else
-				self:settext( ("+%.2f%%"):format(math.floor(pace - rivalPace) / 100) )
-			end
-		elseif mods.MiniIndicator == "StreamProg" then
-			local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
-			if streamMeasures == 0 then return end
-			local measuresCompleted = SL[pn].MeasuresCompleted
-			local completion = measuresCompleted / streamMeasures
-			if mods.MiniIndicatorColor == "Default" then
-				if completion >= 0.9 then
-					self:diffuse(0, 1, (completion - 0.9) * 10, 1)
-				elseif completion >= 0.5 then
-					self:diffuse((0.9 - completion) * 10 / 4, 1, 0, 1)
-				else
-					self:diffuse(1, (completion - 0.2) * 10 / 3, 0, 1)
+		if mods.TargetScore ~= "Ghost Data" or (mods.TargetScore == "Ghost Data" and not ghostdata) then
+			-- specify percent away from 100%
+			if mods.MiniIndicator == "SubtractiveScoring" then
+				if mods.MiniIndicatorColor == "Default" then
+					if score >= 96 then
+						self:diffuse(color("#21CCE8"))
+					elseif score >= 89 then
+						self:diffuse(color("#e29c18"))
+					elseif score >= 80 then
+						self:diffuse(color("#66c955"))
+					elseif score >= 68 then
+						self:diffuse(color("#b45cff"))
+					else
+						self:diffuse(Color.Red)
+					end				
 				end
+				self:settext( ("-%.2f%%"):format(100-score) )
+			elseif mods.MiniIndicator == "PredictiveScoring" then
+				if mods.MiniIndicatorColor == "Default" then
+					if score >= 96 then
+						self:diffuse(color("#21CCE8"))
+					elseif score >= 89 then
+						self:diffuse(color("#e29c18"))
+					elseif score >= 80 then
+						self:diffuse(color("#66c955"))
+					elseif score >= 68 then
+						self:diffuse(color("#b45cff"))
+					else
+						self:diffuse(Color.Red)
+					end				
+				end
+				self:settext( ("%.2f%%"):format(score) )
+			elseif mods.MiniIndicator == "PaceScoring" then
+				local pace = math.floor((actual_dp / current_possible_dp) * 10000) / 100
+				if mods.MiniIndicatorColor == "Default" then
+					if pace >= 96 then
+						self:diffuse(color("#21CCE8"))
+					elseif pace >= 89 then
+						self:diffuse(color("#e29c18"))
+					elseif pace >= 80 then
+						self:diffuse(color("#66c955"))
+					elseif pace >= 68 then
+						self:diffuse(color("#b45cff"))
+					else
+						self:diffuse(Color.Red)
+					end				
+				end
+				self:settext( ("%.2f%%"):format(pace) )
+			elseif mods.MiniIndicator == "RivalScoring" then
+				local pace = math.floor((actual_dp / possible_dp) * 10000) / 100
+				local rivalPace = math.floor((current_possible_dp / possible_dp) * 10000 * SL[pn].Rival.Score) / 10000
+				if SL[pn].Rival.Score == 0 then
+					rivalPace = math.floor((current_possible_dp / possible_dp) * 10000 * SL[pn].Rival.WRScore) / 10000
+				end
+				if mods.MiniIndicatorColor == "Default" then self:diffuse(1-(pace-rivalPace), 0.5-(rivalPace-pace), 1-(rivalPace-pace), 1) end
+				if pace < rivalPace then
+					self:settext( ("-%.2f%%"):format(rivalPace - pace) )
+				else
+					self:settext( ("+%.2f%%"):format(pace - rivalPace) )
+				end
+			elseif mods.MiniIndicator == "Pacemaker" then
+				local pace = math.floor((actual_dp / possible_dp) * 10000)
+				local rivalPace = math.floor((current_possible_dp / possible_dp) * 1000000 * target_score) / 100
+				if mods.MiniIndicatorColor == "Default" then
+					self:diffuse(1-(pace-rivalPace)/100, 0.5-(rivalPace-pace)/100, 1-(rivalPace-pace)/100, 1)
+				end
+				if pace < rivalPace then
+					self:settext( ("-%.2f%%"):format(math.floor(rivalPace - pace) / 100) )
+				else
+					self:settext( ("+%.2f%%"):format(math.floor(pace - rivalPace) / 100) )
+				end
+			elseif mods.MiniIndicator == "StreamProg" then
+				local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
+				if streamMeasures == 0 then return end
+				local measuresCompleted = SL[pn].MeasuresCompleted
+				local completion = measuresCompleted / streamMeasures
+				if mods.MiniIndicatorColor == "Default" then
+					if completion >= 0.9 then
+						self:diffuse(0, 1, (completion - 0.9) * 10, 1)
+					elseif completion >= 0.5 then
+						self:diffuse((0.9 - completion) * 10 / 4, 1, 0, 1)
+					else
+						self:diffuse(1, (completion - 0.2) * 10 / 3, 0, 1)
+					end
+				end
+				self:settext( ("%.2f%%"):format(completion * 100) )
 			end
-			self:settext( ("%.2f%%"):format(completion * 100) )
 		end
-		
 		-- Dim mini-indicator if target score can no longer be met.
 		if ((current_possible_dp - actual_dp) > (possible_dp * (1 - target_score))) and mods.ActionOnMissedTarget == "DimSScore" then self:diffusealpha(0.65) end
 	end
 end
+
+bmt.GhostDataUpdatedMessageCommand=function(self,params)
+	if params.player == player then
+		
+		-- Don't need mods check as it won't broadcast this message if ghost data is not enabled
+		--display = math.max(0, math.floor((params.current-params.target)/params.possible * 10000) / 100)
+		display = math.floor((params.current-params.target)/params.possible * 10000) / 100
+		
+		--SM(display)
+		if display > 0 then	
+			self:settext("+" .. ("%.2f%%"):format(display))
+			self:diffuse(Color.Green)
+		else
+			self:settext(("%.2f%%"):format(display))
+			if display == 0 then		
+				self:diffuse(Color.White)
+			else 
+				self:diffuse(Color.Red)
+			end
+		end
+	end
+end
+
+bmt.NoGhostDataMessageCommand=function(self,params)
+	if params.player == player then
+		ghostdata = false
+	end
+end
+
 
 return bmt
