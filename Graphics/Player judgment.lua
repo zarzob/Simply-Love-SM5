@@ -128,76 +128,6 @@ return Def.ActorFrame{
 		if not frame then return end
 
 		if not mods.HideEarlyDecentWayOffFlash then
-			SCREENMAN:GetTopScreen()
-							 :GetChild("Player"..pn)
-							 :GetChild("NoteField")
-							 :did_tap_note(param.Column + 1, param.TapNoteScore, --[[bright]] false)
-		end
-
-		if not mods.HideEarlyDecentWayOffJudgments then
-			-- If the judgment font contains a graphic for the additional white fantastic window...
-			if sprite:GetNumStates() == 7 or sprite:GetNumStates() == 14 then
-				if ToEnumShortString(param.TapNoteScore) == "W1" then
-					if mods.ShowFaPlusWindow then
-						-- If this W1 judgment fell outside of the FA+ window, show the white window
-						--
-						-- Treat Autoplay specially. The TNS might be out of the range, but
-						-- it's a nicer experience to always just display the top window graphic regardless.
-						-- This technically causes a discrepency on the histogram, but it's likely okay.
-						if not IsW0Judgment(param, player) and not IsAutoplay(player) then
-							frame = 1
-						end
-					end
-					-- We don't need to adjust the top window otherwise.
-				else
-					-- Everything outside of W1 needs to be shifted down a row if not in FA+ mode.
-					-- Some people might be using 2x7s in FA+ mode (by copying ITG graphics to FA+).
-					-- Don't need to shift in that case.
-					if SL.Global.GameMode ~= "FA+" then
-						frame = frame + 1
-					end
-				end
-			end
-
-			self:playcommand("Reset")
-
-			-- most judgment sprite sheets have 12 or 14 frames; 6/7 for early judgments, 6/7 for late judgments
-			-- some (the original 3.9 judgment sprite sheet for example) do not visibly distinguish
-			-- early/late judgments, and thus only have 6/7 frames
-			if sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 then
-				frame = frame * 2
-			end
-			
-			if SL[ToEnumShortString(player)].ActiveModifiers.JudgmentTilt then
-				-- How much to rotate.
-				-- We cap it at 50ms (15px) since anything after likely to be too distracting.
-				local offset = math.min(math.abs(param.TapNoteOffset), 0.050) * 300
-				-- Which direction to rotate.
-				local direction = param.TapNoteOffset < 0 and -1 or 1
-				sprite:rotationz(direction * offset)
-				spriteGhost:rotationz(direction * offset)
-			end
-			
-			if mods.GhostFault then
-				self:playcommand("ResetFault")
-				spriteGhost:visible(true):setstate(frame)
-				spriteGhost:diffusealpha(0.5)
-				spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-			else
-				sprite:visible(true):setstate(frame)
-
-				-- this should match the custom JudgmentTween() from SL for 3.95
-				sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-			end
-		end
-	end,
-	EarlyHitMessageCommand=function(self, param)
-		if param.Player ~= player then return end
-
-		local frame = TNSFrames[ param.TapNoteScore ]
-		if not frame then return end
-
-		if not mods.HideEarlyDecentWayOffFlash then
 			GetPlayerAF(pn):GetChild("NoteField"):did_tap_note(param.Column + 1, param.TapNoteScore, --[[bright]] false)
 		end
 
@@ -240,7 +170,9 @@ return Def.ActorFrame{
 			if SL[ToEnumShortString(player)].ActiveModifiers.JudgmentTilt then
 				-- How much to rotate.
 				-- We cap it at 50ms (15px) since anything after likely to be too distracting.
-				local offset = math.min(math.abs(param.TapNoteOffset), 0.050) * 300
+				local extraOffset = (math.abs(param.TapNoteOffset) > capTimingOffset and math.abs(param.TapNoteOffset) - capTimingOffset or 0) * 300 * mods.TiltMultiplier
+				local offset = math.min(math.abs(param.TapNoteOffset), capTimingOffset) * 300 * mods.TiltMultiplier
+				offset = math.min(offset + math.sqrt(extraOffset), 180)
 				-- Which direction to rotate.
 				local direction = param.TapNoteOffset < 0 and -1 or 1
 				sprite:rotationz(direction * offset)
