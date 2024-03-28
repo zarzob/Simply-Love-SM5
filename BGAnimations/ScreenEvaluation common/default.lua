@@ -85,6 +85,9 @@ for player in ivalues(Players) do
 	-- judgment scatterplot, modifier list, disqualified text
 	t[#t+1] = LoadActor("./PerPlayer/Lower/default.lua", player)
 
+	-- Save Ghost Data if player has improved their score
+	t[#t+1] = LoadActor("./PerPlayer/SaveGhostData.lua", player)
+
 	-- Generate the .itl file for the player.
 	-- When the event isn't active, this actor is nil.
 	t[#t+1] = LoadActor("./PerPlayer/ItlFile.lua", player)
@@ -92,6 +95,7 @@ for player in ivalues(Players) do
 	-- Generate the .rpg file for the player to keep track of best rate mod on the songwheel
 	-- When the event isn't active, this actor is nil.
 	t[#t+1] = LoadActor("./PerPlayer/RpgRatemod.lua", player)
+	
 	
 end
 
