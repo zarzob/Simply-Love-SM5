@@ -40,6 +40,10 @@ if SL.Global.GameMode == "FA+" then
 	solidColors.FullComboW4 = color("#66c955")
 end
 
+-- ghetto quint support
+colors.FullComboW0 = {color("#735E7B"), color("#71187B")} -- magenta combo
+solidColors.FullComboW0 = color("#71187B") -- magenta
+local quintin_tarandimo = mods.ShowFaPlusWindow and true or false -- do we want to show quint combo when the user doesnt have FA+ window enabled?
 
 local ShowComboAt = THEME:GetMetric("Combo", "ShowComboAt")
 
@@ -98,6 +102,10 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 				worst_judgment = 1
 			end
 		end
+
+		-- ghetto quint support
+		if not IsW0Judgment(params, player) then quintin_tarandimo = false end
+
 	end,
 	ColorCommand=function(self, params)
 		-- Though this if/else chain may seem strange (why not reduce it to a single table for quick lookup?)
@@ -142,7 +150,16 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 				end
 			elseif mods.ComboColors ~= "Rainbow" and mods.ComboColors ~= "RainbowScroll" then
 				self:diffuseshift():effectperiod(0.8)
-				if params.FullComboW1 then
+
+				-- ghetto quint support
+				if params.FullComboW1 and quintin_tarandimo then
+					if mods.ComboColors == "Glow" then
+						self:effectcolor1(colors.FullComboW0[1]):effectcolor2(colors.FullComboW0[2])
+					elseif mods.ComboColors == "Solid" then
+						self:stopeffect():diffuse(solidColors.FullComboW0)
+					end
+
+				elseif params.FullComboW1 then
 					if mods.ComboColors == "Glow" then
 						self:effectcolor1(colors.FullComboW1[1]):effectcolor2(colors.FullComboW1[2])
 					elseif mods.ComboColors == "Solid" then
