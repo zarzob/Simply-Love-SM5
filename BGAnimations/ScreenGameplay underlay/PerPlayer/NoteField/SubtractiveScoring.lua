@@ -374,12 +374,14 @@ end
 
 bmt.GhostDataUpdatedMessageCommand=function(self,params)
 	if params.player == player then
-		
 		-- Don't need mods check as it won't broadcast this message if ghost data is not enabled
-		--display = math.max(0, math.floor((params.current-params.target)/params.possible * 10000) / 100)
-		display = math.floor((params.current-params.target)/params.possible * 10000) / 100
+
+		-- Since there is rounding done for score, calculate each score from dance points independently
+		-- then subtract from each other
+		local score_target = math.floor(params.target/params.possible*10000)/100
+		local score_current = math.floor(params.current/params.possible*10000)/100
+		local display = score_current-score_target
 		
-		--SM(display)
 		if display > 0 then	
 			self:settext("+" .. ("%.2f%%"):format(display))
 			self:diffuse(Color.Green)
