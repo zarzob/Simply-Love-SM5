@@ -4,6 +4,7 @@ local profile_data = args.ProfileData
 local avatars = args.Avatars
 local scroller = args.Scroller
 local scroller_item_mt = LoadActor("./ScrollerItemMT.lua")
+local pn = ToEnumShortString(player)
 
 -- -----------------------------------------------------------------------
 -- TODO: start over from scratch so that these numbers make sense in SL
@@ -50,6 +51,20 @@ if SL.Global.FastProfileSwitchInProgress then
 
 	-- If we haven't found a matching profile looking in profile_data, this has to
 	-- be [GUEST]
+	pos = pos or 0
+
+	initial_data = profile_data[pos]
+elseif PREFSMAN:GetPreference("DefaultLocalProfileID"..pn) ~= "" then
+	local default_profile_id = PREFSMAN:GetPreference("DefaultLocalProfileID"..pn)
+	local profile_dir = PROFILEMAN:LocalProfileIDToDir(default_profile_id)
+	
+	for profile in ivalues(profile_data) do
+		if profile.dir == profile_dir then
+			pos = profile.index
+			break
+		end
+	end
+	
 	pos = pos or 0
 
 	initial_data = profile_data[pos]
