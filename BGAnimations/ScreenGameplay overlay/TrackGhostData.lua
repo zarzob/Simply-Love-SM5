@@ -51,7 +51,7 @@ local ghost
 local ghostdata = true
 
 local possible = stats:GetPossibleDancePoints()
-
+local a, b, possibleex
 
 return Def.Actor{
 	OnCommand=function(self)
@@ -144,7 +144,7 @@ return Def.Actor{
 		if mods.TargetScore == "Ghost Data" and ghostdata then
 			if mods.ShowEXScore then
 				currentScore = currentdp_ex
-				TargetScore = ghost[#ex]				
+				TargetScore = ghost[#ex]
 				possible = possibleex
 			else 
 				currentScore = currentdp_itg
