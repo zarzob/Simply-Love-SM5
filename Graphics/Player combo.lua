@@ -41,8 +41,8 @@ if SL.Global.GameMode == "FA+" then
 end
 
 -- ghetto quint support
-colors.FullComboW0 = {color("#735E7B"), color("#71187B")} -- magenta combo
-solidColors.FullComboW0 = color("#71187B") -- magenta
+colors.FullComboW0 = {color("#F7C0FE"), color("#E928FF")} -- magenta combo
+solidColors.FullComboW0 = color("#E928FF") -- magenta
 local quintin_tarandimo = mods.ShowFaPlusWindow and true or false -- do we want to show quint combo when the user doesnt have FA+ window enabled?
 
 local ShowComboAt = THEME:GetMetric("Combo", "ShowComboAt")
