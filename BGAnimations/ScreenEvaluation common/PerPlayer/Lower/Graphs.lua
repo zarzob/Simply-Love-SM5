@@ -52,6 +52,8 @@ local af = Def.ActorFrame{
 			self:zoomto(GraphWidth, GraphHeight):diffuse(color("#101519")):vertalign(top)
 			if ThemePrefs.Get("VisualStyle") == "Technique" then
 				self:diffusealpha(0.95)
+			elseif ThemePrefs.Get("VisualStyle") == "Transistor" then
+				self:diffusealpha(0.75)
 			end
 		end
 	},

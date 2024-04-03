@@ -235,7 +235,7 @@ if iscourse then
 			InitCommand=function(self)
 				self:x(startX):zoomto(endX, GraphHeight):diffuse(LightenColor(LightenColor(color("#101519")))):diffusealpha(0.5):vertalign(top):horizalign(left)
 				if i%2 == 0 then self:visible(false) end
-				if ThemePrefs.Get("VisualStyle") == "Technique" then
+				if ThemePrefs.Get("VisualStyle") == "Technique" or ThemePrefs.Get("VisualStyle") == "Transistor" then
 					self:diffusealpha(0.75)
 				end
 			end

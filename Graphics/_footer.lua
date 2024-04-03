@@ -12,6 +12,8 @@ return Def.Quad{
 			self:diffuse(dark)
 		elseif ThemePrefs.Get("VisualStyle") == "Technique" then
 			self:diffusealpha(0)
+		elseif ThemePrefs.Get("VisualStyle") == "Transistor"  then
+			self:diffuse(GetCurrentColor(true)):diffusealpha(0.5)
 		else
 			self:diffuse(light)
 		end
@@ -31,6 +33,9 @@ return Def.Quad{
 				self:diffusealpha(0)
 			end
 		end
+		if ThemePrefs.Get("VisualStyle") == "Transistor"  then
+			self:diffuse(GetCurrentColor(true)):diffusealpha(0.5)
+		end
 	end,
 	ColorSelectedMessageCommand=function(self)
 		if ThemePrefs.Get("VisualStyle") == "SRPG7" then
@@ -40,6 +45,9 @@ return Def.Quad{
 	VisualStyleSelectedMessageCommand=function(self)
 		if ThemePrefs.Get("VisualStyle") == "Technique" then
 			self:diffusealpha(0)
+		end
+		if ThemePrefs.Get("VisualStyle") == "Transistor"  then
+			self:diffuse(GetCurrentColor(true)):diffusealpha(0.5)
 		end
 	end,
 }

@@ -103,6 +103,8 @@ af[#af+1] = Def.Quad{
 		end
 		if ThemePrefs.Get("VisualStyle") == "Technique" then
 			self:diffusealpha(0.5)
+		elseif ThemePrefs.Get("VisualStyle") == "Transistor"  then
+			self:diffusealpha(0.7)
 		end
 	end
 }
@@ -350,7 +352,7 @@ af2[#af2+1] = Def.ActorFrame{
 	Def.Quad{
 		InitCommand=function(self)
 			self:addy(-4):diffuse(color("#1e282f")):zoomto(width, height-10)
-			if ThemePrefs.Get("VisualStyle") == "Technique" then
+			if ThemePrefs.Get("VisualStyle") == "Technique" or ThemePrefs.Get("VisualStyle") == "Transistor" then
 				self:diffusealpha(0.5)
 			end
 		end,

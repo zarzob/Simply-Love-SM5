@@ -128,6 +128,8 @@ pane[#pane+1] = Def.BitmapText{
 			:horizalign(left)
 		if ThemePrefs.Get("VisualStyle") == "Technique" then
 			self:diffusealpha(0.5)
+		elseif ThemePrefs.Get("VisualStyle") == "Transistor"  then
+			self:diffusealpha(0.7)
 		end
 	end,
 }
@@ -154,6 +156,8 @@ pane[#pane+1] = Def.Quad{
 			:diffuse(color("#101519"))
 		if ThemePrefs.Get("VisualStyle") == "Technique" then
 			self:diffusealpha(0.5)
+		elseif ThemePrefs.Get("VisualStyle") == "Transistor"  then
+			self:diffusealpha(0.7)
 		end
 	end,
 }
@@ -233,6 +237,8 @@ pane[#pane+1] = Def.Quad{
 			:diffuse(color("#101519"))
 		if ThemePrefs.Get("VisualStyle") == "Technique" then
 			self:diffusealpha(0.5)
+		elseif ThemePrefs.Get("VisualStyle") == "Transistor"  then
+			self:diffusealpha(0.7)
 		end
 	end,
 }

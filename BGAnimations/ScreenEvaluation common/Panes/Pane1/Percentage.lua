@@ -23,6 +23,8 @@ return Def.ActorFrame{
 			end
 			if ThemePrefs.Get("VisualStyle") == "Technique" then
 				self:diffusealpha(0.5)
+			elseif ThemePrefs.Get("VisualStyle") == "Transistor"  then
+				self:diffusealpha(0.7)
 			end
 		end
 	},

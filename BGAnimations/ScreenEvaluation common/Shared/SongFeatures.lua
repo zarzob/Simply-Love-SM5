@@ -10,6 +10,8 @@ return Def.ActorFrame{
 			self:diffuse( color("#1E282F") ):setsize(418,16):zoom(0.7)
 			if ThemePrefs.Get("VisualStyle") == "Technique" then
 				self:diffusealpha(0.5)
+			elseif ThemePrefs.Get("VisualStyle") == "Transistor"  then
+				self:diffusealpha(0.7)
 			end
 		end,
 	},

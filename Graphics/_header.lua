@@ -14,6 +14,8 @@ return Def.ActorFrame{
 				self:diffuse(dark)
 			elseif ThemePrefs.Get("VisualStyle") == "Technique" then
 				self:diffusealpha(0)
+			elseif ThemePrefs.Get("VisualStyle") == "Transistor"  then
+				self:diffuse(GetCurrentColor(true)):diffusealpha(0.5)
 			else
 				self:diffuse(light)
 			end
@@ -26,12 +28,15 @@ return Def.ActorFrame{
 			if ThemePrefs.Get("VisualStyle") == "SRPG7" then
 				self:diffuse(GetCurrentColor(true))
 			end
-			if ThemePrefs.Get("VisualStyle") == "Technique" then
+			if ThemePrefs.Get("VisualStyle") == "Technique" or ThemePrefs.Get("VisualStyle") == "Transistor" then
 				if topscreen == "ScreenSelectMusic" and not ThemePrefs.Get("RainbowMode") then
 					self:diffuse(0, 0, 0, 0.5)
 				else
 					self:diffusealpha(0)
 				end
+			end
+			if ThemePrefs.Get("VisualStyle") == "Transistor"  then
+				self:diffuse(GetCurrentColor(true)):diffusealpha(0.5)
 			end
 			self:visible(topscreen ~= "ScreenCRTTestPatterns")
 		end,
@@ -43,6 +48,9 @@ return Def.ActorFrame{
 		VisualStyleSelectedMessageCommand=function(self)
 			if ThemePrefs.Get("VisualStyle") == "Technique" then
 				self:diffusealpha(0)
+			end
+			if ThemePrefs.Get("VisualStyle") == "Transistor"  then
+				self:diffuse(GetCurrentColor(true)):diffusealpha(0.5)
 			end
 		end,
 	},
