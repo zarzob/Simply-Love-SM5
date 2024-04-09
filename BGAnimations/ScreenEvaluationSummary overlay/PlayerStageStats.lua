@@ -69,13 +69,6 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 	InitCommand=function(self) self:zoom(0.5):horizalign(align1):x(col1x):y(-24) end,
 	DrawStageCommand=function(self)
 		if playerStats and score then
-		
-			if playerStats.faplus then
-				self:zoom(0.48):y(-32)
-			else
-				self:zoom(0.5):y(-24)
-			end
-
 			-- trim off the % symbol
 			local score = string.sub(FormatPercentScore(score),1,-2)
 
@@ -90,6 +83,17 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 		else
 			self:settext("")
 		end
+		
+		if playerStats and playerStats.showex then
+			self:zoom(0.38):horizalign(align1):x(col1x):y(-12)
+		else
+			self:horizalign(align1):x(col1x)
+			if playerStats and playerStats.faplus then
+				self:zoom(0.48):y(-32)
+			else
+				self:zoom(0.5):y(-24)
+			end
+		end
 	end
 }
 
@@ -101,6 +105,12 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 			self:settext(("%.2f"):format(playerStats.exscore)):diffuse(Colors[1])
 		else
 			self:settext("")
+		end
+		
+		if playerStats and playerStats.showex then
+			self:zoom(0.48):y(-32):horizalign(align1):x(col1x)
+		else
+			self:zoom(0.38):horizalign(align1):x(col1x):y(-12)
 		end
 	end
 }
@@ -197,7 +207,9 @@ for i=1,#TNSTypes do
 					self:zoom(0.28):horizalign(align2):x(col2x):y(i*13 - 58):diffuse( Colors[i] )
 				else
 					self:zoom(0.28):horizalign(align2):x(col2x):y(i*13 - 63):diffuse( Colors[i] )
-					if i == 2 then
+					if i == 1 then
+						self:diffusealpha(0)
+					elseif i == 2 then
 						self:diffuse( Colors[1] )
 					end
 				end
