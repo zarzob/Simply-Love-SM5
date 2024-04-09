@@ -47,7 +47,7 @@ return Def.Actor{
 			local counts = GetExJudgmentCounts(player)
 			storage.judgments.W0 = counts.W0
 			storage.judgments.W1 = counts.W1
-			storage.showex = true
+			storage.showex = mods.ShowEXScore
 		else
 			storage.showex = false
 		end
