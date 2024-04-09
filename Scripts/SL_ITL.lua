@@ -185,6 +185,9 @@ ReadItlFile = function(player)
 	--          "Rolls" -> total number of rolls held
 	--     "totalRolls" -> total number of rolls in the chart
 	--  },
+	if itlData["fixedEx"] == nil then
+		itlData["fixedEx"] = true
+	end
 	if itlData["fixedEx2024"] == nil then
 		local hashMap = itlData["hashMap"]
 		local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss" }
@@ -268,15 +271,17 @@ ReadItlFile = function(player)
 		for path, hash in pairs(pathMap) do
 			if hashMap[hash] ~= nil then
 				local songPath = path:gsub("/Songs","")		
-				local song = SONGMAN:FindSong(songPath)	
-				local allSteps = song:GetAllSteps()
-				-- Songs with more than one chart will be from the original pack i.e. not ITL.
-				-- These ones could have both singles and doubles, so it won't be accurate
-				if #allSteps == 1 then				
-					local steps = allSteps[1]
-					local stepsType = steps:GetStepsType() == "StepsType_Dance_Single" and "single" or "double"
-					hashMap[hash]["stepsType"] = stepsType		
-				end	
+				local song = SONGMAN:FindSong(songPath)
+				if song ~= nil then
+					local allSteps = song:GetAllSteps()
+					-- Songs with more than one chart will be from the original pack i.e. not ITL.
+					-- These ones could have both singles and doubles, so it won't be accurate
+					if #allSteps == 1 then				
+						local steps = allSteps[1]
+						local stepsType = steps:GetStepsType() == "StepsType_Dance_Single" and "single" or "double"
+						hashMap[hash]["stepsType"] = stepsType		
+					end	
+				end
 			end
 		end
 		itlData["fixedStepsType"] = true
