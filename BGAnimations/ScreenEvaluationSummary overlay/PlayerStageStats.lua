@@ -70,8 +70,15 @@ af[#af+1] = LoadFont("Common Bold")..{
 	DrawStageCommand=function(self)
 		if playerStats and score then
 		
-			if playerStats.judgments and playerStats.judgments.W0 then
-				self:zoom(0.48):y(-32)
+			if playerStats and playerStats.showex then
+				self:zoom(0.38):horizalign(align1):x(col1x):y(-12)
+			else
+				self:horizalign(align1):x(col1x)
+				if playerStats and playerStats.judgments.W0 then
+					self:zoom(0.48):y(-32)
+				else
+					self:zoom(0.5):y(-24)
+				end
 			end
 
 			-- trim off the % symbol
@@ -99,6 +106,12 @@ af[#af+1] = LoadFont("Common Bold")..{
 			self:settext(("%.2f"):format(playerStats.exscore)):diffuse(Colors[1])
 		else
 			self:settext("")
+		end
+		
+		if playerStats and playerStats.showex then
+			self:zoom(0.48):y(-32):horizalign(align1):x(col1x)
+		else
+			self:zoom(0.38):horizalign(align1):x(col1x):y(-12)
 		end
 	end
 }
@@ -202,7 +215,7 @@ for i=1,#TNSTypes do
 				local val = playerStats.judgments[TNSTypes[i]]
 				if val then self:settext(val) end
 
-				self:visible( (i == 1 and playerStats.timingwindows[1]) or playerStats.timingwindows[i-1] or i==#TNSTypes )
+				self:visible( (i == 1 and playerStats.judgments.W0 ~= nil) or playerStats.timingwindows[i-1] or i==#TNSTypes )
 			else
 				self:settext("")
 			end
