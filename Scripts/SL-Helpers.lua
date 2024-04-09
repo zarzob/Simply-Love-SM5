@@ -656,7 +656,7 @@ IsW010Judgment = function(params, player)
 		local prefs = SL.Preferences["FA+"]
 		local scale = PREFSMAN:GetPreference("TimingWindowScale")
 		local pn = ToEnumShortString(player)
-		local W0 = 0.0085 * scale + prefs["TimingWindowAdd"]
+		local W0 = 0.0105 * scale + prefs["TimingWindowAdd"]
 
 		local offset = math.abs(params.TapNoteOffset)
 		if offset <= W0 then
