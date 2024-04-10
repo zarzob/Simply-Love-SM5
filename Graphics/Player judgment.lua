@@ -224,7 +224,7 @@ return Def.ActorFrame{
 		if sprite:GetNumStates() == 7 or sprite:GetNumStates() == 14 then
 			if tns == "W1" then
 				if mods.ShowFaPlusWindow then
-					local is_W0 = IsW010Judgment(param, player) or (not mods.SmallerWhite and IsW0Judgment(param, player))
+					local is_W0 = IsW010Judgment(param, player) or ((not mods.SmallerWhite or mods.SplitWhites) and IsW0Judgment(param, player))
 					-- If this W1 judgment fell outside of the FA+ window, show the white window
 					--
 					-- Treat Autoplay specially. The TNS might be out of the range, but
@@ -315,37 +315,23 @@ return Def.ActorFrame{
 		-- this should match the custom JudgmentTween() from SL for 3.95
 		sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
 		
-		if ((SL.Global.GameMode == "ITG" and tns == "W4") or tns == "W5") and mods.GhostFault then
+		if mods.SplitWhites and mods.ShowFaPlusWindow and tns == "W1" and not IsW010Judgment(param, player) and not IsAutoplay(player) then
+			local splitFrame = 1
+			if spriteGhost:GetNumStates() == 12 or spriteGhost:GetNumStates() == 14 then
+				splitFrame = splitFrame * 2
+				if not param.Early then splitFrame = splitFrame + 1 end
+			end
+			spriteGhost:visible(true):setstate(splitFrame):diffusealpha(0.5):finishtweening()
+			spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		elseif tns == "W4" or tns == "W5" and mods.GhostFault then
 			self:playcommand("ResetFault")
 			spriteGhost:visible(true):setstate(frame)
 			spriteGhost:diffusealpha(0.5)
-			spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):linear(0.5):diffusealpha(0)
+		else
+			spriteGhost:visible(false):finishtweening()
 		end
 	end,
-	
-	Def.Sprite{
-		Name="GhostJudgment",
-		InitCommand=function(self)
-			-- animate(false) is needed so that this Sprite does not automatically
-			-- animate its way through all available frames; we want to control which
-			-- frame displays based on what judgment the player earns
-			self:animate(false):visible(false)
-
-			local mini = mods.Mini:gsub("%%","") / 100
-			self:addx((mods.NoteFieldOffsetX * (1 + mini)) * 2)
-			self:addy((mods.NoteFieldOffsetY * (1 + mini)) * 2)
-			
-			-- if we are on ScreenEdit, judgment graphic is always "Love"
-			-- because ScreenEdit is a mess and not worth bothering with.
-			if string.match(tostring(SCREENMAN:GetTopScreen()), "ScreenEdit") then
-				self:Load( THEME:GetPathG("", "_judgments/Love") )
-
-			else
-				self:Load( THEME:GetPathG("", "_judgments/" .. file_to_load) )
-			end
-		end,
-		ResetFaultCommand=function(self) self:finishtweening():stopeffect():visible(false) end
-	},
 
 	Def.Sprite{
 		Name="JudgmentWithOffsets",
@@ -404,4 +390,28 @@ return Def.ActorFrame{
 			end
         end
     },
+	
+	Def.Sprite{
+		Name="GhostJudgment",
+		InitCommand=function(self)
+			-- animate(false) is needed so that this Sprite does not automatically
+			-- animate its way through all available frames; we want to control which
+			-- frame displays based on what judgment the player earns
+			self:animate(false):visible(false)
+
+			local mini = mods.Mini:gsub("%%","") / 100
+			self:addx((mods.NoteFieldOffsetX * (1 + mini)) * 2)
+			self:addy((mods.NoteFieldOffsetY * (1 + mini)) * 2)
+			
+			-- if we are on ScreenEdit, judgment graphic is always "Love"
+			-- because ScreenEdit is a mess and not worth bothering with.
+			if string.match(tostring(SCREENMAN:GetTopScreen()), "ScreenEdit") then
+				self:Load( THEME:GetPathG("", "_judgments/Love") )
+
+			else
+				self:Load( THEME:GetPathG("", "_judgments/" .. file_to_load) )
+			end
+		end,
+		ResetFaultCommand=function(self) self:finishtweening():stopeffect():visible(false) end
+	},
 }

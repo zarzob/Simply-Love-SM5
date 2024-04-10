@@ -113,6 +113,7 @@ local permitted_profile_settings = {
 	JudgmentBack         = "boolean",
 	ErrorMSDisplay       = "boolean",
 	GhostFault           = "boolean",
+	SplitWhites          = "boolean",
 	BreakUI              = "boolean",
 
 	GrowCombo			 = "boolean",
