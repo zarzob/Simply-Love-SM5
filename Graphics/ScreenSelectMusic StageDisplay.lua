@@ -25,13 +25,8 @@ t[#t+1] = Def.ActorFrame {
 			elseif GAMESTATE:IsEventMode() then
 				self:settextf("Stage %s", curStageIndex);
 			else
-				if THEME:GetMetric(curScreen,"StageDisplayUseShortString") then
-				  self:settextf("%s", ToEnumShortString(curStage));
-				  self:zoom(0.75);
-				else
-				  self:settextf("%s Stage", ToEnumShortString(curStage));
-				  self:zoom(1);
-				end;
+				self:settextf("%s Stage", ToEnumShortString(curStage));
+				self:zoom(1);
 			end;
 			-- StepMania is being stupid so we have to do this here;
 			self:diffuse(StageToColor(curStage));
