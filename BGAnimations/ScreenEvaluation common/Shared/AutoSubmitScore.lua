@@ -285,6 +285,8 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								ParseGroovestatsDate(gsEntry["date"]),
 								entry
 							)
+							-- ITL leaderboard is EX scores, so highlight them blue.
+							entry:GetChild("Score"):diffuse(SL.JudgmentColors["FA+"][1])
 							if gsEntry["isRival"] then
 								entry:diffuse(color("#BD94FF"))
 								itlRival = itlRival + 1
