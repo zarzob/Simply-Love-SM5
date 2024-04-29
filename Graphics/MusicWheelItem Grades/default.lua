@@ -26,12 +26,13 @@ local function GetLamp(song)
 	if not GAMESTATE:GetCurrentSteps(pn) then return nil end
 	
 	local diff = GAMESTATE:GetCurrentSteps(pn):GetDifficulty()
+	local stepstype = GAMESTATE:GetCurrentStyle():GetStepsType()
 	
 	local stepsList = song:GetAllSteps()
 	local steps = nil
 	
 	for check in ivalues(stepsList) do
-		if check:GetDifficulty() == diff then
+		if check:GetDifficulty() == diff and check:GetStepsType() == stepstype then
 			steps = check
 			break
 		end
