@@ -31,7 +31,7 @@ local function GetLamp(song)
 	local steps = nil
 	
 	for check in ivalues(stepsList) do
-		if check:GetDifficulty() == diff then
+		if check:GetDifficulty() == diff and check:GetStepsType() == GAMESTATE:GetCurrentStyle():GetStepsType() then
 			steps = check
 			break
 		end
@@ -141,7 +141,9 @@ return Def.ActorFrame{
 				self:GetParent():GetChild("Grades"):visible(false)
 			else
 				self:visible(false)
-				if lamp ~= nil then self:GetParent():GetChild("Grades"):visible(true) end
+				if lamp ~= nil then
+					self:GetParent():GetChild("Grades"):visible(true)
+				end
 			end
 		end
 	},

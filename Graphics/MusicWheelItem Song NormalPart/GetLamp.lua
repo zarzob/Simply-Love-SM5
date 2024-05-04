@@ -30,7 +30,7 @@ local function GetLamp(song)
 	local steps = nil
 	
 	for check in ivalues(stepsList) do
-		if check:GetDifficulty() == diff then
+		if check:GetDifficulty() == diff and check:GetStepsType() == GAMESTATE:GetCurrentStyle():GetStepsType() then
 			steps = check
 			break
 		end
