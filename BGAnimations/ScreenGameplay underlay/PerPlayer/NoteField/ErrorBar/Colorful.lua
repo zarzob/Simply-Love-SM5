@@ -146,13 +146,13 @@ for i, window in ipairs(windows.timing) do
     bar_af[#bar_af+1] = Def.Quad{
         Name="EarlyW" .. windowNum,
         InitCommand = function(self)
-            self:x(-x):horizalign("left"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(0.3)
+            self:x(-x):horizalign("left"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(1)
         end
     }
     bar_af[#bar_af+1] = Def.Quad{
         Name="LateW" .. windowNum,
         InitCommand = function(self)
-            self:x(x):horizalign("right"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(0.3)
+            self:x(x):horizalign("right"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(1)
         end
     }
 
