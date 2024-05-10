@@ -24,7 +24,7 @@ local function DisplayText(self, params)
 
             self:diffusealpha(1)
                 :settext(params.Early and "EARLY" or "LATE")
-                :diffuse(params.Early and color("#ff5a4e") or color("#066af4"))
+                :diffuse(params.Early and color("#066af4") or color("#ff5a4e"))
                 :x((params.Early and -1 or 1) * 40)
                 :sleep(0.5)
                 :diffusealpha(0)
