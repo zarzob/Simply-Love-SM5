@@ -25,6 +25,8 @@ local player, layout = ...
 local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 
+local hideEarlyJudgment = mods.HideEarlyDecentWayOffJudgments and true or false
+
 local judgmentColors = {
     TapNoteScore_W1 = SL.JudgmentColors[SL.Global.GameMode][1],
     TapNoteScore_W2 = SL.JudgmentColors[SL.Global.GameMode][2],
@@ -96,7 +98,7 @@ local af = Def.ActorFrame{
         self:RemoveChild("EarlyLabel")
         self:RemoveChild("LateLabel")
     end,
-    EarlyHitMessageCommand=function(self, params)
+    if params.Player ~= player or hideEarlyJudgment then return end
         if params.Player ~= player then return end
 
         DisplayTick(self, params)
