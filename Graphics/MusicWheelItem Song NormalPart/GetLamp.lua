@@ -47,6 +47,7 @@ local function GetLamp(song)
 	end
 
 	local best_lamp = nil
+	local tap_count = 99
 
 	for score in ivalues(high_score_list:GetHighScores()) do
 		local award = score:GetStageAward()
@@ -65,6 +66,18 @@ local function GetLamp(song)
 			best_lamp = math.min(best_lamp and best_lamp or 999, AwardMap[award])
 		end
 		
+		-- Single Digit Judge Count
+		if AwardMap[award] == best_lamp then
+			if best_lamp == 1 and score:GetScore() > 0 then
+				tap_count = math.min(tap_count, score:GetScore())
+			elseif best_lamp == 2 then
+				tap_count = math.min(tap_count, score:GetTapNoteScore("TapNoteScore_W2"))
+			elseif best_lamp == 3 then
+				tap_count = math.min(tap_count, score:GetTapNoteScore("TapNoteScore_W3"))
+			end
+		end
+			
+		
 		if best_lamp == 1 and score:GetScore() == 0 then
 			best_lamp = 0
 		elseif best_lamp == nil then
@@ -73,7 +86,7 @@ local function GetLamp(song)
 		end
 	end
 
-	return best_lamp
+	return best_lamp,tap_count
 end
 
 local function MaybeSetLampForUnmarkedItlSong(self, player)
@@ -141,6 +154,7 @@ return Def.ActorFrame{
 
 			-- Check ITL File
 			local itl_lamp = nil
+			local itl_taps = 99
 			if param.Song ~= nil then
 				local song = param.Song
 				local song_dir = song:GetSongDir()
@@ -149,6 +163,9 @@ return Def.ActorFrame{
 						local hash = SL[pn].ITLData["pathMap"][song_dir]
 						if SL[pn].ITLData["hashMap"][hash] ~= nil then
 							itl_lamp = 5 - SL[pn].ITLData["hashMap"][hash]["clearType"]
+							if SL[pn].ITLData["hashMap"][hash]["judgments"]["W" .. itl_lamp] then
+								itl_taps = math.min(itl_taps, SL[pn].ITLData["hashMap"][hash]["judgments"]["W" .. itl_lamp])
+							end
 						end
 					end
 				end
@@ -159,6 +176,7 @@ return Def.ActorFrame{
 				if itl_lamp >= 4 then
 					self:visible(true):stopeffect()
 					self:diffuse(ClearLamp[1])
+					self:GetParent():GetChild("Judge"):playcommand("Hide")
 				else
 					self:visible(true)
 					self:diffuseshift():effectperiod(0.8)
@@ -167,19 +185,25 @@ return Def.ActorFrame{
 						local ItlPink = color("1,0.2,0.406,1")
 						self:effectcolor1(ItlPink)
 						self:effectcolor2(lerp_color(0.70, color("#ffffff"), ItlPink))
+						self:GetParent():GetChild("Judge"):playcommand("Hide")
 					else
 						self:effectcolor1(SL.JudgmentColors["ITG"][itl_lamp])
 						self:effectcolor2(lerp_color(0.70, color("#ffffff"), SL.JudgmentColors["ITG"][itl_lamp]))
+						if itl_taps < 10 then
+							self:GetParent():GetChild("Judge"):playcommand("Count", {count=itl_taps,lamp=itl_lamp})
+						end
 					end
 				end
 			else
-				local lamp = GetLamp(param.Song)
+				local lamp, tap_count = GetLamp(param.Song)
 				if lamp == nil then
 					self:visible(false)
+					self:GetParent():GetChild("Judge"):playcommand("Hide")
 				elseif lamp > 50 then
 					self:visible(true)
 					self:stopeffect()
 					self:diffuse(ClearLamp[lamp - 50])
+					self:GetParent():GetChild("Judge"):playcommand("Hide")
 				elseif lamp == 0 then
 					-- Quinted, use a special color
 					self:visible(true)
@@ -187,12 +211,19 @@ return Def.ActorFrame{
 					self:diffuseshift():effectperiod(0.8)
 					self:effectcolor1(ItlPink)
 					self:effectcolor2(lerp_color(0.70, color("#ffffff"), ItlPink))
+					self:GetParent():GetChild("Judge"):playcommand("Hide")
 				else
 					self:visible(true)
 					self:diffuseshift():effectperiod(0.8)
 					self:effectcolor1(SL.JudgmentColors[SL.Global.GameMode][lamp])
 					self:effectcolor2(lerp_color(
 						0.70, color("#ffffff"), SL.JudgmentColors[SL.Global.GameMode][lamp]))
+						
+					if tap_count and tap_count < 10 then
+						self:GetParent():GetChild("Judge"):playcommand("Count", {count=tap_count,lamp=lamp})
+					else
+						self:GetParent():GetChild("Judge"):playcommand("Hide")
+					end
 				end
 			end
 			
@@ -206,5 +237,34 @@ return Def.ActorFrame{
 				end
 			end
 		end
+	},
+	
+	Def.BitmapText{
+		Font=ThemePrefs.Get("ThemeFont") .. " ScreenEval",
+		Name="Judge",
+		Text="5",
+		InitCommand=function(self)
+			self:visible(false)
+			self:zoom(0.15)
+			self:addy(10)
+			self:diffuse(1,1,1,1)
+		end,
+		CountCommand=function(self, param)
+			if player == PLAYER_2 and GAMESTATE:GetNumSidesJoined() == 2 then
+				-- Ultrawide is quite hard to align, manually scale for it.
+				if IsUltraWide then
+					self:x(SL_WideScale(18, 30) * 2 + SL_WideScale(5, 8) + 40 -9.2)
+				else
+					self:x(SL_WideScale(18, 30) * 2 + SL_WideScale(5, 8) -9.2)
+				end
+			else
+				self:x(3)
+			end
+			self:settext(param.count):visible(true):diffuse(SL.JudgmentColors["FA+"][param.lamp+1])
+		end,
+		HideCommand=function(self)
+			self:settext(""):visible(false)
+		end,
 	}
+		
 }
