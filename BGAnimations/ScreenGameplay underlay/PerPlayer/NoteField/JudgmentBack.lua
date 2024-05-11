@@ -384,9 +384,13 @@ return Def.ActorFrame{
 			-- frame displays based on what judgment the player earns
 			self:animate(false):visible(false)
 
-			local mini = mods.Mini:gsub("%%","") / 100
-			self:addx((mods.NoteFieldOffsetX * (1 + mini)) * 2)
-			self:addy((mods.NoteFieldOffsetY * (1 + mini)) * 2)
+			local opts = GAMESTATE:GetPlayerState(player):GetCurrentPlayerOptions()
+			local width = GetNotefieldWidth()
+			local NumColumns = GAMESTATE:GetCurrentStyle():ColumnsPerPlayer()
+			local judgmentY = _screen.cy + (opts:Reverse() ~= 0 and 30 or -30)
+			self:xy(GetNotefieldX(player), judgmentY)
+			local mini = mods.Mini:gsub("%%","")/100
+			self:zoom(math.min(math.max((2 - mini)/2, 0.35),1))
 			
 			-- if we are on ScreenEdit, judgment graphic is always "Love"
 			-- because ScreenEdit is a mess and not worth bothering with.
