@@ -188,8 +188,16 @@ return Def.ActorFrame{
 				SCREENMAN:GetTopScreen():GetChild("Player"..ToEnumShortString(player)):GetChild("NoteField"):rotationz(direction * offset)
 			end
 			
-			-- this should match the custom JudgmentTween() from SL for 3.95
-			sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			if mods.JudgmentAnimation == 'Default' then
+				-- this should match the custom JudgmentTween() from SL for 3.95
+				sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			elseif mods.JudgmentAnimation == 'Still' then
+				-- this should match the behaviour of Etterna
+				sprite:zoom(0.75):sleep(0.9):linear(0):zoom(0)
+			elseif mods.JudgmentAnimation == 'ITG' then
+				-- this should match the behaviour of ITG2/ITG3
+				sprite:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			end
 		end
 	end,
 	JudgmentMessageCommand=function(self, param)
@@ -312,8 +320,17 @@ return Def.ActorFrame{
 			local direction = param.TapNoteOffset < 0 and -1 or 1
 			SCREENMAN:GetTopScreen():GetChild("Player"..ToEnumShortString(player)):GetChild("NoteField"):rotationz(direction * offset)
 		end
-		-- this should match the custom JudgmentTween() from SL for 3.95
-		sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		
+		if mods.JudgmentAnimation == 'Default' then
+			-- this should match the custom JudgmentTween() from SL for 3.95
+			sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		elseif mods.JudgmentAnimation == 'Still' then
+			-- this should match the behaviour of Etterna
+			sprite:zoom(0.75):sleep(0.9):linear(0):zoom(0)
+		elseif mods.JudgmentAnimation == 'ITG' then
+			-- this should match the behaviour of ITG2/ITG3
+			sprite:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		end
 		
 		if mods.SplitWhites and mods.ShowFaPlusWindow and tns == "W1" and not IsW010Judgment(param, player) and not IsAutoplay(player) then
 			local splitFrame = 1
@@ -322,12 +339,30 @@ return Def.ActorFrame{
 				if not param.Early then splitFrame = splitFrame + 1 end
 			end
 			spriteGhost:visible(true):setstate(splitFrame):diffusealpha(0.5):finishtweening()
-			spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			if mods.JudgmentAnimation == 'Default' then
+				-- this should match the custom JudgmentTween() from SL for 3.95
+				spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			elseif mods.JudgmentAnimation == 'Still' then
+				-- this should match the behaviour of Etterna
+				spriteGhost:zoom(0.75):sleep(0.9):linear(0):zoom(0)
+			elseif mods.JudgmentAnimation == 'ITG' then
+				-- this should match the behaviour of ITG2/ITG3
+				spriteGhost:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			end
 		elseif tns == "W4" or tns == "W5" and mods.GhostFault then
 			self:playcommand("ResetFault")
 			spriteGhost:visible(true):setstate(frame)
 			spriteGhost:diffusealpha(0.5)
-			spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):linear(0.5):diffusealpha(0)
+			if mods.JudgmentAnimation == 'Default' then
+				-- this should match the custom JudgmentTween() from SL for 3.95
+				spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			elseif mods.JudgmentAnimation == 'Still' then
+				-- this should match the behaviour of Etterna
+				spriteGhost:zoom(0.75):sleep(0.9):linear(0):zoom(0)
+			elseif mods.JudgmentAnimation == 'ITG' then
+				-- this should match the behaviour of ITG2/ITG3
+				spriteGhost:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			end
 		else
 			spriteGhost:visible(false):finishtweening()
 		end

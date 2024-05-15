@@ -965,6 +965,10 @@ local Overrides = {
 		Values = { "Time", "Measures" }
 	},
 	-------------------------------------------------------------------------
+	JudgmentAnimation = {
+		Choices = { "Default", "Still", "ITG" }
+	},
+	-------------------------------------------------------------------------
 	RailBalance = {
 		Values = { "No", "What" }
 	},
