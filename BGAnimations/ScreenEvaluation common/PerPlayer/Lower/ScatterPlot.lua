@@ -11,6 +11,10 @@ local GraphWidth = args.GraphWidth
 local GraphHeight = args.GraphHeight
 local mods = SL[pn].ActiveModifiers
 
+local tenms = mods.SmallerWhite
+local SplitWhites = mods.SplitWhites
+local magenta = color("#E928FF")
+
 local function TotalCourseLength(player)
     -- utility for graph stuff because i ended up doing this a lot
     -- i use this method instead of TrailUtil.GetTotalSeconds because that leaves unused time at the end in graphs
@@ -102,7 +106,15 @@ for t in ivalues(sequential_offsets) do
 
 		if mods.ShowFaPlusWindow and mods.ShowFaPlusPane then
 			abs_offset = math.abs(Offset)
-			if abs_offset > GetTimingWindow(1, "FA+") and abs_offset <= GetTimingWindow(2, "FA+") then
+			if tenms and SplitWhites then
+				if abs_offset < GetTimingWindow(1, "FA+",tenms) then
+					c = magenta
+				elseif abs_offset > GetTimingWindow(1, "FA+",tens) and abs_offset <= GetTimingWindow(1, "FA+") then
+					c = SL.JudgmentColors["FA+"][1]
+				elseif abs_offset > GetTimingWindow(1, "FA+") and abs_offset <= GetTimingWindow(2, "FA+") then
+					c = SL.JudgmentColors["FA+"][2]
+				end
+			elseif abs_offset > GetTimingWindow(1, "FA+") and abs_offset <= GetTimingWindow(2, "FA+") then
 				c = SL.JudgmentColors["FA+"][2]
 			end
 		end
