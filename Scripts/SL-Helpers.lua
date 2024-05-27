@@ -44,7 +44,7 @@ GetTimingWindow = function(n, mode, tenms)
 	local prefs = SL.Preferences[mode or SL.Global.GameMode]
 	local scale = PREFSMAN:GetPreference("TimingWindowScale")
 	if mode == "FA+" and tenms and n == 1 then
-		return 0.0085 * scale + prefs.TimingWindowAdd
+		return 0.0105 * scale + prefs.TimingWindowAdd
 	end
 	return prefs["TimingWindowSecondsW"..n] * scale + prefs.TimingWindowAdd
 end
@@ -656,7 +656,7 @@ IsW010Judgment = function(params, player)
 		local prefs = SL.Preferences["FA+"]
 		local scale = PREFSMAN:GetPreference("TimingWindowScale")
 		local pn = ToEnumShortString(player)
-		local W0 = 0.0085 * scale + prefs["TimingWindowAdd"]
+		local W0 = 0.0105 * scale + prefs["TimingWindowAdd"]
 
 		local offset = math.abs(params.TapNoteOffset)
 		if offset <= W0 then
