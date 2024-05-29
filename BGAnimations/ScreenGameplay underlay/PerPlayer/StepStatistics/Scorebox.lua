@@ -218,6 +218,10 @@ local LeaderboardRequestProcessor = function(res, master)
 										boogie_ex
 									)
 					end
+					numEntries = numEntries + 1
+					for i=math.max(2,numEntries),5,1 do
+						SetScoreData(1, i, "", "", "", "", "", "", true)
+					end
 				end
 			end
 
@@ -235,6 +239,10 @@ local LeaderboardRequestProcessor = function(res, master)
 										entry["isFail"],
 										true
 									)
+					end
+					numEntries = numEntries + 1
+					for i=math.max(2,numEntries),5,1 do
+						SetScoreData(2, i, "", "", "", "", "", "", true)
 					end
 				end
 			end
@@ -261,14 +269,8 @@ local LeaderboardRequestProcessor = function(res, master)
 									)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
-						SetScoreData(3, i,
-										"",
-										"",
-										"",
-										false,
-										false,
-										false)
+					for i=math.max(2,numEntries),5,1 do
+						SetScoreData(3, i, "", "", "", "", "", "", true)
 					end
 				end
 			end
@@ -292,14 +294,8 @@ local LeaderboardRequestProcessor = function(res, master)
 									)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
-						SetScoreData(4, i,
-										"",
-										"",
-										"",
-										false,
-										false,
-										false)
+					for i=math.max(2,numEntries),5,1 do
+						SetScoreData(4, i, "", "", "", "", "", "", true)
 					end
 				end
 			end

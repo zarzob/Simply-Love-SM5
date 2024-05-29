@@ -180,6 +180,8 @@ local LeaderboardRequestProcessor = function(res, master)
 		local showITG = SL["P"..n].ActiveModifiers.SBITGScore
 		local showEX = SL["P"..n].ActiveModifiers.SBEXScore
 		local showEvents = SL["P"..n].ActiveModifiers.SBEvents
+		
+		cur_style = 0
 
 		local numEntries = 0
 		if SL["P"..n].ActiveModifiers.ShowEXScore then
@@ -200,7 +202,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i=math.max(2,numEntries),5,1 do
 						SetScoreData(1, i, "", "", "", "", "", "", true)
 					end
 				end
@@ -222,7 +224,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i=math.max(2,numEntries),5,1 do
 						SetScoreData(2, i, "", "", "", "", "", "", boogie_ex)
 					end
 				end
@@ -245,7 +247,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i=math.max(2,numEntries),5,1 do
 						SetScoreData(1, i, "", "", "", "", "", "", boogie_ex)
 					end
 				end
@@ -267,7 +269,7 @@ local LeaderboardRequestProcessor = function(res, master)
 									)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i=math.max(2,numEntries),5,1 do
 						SetScoreData(2, i, "", "", "", "", "", "", true)
 					end
 				end
