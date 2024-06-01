@@ -56,6 +56,10 @@ local PlayerDefaults = {
 				ShowEXScore = false,
 				ShowFaPlusPane = true,
 				
+				RainbowMax = false,
+				ResponsiveColors = false,
+				ShowLifePercent = false,
+				
 				PackBanner = false,
 				StepInfo = false,
 				SBITGScore = true,
