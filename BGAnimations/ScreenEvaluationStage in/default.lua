@@ -9,7 +9,7 @@ for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 	end
 end
 
-if ThemePrefs.Get("VisualStyle") ~= "SRPG7" then
+if ThemePrefs.Get("VisualStyle") ~= "SRPG8" then
 	local img = failed and "failed text.png" or "cleared text.png"
 
 	return Def.ActorFrame{
@@ -24,7 +24,7 @@ if ThemePrefs.Get("VisualStyle") ~= "SRPG7" then
 		}
 	}
 else
-	local img = failed and THEME:GetPathG("","_VisualStyles/SRPG7/Banner-Failed.png") or THEME:GetPathG("","_VisualStyles/SRPG7/Banner-Passed.png")
+	local img = failed and THEME:GetPathG("","_VisualStyles/SRPG8/Banner-Failed.png") or THEME:GetPathG("","_VisualStyles/SRPG8/Banner-Passed.png")
 
 	local af = Def.ActorFrame{
 		InitCommand=function(self)
@@ -142,7 +142,7 @@ else
 
 	if failed then
 		af[#af+1] = Def.Sprite{
-			Texture=THEME:GetPathG("", "_VisualStyles/SRPG7/NoEscape.png"),
+			Texture=THEME:GetPathG("", "_VisualStyles/SRPG8/NoEscape.png"),
 			InitCommand=function(self)
 				self:zoom(0.3):zoomx(0.26):diffusealpha(0)
 			end,
@@ -150,11 +150,11 @@ else
 				self:sleep(1):diffusealpha(1)
 						:linear(3.25):zoomx(0.3)
 						:decelerate(0.5):diffusealpha(0)
-				SOUND:PlayOnce(THEME:GetPathS("", "SRPG7-Failed.ogg"))
+				SOUND:PlayOnce(THEME:GetPathS("", "SRPG8-Failed.ogg"))
 			end
 		}
 		af[#af+1] = Def.Sprite{
-			Texture=THEME:GetPathG("", "_VisualStyles/SRPG7/Death.mp4"),
+			Texture=THEME:GetPathG("", "_VisualStyles/SRPG8/Death.mp4"),
 			InitCommand=function(self)
 				self:zoom(0.45):y(220):blend("BlendMode_Add")
 			end,
@@ -164,7 +164,7 @@ else
 			end,
 		}
 	else
-		local image = THEME:GetPathG("", "_VisualStyles/SRPG7/MonsterVanquished.png")
+		local image = THEME:GetPathG("", "_VisualStyles/SRPG8/MonsterVanquished.png")
 
 		local bosses = {
 			["e52ab3c368462981"]="RaidBossVanquished.png",
@@ -190,14 +190,14 @@ else
 			local pn = ToEnumShortString(player)
 			local chartHash = SL[pn].Streams.Hash
 			if bosses[chartHash] ~= nil then
-				image = THEME:GetPathG("", "_VisualStyles/SRPG7/"..bosses[chartHash])
+				image = THEME:GetPathG("", "_VisualStyles/SRPG8/"..bosses[chartHash])
 				found_boss = true
 				break
 			end
 		end
 
 		if not found_boss and not GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentSong():GetLastSecond() > 16 * 60 then
-			image = THEME:GetPathG("", "_VisualStyles/SRPG7/HorrorVanquished.png")
+			image = THEME:GetPathG("", "_VisualStyles/SRPG8/HorrorVanquished.png")
 		end
 
 		af[#af+1] = Def.Sprite{
@@ -211,11 +211,11 @@ else
 			NextCommand=function(self)
 				self:linear(3.25):zoomx(0.25)
 						:decelerate(0.5):diffusealpha(0)
-				SOUND:PlayOnce(THEME:GetPathS("", "SRPG7-Passed.ogg"))
+				SOUND:PlayOnce(THEME:GetPathS("", "SRPG8-Passed.ogg"))
 			end
 		}
 		af[#af+1] = Def.Sprite{
-			Texture=THEME:GetPathG("", "_VisualStyles/SRPG7/Cleared.mp4"),
+			Texture=THEME:GetPathG("", "_VisualStyles/SRPG8/Cleared.mp4"),
 			InitCommand=function(self)
 				self:zoom(0.9):y(260):blend("BlendMode_Add"):croptop(0.2):cropbottom(0.2):diffusealpha(0)
 			end,
