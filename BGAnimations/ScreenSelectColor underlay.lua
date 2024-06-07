@@ -82,7 +82,7 @@ local wheel_item_mt = {
 					subself:zoom(0.25)
 					if style == "SRPG8" then
 						-- subself:blend("BlendMode_Add")
-						subself:zoom(0.35)
+						subself:zoom(0.7)
 					end
 				end,
 				OnCommand=function(subself)
