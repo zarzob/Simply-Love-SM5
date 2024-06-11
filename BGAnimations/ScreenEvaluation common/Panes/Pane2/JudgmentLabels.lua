@@ -128,7 +128,8 @@ end
 -- labels: hands/ex, holds, mines, rolls
 for index, label in ipairs(RadarCategories) do
 	if index == 1 then
-		text = nil
+		local showFaPlusPercent = SL[pn].ActiveModifiers.SmallerWhite
+		local text = nil
 		if SL[pn].ActiveModifiers.ShowEXScore then
 			text = "ITG"
 		else
@@ -150,6 +151,23 @@ for index, label in ipairs(RadarCategories) do
 				else
 					self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 				end
+				self:playcommand("Marquee")
+			end,
+			MarqueeCommand=function(self)
+				if showFaPlusPercent then
+					if SL[pn].ActiveModifiers.SmallerWhite then
+						self:x( (controller == PLAYER_1 and -135) or 108 )
+						self:settext("FA10+")
+					else
+						self:x( (controller == PLAYER_1 and -150) or 93 )
+						self:settext("FA+")
+					end
+				else
+					self:x( (controller == PLAYER_1 and -160) or 90 )
+					self:settext(text)
+				end
+				showFaPlusPercent = not showFaPlusPercent
+				self:sleep(2):queuecommand("Marquee")
 			end
 		}
 	end

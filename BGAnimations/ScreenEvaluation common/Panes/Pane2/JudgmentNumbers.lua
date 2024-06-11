@@ -3,6 +3,22 @@ local player, controller = unpack(...)
 local pn = ToEnumShortString(player)
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 
+local CalculateFaPlus = function(ex_counts)
+	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss" }
+	local total_taps = 0
+
+	for key in ivalues(keys) do
+		local value = ex_counts[key]
+		if value ~= nil then
+			total_taps = total_taps + value
+		end
+	end
+	if SL[pn].ActiveModifiers.SmallerWhite then
+		return math.max(0, math.floor(ex_counts["W010"]/total_taps * 10000) / 100)
+	end
+	return math.max(0, math.floor(ex_counts["W0"]/total_taps * 10000) / 100)
+end
+
 local TapNoteScores = {
 	Types = { 'W0', 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss' },
 	Colors = {
@@ -104,6 +120,8 @@ end
 for index, RCType in ipairs(RadarCategories.Types) do
 	-- Swap to displaying ITG score if we're showing EX score in gameplay.
 	local percent = nil
+	local showFaPlusPercent = SL[pn].ActiveModifiers.SmallerWhite
+	local faPlusPercent = CalculateFaPlus(counts)
 	if SL[pn].ActiveModifiers.ShowEXScore then
 		local PercentDP = pss:GetPercentDancePoints()
 		percent = FormatPercentScore(PercentDP):gsub("%%", "")
@@ -127,6 +145,16 @@ for index, RCType in ipairs(RadarCategories.Types) do
 				else
 					self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 				end
+				self:playcommand("Marquee")
+			end,
+			MarqueeCommand=function(self)
+				if showFaPlusPercent then
+					self:settext(("%.2f"):format(faPlusPercent))
+				else
+					self:settext(("%.2f"):format(percent))
+				end
+				showFaPlusPercent = not showFaPlusPercent
+				self:sleep(2):queuecommand("Marquee")
 			end
 		}
 	end
