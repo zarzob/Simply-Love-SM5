@@ -422,7 +422,7 @@ return Def.ActorFrame{
 			local width = GetNotefieldWidth()
 			local NumColumns = GAMESTATE:GetCurrentStyle():ColumnsPerPlayer()
 			local judgmentY = _screen.cy + (opts:Reverse() ~= 0 and 30 or -30)
-			self:xy(GetNotefieldX(player), judgmentY)
+			-- self:xy(GetNotefieldX(player), judgmentY)
 			local mini = mods.Mini:gsub("%%","")/100
 			self:zoom(math.min(math.max((2 - mini)/2, 0.35),1))
 			
