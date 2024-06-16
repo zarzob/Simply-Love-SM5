@@ -297,6 +297,19 @@ end
 
 local af = Def.ActorFrame {
 	Name="AutoSubmitMaster",
+	OnCommand=function(self)
+		-- local overlay = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common")
+		-- overlay:GetChild("AutoSubmitMaster"):GetChild("EventOverlay"):visible(true)
+		-- overlay:queuecommand("DirectInputToEventOverlayHandler")
+
+		-- local eventAf = overlay:GetChild("AutoSubmitMaster"):GetChild("EventOverlay"):GetChild("P1EventAf")
+		-- eventAf:playcommand("Show", {data={
+		-- 	["rpg"] = {
+		-- 		["name"] = "SRPG8",
+		-- 		["result"] = "score-added",
+		-- 	}
+		-- }})
+	end,
 	RequestResponseActor(17, 50)..{
 		OnCommand=function(self)
 			local sendRequest = false
