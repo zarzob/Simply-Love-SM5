@@ -64,7 +64,7 @@ local function GetLamp(song)
 		
 		if award and AwardMap[award] ~= nil then
 			-- Reset tap count if the best lamp goes up
-			if AwardMap[award] < best_lamp then
+			if best_lamp ~= nil and AwardMap[award] < best_lamp then
 				tap_count = 99
 			end
 			best_lamp = math.min(best_lamp and best_lamp or 999, AwardMap[award])
