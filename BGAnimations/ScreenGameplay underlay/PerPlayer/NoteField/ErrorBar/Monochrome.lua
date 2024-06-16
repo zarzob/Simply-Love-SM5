@@ -98,10 +98,10 @@ local af = Def.ActorFrame{
         self:RemoveChild("EarlyLabel")
         self:RemoveChild("LateLabel")
     end,
-    if params.Player ~= player or hideEarlyJudgment then return end
-        if params.Player ~= player then return end
+	EarlyHitMessageCommand=function(self, params)
+		if params.Player ~= player or hideEarlyJudgment then return end
 
-        DisplayTick(self, params)
+		DisplayTick(self, params)
     end,
     JudgmentMessageCommand = function(self, params)
         if params.Player ~= player then return end
