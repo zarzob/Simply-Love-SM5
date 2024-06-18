@@ -291,7 +291,7 @@ local t = Def.ActorFrame {
 		end
 
 		-- Add operator functions if in event mode. (Public arcades probably don't want random players
-		-- attempting to diagnose the pads or reload songs ...)
+		-- attempting to diagnose the pads, etc ...)
 		if GAMESTATE:IsEventMode() then
 			-- Allow players to switch to a TestInput overlay if the current game has visual assets to support it.
 			local game = GAMESTATE:GetCurrentGame():GetName()
