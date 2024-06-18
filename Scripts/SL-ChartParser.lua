@@ -250,7 +250,7 @@ local GetSimfileChartString = function(SimfileString, StepsType, Difficulty, Ste
 			local normalizedNoteData = noteData:gsub('\r\n?', '\n')
 			-- Split the entire chart string into pieces on ":"
 			local parts = {}
-			for part in normalizedNoteData:gmatch("[^:]+") do
+			for part in normalizedNoteData:gmatch("[^:]*") do
 				parts[#parts+1] = part
 			end
 
