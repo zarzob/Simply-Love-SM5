@@ -7,7 +7,7 @@
 
 Simply Love is an ITGmania theme for the post-ITG community.
 
-It features a clean and simple design, offers numerous data-driven features not implemented by the ITGmania engine, and allows the current generation of ITG fans to breathe new life into the game they've known for over a decade.
+It features a clean and simple design, offers numerous data-driven features not implemented by the ITGmania engine, and allows the current generation of ITG fans to breathe new life into the game they've known for over a two decades.
 
 Simply Love was originally designed and implemented for a previous version of StepMania (SM3.95) by hurtpiggypig.  For more information on that version of Simply Love, check here:
 https://www.youtube.com/watch?v=OtcWy5m6-CQ
@@ -19,8 +19,6 @@ The current release of Simply Love is compatible with current ITGmania versions 
 
 For new installations we currently recommend grabbing the ITGmania + Simply Love bundle over at the
 [www.itgmania.com](https://www.itgmania.com).
-
-If you are able to compile StepMania's source code yourself, the [5_1-new branch](https://github.com/stepmania/stepmania/tree/5_1-new/) is supported.  The wiki has [instructions for compiling](https://github.com/stepmania/stepmania/wiki/Compiling-StepMania).
 
 
 **Incompatible Versions**<br>
