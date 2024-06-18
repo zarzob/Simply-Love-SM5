@@ -313,7 +313,7 @@ local GetRpgPaneFunctions = function(eventAf, rpgData, player)
 				-- Extract the actual numeric text.
 				local substring = string.sub(text, i, j)
 
-				local clr = RpgText
+				local clr = Color.Green
 
 				-- Except negatives should be red.
 				if substring:sub(1, 1) == "-" then
@@ -345,7 +345,7 @@ local GetRpgPaneFunctions = function(eventAf, rpgData, player)
 
 				bodyText:AddAttribute(i-1, {
 					Length=#substring,
-					Diffuse=RpgText
+					Diffuse=Color.Green
 				})
 
 				offset = j + 1
