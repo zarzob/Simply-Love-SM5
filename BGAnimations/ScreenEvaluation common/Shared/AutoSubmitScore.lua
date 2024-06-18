@@ -307,6 +307,32 @@ local af = Def.ActorFrame {
 		-- 	["rpg"] = {
 		-- 		["name"] = "SRPG8",
 		-- 		["result"] = "score-added",
+		-- 		["rpgLeaderboard"] = {
+		-- 			{
+		-- 				["rank"] = 1,
+		-- 				["name"] = "Player1",
+		-- 				["score"] = 9900,
+		-- 				["date"] ="2024-05-05 1:20:30",
+		-- 				["isRival"] = false,
+		-- 				["isSelf"] = false,
+		-- 			},
+		-- 			{
+		-- 				["rank"] = 2,
+		-- 				["name"] = "Player2",
+		-- 				["score"] = 9800,
+		-- 				["date"] ="2024-05-05 1:20:30",
+		-- 				["isRival"] = true,
+		-- 				["isSelf"] = false,
+		-- 			},
+		-- 			{
+		-- 				["rank"] = 3,
+		-- 				["name"] = "Player3",
+		-- 				["score"] = 9700,
+		-- 				["date"] ="2024-05-05 1:20:30",
+		-- 				["isRival"] = false,
+		-- 				["isSelf"] = true,
+		-- 			}
+		-- 		}
 		-- 	}
 		-- }})
 	end,
