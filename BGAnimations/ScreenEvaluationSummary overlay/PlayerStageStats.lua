@@ -95,17 +95,6 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 		else
 			self:settext("")
 		end
-		
-		if playerStats and playerStats.showex then
-			self:zoom(0.38):horizalign(align1):x(col1x):y(-12)
-		else
-			self:horizalign(align1):x(col1x)
-			if playerStats and playerStats.faplus then
-				self:zoom(0.48):y(-32)
-			else
-				self:zoom(0.5):y(-24)
-			end
-		end
 	end
 }
 
@@ -215,20 +204,16 @@ for i=1,#TNSTypes do
 		end,
 		DrawStageCommand=function(self, params)
 			if playerStats and playerStats.judgments then
-				if playerStats.faplus then
+				if playerStats.judgments.W0 then
 					self:zoom(0.28):horizalign(align2):x(col2x):y(i*13 - 58):diffuse( Colors[i] )
 				else
 					self:zoom(0.28):horizalign(align2):x(col2x):y(i*13 - 63):diffuse( Colors[i] )
-					if i == 1 then
-						self:diffusealpha(0)
-					elseif i == 2 then
+					if i == 2 then
 						self:diffuse( Colors[1] )
 					end
 				end
-				if i ~= 1 or playerStats.faplus then
-					local val = playerStats.judgments[TNSTypes[i]]
-					if val then self:settext(val) end
-				end
+				local val = playerStats.judgments[TNSTypes[i]]
+				if val then self:settext(val) end
 
 				self:visible( (i == 1 and playerStats.judgments.W0 ~= nil) or playerStats.timingwindows[i-1] or i==#TNSTypes )
 			else
