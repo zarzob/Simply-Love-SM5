@@ -26,7 +26,7 @@ local GottaGoFast=function(pn,rate)
 end
 
 ReadRpgFile = function(dir, song)
-	local path = dir.. "SRPG7.rpg"	
+	local path = dir.. "SRPG8.rpg"	
 	local f = RageFileUtil:CreateRageFile()
 	local existing = ""
 	local recordType
