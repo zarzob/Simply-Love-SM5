@@ -23,6 +23,9 @@ local function CloseFolder()
 	wheel:Move(-1)
 	wheel:Move(0)
 end
+-- In 2-players mode, whether the DensityGraph or PatternInfo is shown
+-- Can be toggled by the code "ToggleChartInfo" in metrics.ini
+local showPatternInfo = false
 
 local af = Def.ActorFrame{
 	InitCommand=function(self)
@@ -86,6 +89,7 @@ local af = Def.ActorFrame{
 			-- Only need to toggle in versus since in single player modes, both
 			-- panes are already displayed.
 			if GAMESTATE:GetNumSidesJoined() == 2 then
+				showPatternInfo = not showPatternInfo
 				self:queuecommand("TogglePatternInfo")
 			end
 		elseif (params.Name == "CloseFolder1" or params.Name == "CloseFolder2" or params.Name == "CloseFolder3") and params.Name == ThemePrefs.Get("CloseFolderCodes") then
@@ -152,10 +156,10 @@ af2[#af2+1] = NPS_Histogram(player, width, height)..{
 		self:visible(false)
 	end,
 	RedrawCommand=function(self)
-		self:visible(true)
+		self:visible(not showPatternInfo)
 	end,
 	TogglePatternInfoCommand=function(self)
-		self:visible(not self:GetVisible())
+		self:visible(not showPatternInfo)
 	end
 }
 -- Don't let the density graph parse the chart.
@@ -225,7 +229,7 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				table.insert(text_table,("Peak eBPM: %.1f"):format(nps*15))
 				self:finishtweening():playcommand("Marquee",{text_table=text_table})
 			end
-			self:visible(true)
+			self:visible(not showPatternInfo)
 		end
 	end,
 	MarqueeCommand=function(self)
@@ -240,7 +244,7 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		self:stoptweening()
 	end,
 	TogglePatternInfoCommand=function(self)
-		self:visible(not self:GetVisible())
+		self:visible(not showPatternInfo)
 	end
 }
 
@@ -255,10 +259,10 @@ af2[#af2+1] = Def.ActorFrame{
 		self:visible(false)
 	end,
 	RedrawCommand=function(self)
-		self:visible(true)
+		self:visible(not showPatternInfo)
 	end,
 	TogglePatternInfoCommand=function(self)
-		self:visible(not self:GetVisible())
+		self:visible(not showPatternInfo)
 	end,
 	Def.Quad{
 		InitCommand=function(self)
@@ -342,7 +346,7 @@ af2[#af2+1] = Def.ActorFrame{
 		end
 	end,
 	TogglePatternInfoCommand=function(self)
-		self:visible(not self:GetVisible())
+		self:visible(showPatternInfo)
 	end,
 	
 	-- Background for the additional chart info.

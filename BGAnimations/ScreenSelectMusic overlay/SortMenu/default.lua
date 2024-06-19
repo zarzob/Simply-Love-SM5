@@ -291,11 +291,10 @@ local t = Def.ActorFrame {
 			-- It's technically not possible to reach the sort menu in Casual Mode, but juuust in case let's still
 			-- include the check.
 			if SL.Global.GameMode ~= "Casual"   then table.insert(wheel_options, {"ChangeMode", "Casual"}) end
-
 		end
 
 		-- Add operator functions if in event mode. (Public arcades probably don't want random players
-		-- attempting to diagnose the pads or reload songs ...)
+		-- attempting to diagnose the pads, etc ...)
 		if GAMESTATE:IsEventMode() then
 			-- Allow players to switch to a TestInput overlay if the current game has visual assets to support it.
 			local game = GAMESTATE:GetCurrentGame():GetName()

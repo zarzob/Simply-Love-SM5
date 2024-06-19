@@ -852,6 +852,8 @@ GetColumnMapping = function(player)
 	local left = po:Left()
 	local right = po:Right()
 	local mirror = po:Mirror()
+	local udmirror = po:UDMirror()
+	local lrmirror = po:LRMirror()
 
 	-- Combining flip and invert results in unusual spacing so ignore it.
 	if flip and invert then
@@ -896,14 +898,27 @@ GetColumnMapping = function(player)
 		column_mapping = {column_mapping[4], column_mapping[3], column_mapping[2], column_mapping[1]}
 	end
 
+	if udmirror then
+		column_mapping = {column_mapping[1], column_mapping[3], column_mapping[2], column_mapping[4]}
+	end
+
+	if lrmirror then
+		column_mapping = {column_mapping[4], column_mapping[2], column_mapping[3], column_mapping[1]}
+	end
+
 	if num_columns == 8 then
 		for i=1,4 do
 			column_mapping[4+i] = column_mapping[i] + 4
 		end
 
-		-- We only need to apply the following if exactly one of flip or mirror is active
-		-- since they otherwise cancel each other out
-		if (not flip and mirror) or (flip and not mirror) then
+		-- Flip, Mirror. and LRMirror all swap left and right sides.
+		-- If an odd number of them are set then swap.
+		local swapCount = 0
+		if flip then swapCount = swapCount + 1 end
+		if mirror then swapCount = swapCount + 1 end
+		if lrmirror then swapCount = swapCount + 1 end
+
+		if swapCount % 2 == 1 then
 			for i=1,4 do
 				column_mapping[i] = column_mapping[i] + 4
 				column_mapping[i+4] = column_mapping[i+4] - 4
@@ -960,9 +975,10 @@ end
 
 -- -----------------------------------------------------------------------
 -- Returns a stringified form of a player's selected options.
-GetPlayerOptionsString = function(player)
+GetPlayerOptionsString = function(player, modsLevel)
+	local modsLevel = modsLevel or "ModsLevel_Preferred"
 	-- grab the song options from this PlayerState
-	local PlayerOptions = GAMESTATE:GetPlayerState(player):GetPlayerOptionsArray("ModsLevel_Preferred")
+	local PlayerOptions = GAMESTATE:GetPlayerState(player):GetPlayerOptionsArray(modsLevel)
 	local pn = ToEnumShortString(player)
 
 	-- start with an empty string...
