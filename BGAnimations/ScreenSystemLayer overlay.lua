@@ -221,6 +221,7 @@ t[#t+1] = Def.BitmapText{
 					)
 				end
 			end
+		end
 
 		local textColor = Color.White
 		local screenName = screen:GetName()
