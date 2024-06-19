@@ -13,7 +13,7 @@ return Def.ActorFrame{
 		OnCommand=function(self)
 			local seconds
 			if not GAMESTATE:IsCourseMode() then
-				seconds = GAMESTATE:GetCurrentSong():MusicLengthSeconds()
+				seconds = GAMESTATE:GetCurrentSong():GetLastSecond()
 			else
 				local trail = GAMESTATE:GetCurrentTrail(GAMESTATE:GetMasterPlayerNumber())
 				if trail then
