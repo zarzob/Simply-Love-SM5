@@ -26,8 +26,8 @@ if GAMESTATE:IsCourseMode() then
 elseif SL.Global.GameplayReloadCheck then
 	SL.Global.Stages.Restarts = SL.Global.Stages.Restarts + 1
 	text = "RESTART " .. tostring(SL.Global.Stages.Restarts)
-elseif string.find(string.upper(GAMESTATE:GetCurrentSong():GetGroupName()), "STAMINA RPG 7") then
-	text = "Stamina RPG 7"
+elseif string.find(string.upper(GAMESTATE:GetCurrentSong():GetGroupName()), "STAMINA RPG 8") then
+	text = "Stamina RPG 8"
 	
 elseif string.find(string.upper(GAMESTATE:GetCurrentSong():GetGroupName()), "ITL ONLINE 2024") then
 	text = "ITL Online 2024"
