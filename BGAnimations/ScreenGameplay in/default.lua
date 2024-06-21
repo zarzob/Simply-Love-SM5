@@ -115,7 +115,7 @@ local soundDir = THEME:GetCurrentThemeDirectory() .. "Sounds/Song Start/"
 audio_files = findFiles(soundDir)
 local restart_file = soundDir .. "Restart/" .. SL.Global.Stages.Restarts .. ".ogg"
 local restart_nocount_file = soundDir .. "Restart/restart.ogg"
-if SL.Global.GameplayReloadCheck then
+if SL.Global.GameplayReloadCheck and (FILEMAN:DoesFileExist(restart_file) or FILEMAN:DoesFileExist(restart_nocount_file)) then
 	if FILEMAN:DoesFileExist(restart_file) then SOUND:PlayOnce(restart_file)
 	elseif FILEMAN:DoesFileExist(restart_nocount_file) then SOUND:PlayOnce(restart_nocount_file) end
 elseif #audio_files > 0 then
