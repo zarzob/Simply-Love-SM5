@@ -61,9 +61,6 @@ t[#t+1] = LoadActor("./Shared/TitleAndBanner.lua")
 -- under the banner
 t[#t+1] = LoadActor("./Shared/SongFeatures.lua")
 
--- text to display Song or Course Length
-t[#t+1] = LoadActor("./Shared/SongLength.lua")
-
 -- store some attributes of this playthrough of this song in the global SL table
 -- for later retrieval on ScreenEvaluationSummary
 t[#t+1] = LoadActor("./Shared/GlobalStorage.lua")
