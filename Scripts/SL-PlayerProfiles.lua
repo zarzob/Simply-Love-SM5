@@ -71,7 +71,6 @@ local permitted_profile_settings = {
 	JudgmentTilt         = "boolean",
 	ColumnCues           = "boolean",
 	ColumnCountdown      = "boolean",
-	ShowHeldMiss         = "boolean",
 	TrackFoot            = "boolean",
 	ScaleGraph           = "boolean",
 
