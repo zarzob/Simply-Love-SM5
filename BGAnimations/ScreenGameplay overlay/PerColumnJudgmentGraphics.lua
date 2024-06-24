@@ -3,7 +3,6 @@ local pn = ToEnumShortString(player)
 
 local mods = SL[pn].ActiveModifiers
 if SL.Global.GameMode == "Casual" then return end
-if not mods.ColumnCues then return end
 
 local column_mapping = GetColumnMapping(player)
 
@@ -11,7 +10,6 @@ local column_mapping = GetColumnMapping(player)
 if column_mapping == nil then return end
 
 local playerState = GAMESTATE:GetPlayerState(player)
-local columnCues = SL[pn].Streams.ColumnCues
 
 local numColumns = GAMESTATE:GetCurrentStyle():ColumnsPerPlayer()
 local style = GAMESTATE:GetCurrentStyle(player)
