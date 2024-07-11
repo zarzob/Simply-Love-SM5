@@ -74,3 +74,4 @@ Stuff that might be good to implement in the near future
 * Automatically reset ratemod to 1.00 once a song is played - `zankoku`
 * Theme option to display leaderboard instead of event box in corner - `zankoku`
 * 10/15ms split functionality for error bars
+* Variablise RPG / ITL iteration for folder name searches
