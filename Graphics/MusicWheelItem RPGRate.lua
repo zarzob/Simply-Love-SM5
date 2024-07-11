@@ -73,7 +73,7 @@ local af = Def.ActorFrame {
 		dir = PROFILEMAN:GetProfileDir(profile_slot[player])
 	end,
 	SetMessageCommand=function(self,params)
-		if params.Type == "Song" and string.find(string.upper(params.Text), "STAMINA RPG 7") then
+		if params.Type == "Song" and string.find(string.upper(params.Text), "STAMINA RPG 8") then
 			local rate = ReadRpgFile(dir, params.Song:GetDisplayFullTitle())
 			local song = params.Song
 			local song = song:GetDisplayFullTitle()			
