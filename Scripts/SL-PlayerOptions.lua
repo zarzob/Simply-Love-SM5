@@ -652,7 +652,8 @@ local Overrides = {
 	},
 	-------------------------------------------------------------------------
 	ErrorBar = {
-		Values = { "None", "Colorful", "Monochrome", "Text", "Highlight" },
+		SelectType = "SelectMultiple",
+		Values = { "Colorful", "Monochrome", "Text", "Highlight", "Average" },
 	},
 	-------------------------------------------------------------------------
 	ErrorBarOptions = {
