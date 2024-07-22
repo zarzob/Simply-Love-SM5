@@ -10,7 +10,7 @@ local threshold = nil
 for i = 1, NumJudgmentsAvailable() do
     if mods.TimingWindows[i] then
         if i == 1 and mods.ShowFaPlusWindow then
-            threshold = GetTimingWindow(1, "FA+")
+            threshold = GetTimingWindow(1, "FA+", mods.SmallerWhite)
         else
             threshold = GetTimingWindow(i)
         end
@@ -18,11 +18,24 @@ for i = 1, NumJudgmentsAvailable() do
     end
 end
 
+local W1 = SL.Preferences["FA+"].TimingWindowSecondsW1 + SL.Preferences.ITG.TimingWindowAdd
+
+local SplitWhites = mods.SmallerWhite and mods.SplitWhites and mods.ShowFaPlusWindow
+
 local function DisplayText(self, params)
     local score = ToEnumShortString(params.TapNoteScore)
     if score == "W1" or score == "W2" or score == "W3" or score == "W4" or score == "W5" then
         if math.abs(params.TapNoteOffset) > threshold then
             self:finishtweening()
+            local tenms = math.abs(params.TapNoteOffset) < W1
+
+            if SplitWhites then 
+                if tenms then 
+                    self:zoom(0.15)
+                else 
+                    self:zoom(0.3)
+                end
+            end
 
             self:diffusealpha(1)
                 :settext(params.Early and "EARLY" or "LATE")
@@ -30,6 +43,7 @@ local function DisplayText(self, params)
                 :x((params.Early and -1 or 1) * 40)
                 :sleep(0.5)
                 :diffusealpha(0)
+            
         else
             self:finishtweening()
             self:diffusealpha(0)
@@ -55,7 +69,7 @@ local af = Def.ActorFrame{
         JudgmentMessageCommand = function(self, params)
             if params.Player ~= player then return end
             if params.HoldNoteScore then return end
-
+                        
             if params.EarlyTapNoteScore ~= nil then
                 local tns = ToEnumShortString(params.TapNoteScore)
                 local earlyTns = ToEnumShortString(params.EarlyTapNoteScore)
@@ -72,7 +86,7 @@ local af = Def.ActorFrame{
                     end
                 end
             end
-
+            
             DisplayText(self, params)
         end
     },
