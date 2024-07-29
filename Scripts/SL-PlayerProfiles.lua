@@ -74,7 +74,13 @@ local permitted_profile_settings = {
 	TrackFoot            = "boolean",
 	ScaleGraph           = "boolean",
 
-	ErrorBar             = "string",
+	-- Error Bar Options --
+	Colorful             = "boolean",
+	Monochrome           = "boolean", 
+	Text                 = "boolean", 
+	Highlight            = "boolean",
+	Average              = "boolean",
+	--
 	ErrorBarUp           = "boolean",
 	ErrorBarMultiTick    = "boolean",
 	ErrorBarCap    		 = "number",
