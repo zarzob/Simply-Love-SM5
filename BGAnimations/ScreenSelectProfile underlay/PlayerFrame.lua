@@ -338,7 +338,7 @@ return Def.ActorFrame{
 					SetCommand=function(self, params)
 						local underlay = SCREENMAN:GetTopScreen():GetChild("Underlay")
 						if params and params.noteskin then
-							local noteskin = underlay:GetChild("NoteSkin_"..params.noteskin)
+							local noteskin = underlay:GetChild("NoteSkin_"..params.noteskin.."_arrow_Up")
 							if noteskin then
 								self:visible(true):SetTarget(noteskin)
 							else
