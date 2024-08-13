@@ -256,11 +256,12 @@ end
 
 -- ----------------------------------------------------------------
 -- Returns the total amount of stream and break measures in a chart.
-GetTotalStreamAndBreakMeasures = function(pn)
+GetTotalStreamAndBreakMeasures = function(pn, fullMeasures)
 	local totalStream, totalBreak = 0, 0
 	local edgeBreak = 0
 	local lastSegmentWasStream = false
 	local segments = {}
+	local addition = fullMeasures and 2 or 0
 	
 	local GetDensity = function(segments)
 		local total_stream = 0
@@ -275,22 +276,22 @@ GetTotalStreamAndBreakMeasures = function(pn)
 
 	
 	if GetDisplayBPMs(pn)[1] == GetDisplayBPMs(pn)[2] then
-		segments = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, 30)
+		segments = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, 30+addition)
 		
 		if #segments == 0 or GetDensity(segments) < 0.2 then
 			multiplier = 1.5
-			segments = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, 22)
+			segments = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, 22+addition)
 		end
 		
 		if #segments == 0 or GetDensity(segments) < 0.2 then
 			multiplier = 1.25
-			segments = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, 18)
+			segments = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, 18+addition)
 		end
 	end
 	
 	if #segments == 0 or GetDensity(segments) < 0.2 then
 		multiplier = 1
-		segments = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, 14)
+		segments = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, 14+addition)
 	end
 	
 	for i, segment in ipairs(segments) do

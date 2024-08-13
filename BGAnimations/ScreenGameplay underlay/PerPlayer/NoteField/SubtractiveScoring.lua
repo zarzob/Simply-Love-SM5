@@ -351,7 +351,7 @@ bmt.SetScoreCommand=function(self, params)
 					self:settext( ("+%.2f%%"):format(math.floor(pace - rivalPace) / 100) )
 				end
 			elseif mods.MiniIndicator == "StreamProg" then
-				local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
+				local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn,true)
 				if streamMeasures == 0 then return end
 				local measuresCompleted = SL[pn].MeasuresCompleted
 				local completion = measuresCompleted / streamMeasures
