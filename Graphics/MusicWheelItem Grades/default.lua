@@ -61,9 +61,8 @@ local function GetLamp(song)
 		return nil
 	end
 
-	local best_lamp = nil
-
 	for score in ivalues(high_score_list:GetHighScores()) do
+		local best_lamp = nil
 		local award = score:GetStageAward()
 		
 		if award and AwardMap[award] ~= nil then
