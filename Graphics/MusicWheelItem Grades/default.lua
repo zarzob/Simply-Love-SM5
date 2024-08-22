@@ -61,15 +61,16 @@ local function GetLamp(song)
 		return nil
 	end
 
+	local best_lamp = nil
+
 	for score in ivalues(high_score_list:GetHighScores()) do
-		local best_lamp = nil
 		local award = score:GetStageAward()
 		
 		if award and AwardMap[award] ~= nil then
 			best_lamp = math.min(best_lamp and best_lamp or 999, AwardMap[award])
 		end
 		
-		if best_lamp == 1 and score:GetScore() == 0 then
+		if AwardMap[award] == best_lamp and best_lamp == 1 and score:GetScore() == 0 then
 			best_lamp = 0
 		elseif best_lamp == nil then
 			if score:GetGrade() == "Grade_Failed" then best_lamp = 52
