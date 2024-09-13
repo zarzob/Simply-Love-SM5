@@ -9,6 +9,9 @@ local pn = ToEnumShortString(player)
 
 local IsNotWide = (GetScreenAspectRatio() < 16/9)
 
+local currentFolder = ""
+local currentDifficulty = ""	
+
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:y(_screen.cy*0.3)
@@ -76,6 +79,7 @@ af2.BuildSongLampArrayCommand=function(self)
 		else
 			self:visible(true)
 			local scores = {
+				Grade_Tier00 = 0,
 				Grade_Tier01 = 0,
 				Grade_Tier02 = 0,
 				Grade_Tier03 = 0,
@@ -90,30 +94,38 @@ af2.BuildSongLampArrayCommand=function(self)
 			if steps then
 				local difficulty = steps:GetDifficulty()
 				-- Get profile and current difficulty
-				for song in ivalues(songs) do
-					local allsteps = song:GetAllSteps()
-					for songsteps in ivalues(allsteps) do
-						local stepsdiff = songsteps:GetDifficulty()
-						if difficulty == stepsdiff and stepstype == songsteps:GetStepsType() then
-							countSongs = countSongs + 1
-							HighScoreList = profile:GetHighScoreListIfExists(song,songsteps)
-							if HighScoreList ~= nil then 
-								HighScores = HighScoreList:GetHighScores()
-								-- Get highest score
-								if #HighScores > 0 then
-									local grade = HighScores[1]:GetGrade()
-									if grade ~= "Grade_Failed" then
-										scores["Passes"] = scores["Passes"] + 1
-										if grades[grade] < 4 then
-											scores[grade] = scores[grade] + 1
+				if folderName ~= currentFolder or difficulty ~= currentDifficulty then
+					currentFolder = folderName
+					currentDifficulty = difficulty
+					for song in ivalues(songs) do
+						local allsteps = song:GetAllSteps()
+						for songsteps in ivalues(allsteps) do
+							local stepsdiff = songsteps:GetDifficulty()
+							if difficulty == stepsdiff and stepstype == songsteps:GetStepsType() then
+								countSongs = countSongs + 1
+								HighScoreList = profile:GetHighScoreListIfExists(song,songsteps)
+								if HighScoreList ~= nil then 
+									HighScores = HighScoreList:GetHighScores()
+									-- Get highest score
+									if #HighScores > 0 then
+										local grade = HighScores[1]:GetGrade()
+										if grade ~= "Grade_Failed" then
+											scores["Passes"] = scores["Passes"] + 1
+											if grades[grade] < 4 then
+												if grade == "Grade_Tier01" and HighScores[1]:GetScore() == 0 then
+													scores["Grade_Tier00"] = scores["Grade_Tier00"] + 1
+												else
+													scores[grade] = scores[grade] + 1
+												end
+											end
 										end
 									end
 								end
 							end
 						end
 					end
+					self:playcommand("FolderSummary", {folderName=folderName, profileName=profileName, countSongs=countSongs, scores=scores, difficulty=difficulty })
 				end
-				self:playcommand("FolderSummary", {folderName=folderName, profileName=profileName, countSongs=countSongs, scores=scores, difficulty=difficulty })
 			else
 				self:visible(false)
 			end
@@ -206,7 +218,37 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 }
 
 -- Grades and grade count
-local columnWidth = IsNotWide and 75 or 100
+local columnWidth = IsNotWide and 62 or 80
+af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+	Name="Grade0",
+	Text="",
+	FolderSummaryCommand=function(self,params)
+		local text = params.scores["Grade_Tier00"]
+		self:settext(text)
+		self:x(-210+columnWidth)
+		self:y(52)
+		self:zoom(1.4)
+		if IsNotWide then
+			self:zoom(1.05)
+			self:x(-170+columnWidth)
+			self:y(45)
+		end
+	end
+}
+af2[#af2+1] = Def.Sprite{
+	Texture=THEME:GetPathG("MusicWheelItem","Grades/quint.png"),
+	InitCommand=function(self) self:zoom( SL_WideScale(0.18, 0.3) ):animate(false) end,
+	FolderSummaryCommand=function(self, params)
+		self:x(-250+columnWidth)
+		self:y(52)
+		self:zoom(0.5)
+		if IsNotWide then
+			self:zoom(0.38)
+			self:x(-200+columnWidth)
+			self:y(45)
+		end
+	end
+}
 for i=1,4 do
 	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Grade" ..i,
@@ -214,12 +256,12 @@ for i=1,4 do
 		FolderSummaryCommand=function(self,params)
 			local text = params.scores["Grade_Tier0"..i]
 			self:settext(text)
-			self:x(-220+columnWidth*i)
+			self:x(-210+columnWidth*(i+1))
 			self:y(52)
 			self:zoom(1.4)
 			if IsNotWide then
 				self:zoom(1.05)
-				self:x(-170+columnWidth*i)
+				self:x(-170+columnWidth*(i+1))
 				self:y(45)
 			end
 		end
@@ -229,12 +271,12 @@ for i=1,4 do
 		InitCommand=function(self) self:zoom( SL_WideScale(0.18, 0.3) ):animate(false) end,
 		FolderSummaryCommand=function(self, params)
 			self:setstate(grades["Grade_Tier0"..i])
-			self:x(-270+columnWidth*i)
+			self:x(-250+columnWidth*(i+1))
 			self:y(52)
 			self:zoom(0.5)
 			if IsNotWide then
 				self:zoom(0.38)
-				self:x(-200+columnWidth*i)
+				self:x(-200+columnWidth*(i+1))
 				self:y(45)
 			end
 		end
