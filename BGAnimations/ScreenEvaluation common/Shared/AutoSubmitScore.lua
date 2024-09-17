@@ -128,6 +128,49 @@ local AttemptDownloads = function(res)
 	end
 end
 
+local ScreenshotQR = function(playernum)
+	-- format a localized month string like "06-June" or "12-Diciembre"
+	local month = ("%02d-%s"):format(MonthOfYear()+1, THEME:GetString("Months", "Month"..MonthOfYear()+1))
+
+	-- get the FullTitle of the song or course that was just played
+	local title = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse():GetDisplayFullTitle() or GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
+
+	-- song titles can be very long, and the engine's SaveScreenshot() function
+	-- is already hardcoded to make the filename long via DateTime::GetNowDateTime()
+	-- so, let's use only the first 25 characters of the title in the screenshot filename
+	title = title:utf8sub(1,25)
+
+	-- substitute all symbols with underscores to avoid file name conflicts
+	title = title:gsub("%W", "_")
+
+	-- organize screenshots Love into directories, like...
+	--      ./Screenshots/Simply_Love/2020/04-April/DVNO-2020-04-22_175951.png
+	-- note that the engine's SaveScreenshot() function will convert whitespace
+	-- characters to underscores, so we might as well just use underscores here
+	local prefix = "Simply_Love/QRCodes/" .. Year() .. "/" .. month .. "/"
+	local suffix = "_" .. title
+
+	-- attempt to write a screenshot to disk
+	-- arg1 is playernumber that requsted the screenshot; if they are using a profile, the screenshot will be saved there
+	-- arg2 is a boolean for whether to use lossy compression on the screenshot before writing to disk
+	-- arg3 is a boolean for whther to have CRYPTMAN use the machine's private key to sign the screenshot
+	--      (there is currently no online system in place that I know that would benefit from that^)
+	-- arg4 is an optional string to prefix the filename with
+	-- arg5 is an optional string to append to the end of the filename
+	--
+	-- first return value is boolean indicating success/failure to write to disk
+	-- second return value is
+	--     (directory + filename) if write to disk was successful
+	--     (filename)             if write to disk failed
+		
+	local success, path = SaveScreenshot("P1", false, false , prefix, suffix)
+
+	if success then
+		MESSAGEMAN:Broadcast("ScreenshotCurrentScreen")
+		SM("Automatically saved QR screenshot")
+	end
+end
+
 local AutoSubmitRequestProcessor = function(res, overlay)
 	local P1SubmitText = overlay:GetChild("AutoSubmitMaster"):GetChild("P1SubmitText")
 	local P2SubmitText = overlay:GetChild("AutoSubmitMaster"):GetChild("P2SubmitText")
@@ -528,9 +571,30 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 	SubmitFailedCommand=function(self)
 		self:settext("Submit Failed 😞")
 		DiffuseEmojis(self)
+		
+		local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+		if GAMESTATE:IsSideJoined(PLAYER_2) then
+			p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		else
+			p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		end
+		p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
+		self:sleep(0.1):queuecommand("SS")
 	end,
 	TimedOutCommand=function(self)
 		self:settext("Timed Out")
+		
+		local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+		if GAMESTATE:IsSideJoined(PLAYER_2) then
+			p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		else
+			p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		end
+		p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
+		self:sleep(0.1):queuecommand("SS")
+	end,
+	SSCommand=function(self)
+		ScreenshotQR("PlayerNumber_P1")
 	end
 }
 
@@ -550,9 +614,30 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 	SubmitFailedCommand=function(self)
 		self:settext("Submit Failed 😞")
 		DiffuseEmojis(self)
+		
+		local p1pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+		if GAMESTATE:IsSideJoined(PLAYER_1) then
+			p1pane:GetChild("Pane" .. SL["P1"].EvalPanePrimary .. "_SideP1"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		else
+			p1pane:GetChild("Pane" .. SL["P1"].EvalPaneSecondary .. "_SideP1"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		end
+		p1pane:GetChild("Pane7_SideP1"):visible(true):sleep(0.2):diffusealpha(0)
+		self:sleep(0.1):queuecommand("SS")
 	end,
 	TimedOutCommand=function(self)
 		self:settext("Timed Out")
+		
+		local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+		if GAMESTATE:IsSideJoined(PLAYER_2) then
+			p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		else
+			p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		end
+		p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
+		self:sleep(0.1):queuecommand("SS")
+	end,
+	SSCommand=function(self)
+		ScreenshotQR("PlayerNumber_P2")
 	end
 }
 
