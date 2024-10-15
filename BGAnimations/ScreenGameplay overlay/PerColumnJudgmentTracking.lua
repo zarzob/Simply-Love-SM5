@@ -116,12 +116,5 @@ return Def.Actor{
 				end
 			end
 		end
-	end,
-	EarlyHitMessageCommand=function(self, params)
-		if params.Player == player then
-			local col = params.Column + 1
-			local tns = ToEnumShortString(params.TapNoteScore)
-			judgments[col]["Early"][tns] = judgments[col]["Early"][tns] + 1
-		end
 	end
 }
