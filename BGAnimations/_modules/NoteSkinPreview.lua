@@ -76,7 +76,7 @@ if okay and noteskin_actor then
 	return noteskin_actor..{
 		Name="NoteSkin_"..noteskin_name.."_arrow_"..column,
 		InitCommand=function(self)
-			self:visible(true):addx(offset)
+			self:visible(false):addx(offset)
 			local spacingX = NOTESKIN:GetMetricFForNoteSkin("Tap Note", "TapNoteNoteColorTextureCoordSpacingX", noteskin_name)
 			local spacingY = NOTESKIN:GetMetricFForNoteSkin("Tap Note", "TapNoteNoteColorTextureCoordSpacingY", noteskin_name)
 	

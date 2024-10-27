@@ -135,11 +135,6 @@ else
 	target_grade_score = tonumber(SL[pn].ActiveModifiers.TargetScoreNumber) / 100
 end
 
--- if there is no personal/machine score, default to S as target
-if target_grade_score == 0 then
-	target_grade_score = THEME:GetMetric("PlayerStageStats", "GradePercentTier06")
-end
-
 -- ---------------------------------------------------------------
 
 return target_grade_score, pos_data, GetTopScore("Personal")
