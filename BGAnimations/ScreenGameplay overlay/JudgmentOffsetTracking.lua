@@ -17,6 +17,7 @@ local foot
 
 local hitEarly = false
 local earlyOffset = 0
+local heldMiss = false
 
 return Def.Actor{
 	EarlyHitMessageCommand=function(self, params)
@@ -53,6 +54,10 @@ return Def.Actor{
 				if tnt == "Tap" or tnt == "HoldHead" or tnt == "Lift" then
 					local tns = ToEnumShortString(params.TapNoteScore)
 					arrow = arrow + col
+					
+					if tnt ~= "Lift" and tns == "Miss" and tapnote:GetTapNoteResult():GetHeld() then
+						heldMiss = true
+					end
 					
 					if arrow == 1 then
 						foot=true
@@ -91,8 +96,9 @@ return Def.Actor{
 
 			-- Store judgment offsets (including misses) in an indexed table as they occur.
 			-- Also store the CurMusicSeconds for Evaluation's scatter plot.
-			sequential_offsets[#sequential_offsets+1] = { courseOffset + GAMESTATE:GetCurMusicSeconds(), offset, arrow, isStream, foot, hitEarly, earlyOffset }
+			sequential_offsets[#sequential_offsets+1] = { courseOffset + GAMESTATE:GetCurMusicSeconds(), offset, arrow, isStream, foot, hitEarly, earlyOffset, heldMiss }
 			hitEarly = false
+			heldMiss = false
 			earlyOffset = 0
 		end
 	end,

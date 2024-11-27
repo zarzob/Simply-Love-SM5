@@ -86,6 +86,7 @@ for t in ivalues(sequential_offsets) do
 	
 	EarlyHit = t[6]
 	EarlyOffset = t[7]
+	HeldMiss = t[8]
 
 	if Offset ~= "Miss" then
 		CurrentSecond = CurrentSecond - Offset
@@ -185,7 +186,7 @@ for t in ivalues(sequential_offsets) do
 			c = colors[TimingWindow]
 
 			if mods.ShowFaPlusWindow and mods.ShowFaPlusPane then
-				abs_offset = math.abs(EarlyOffset)
+				abs_offset = math.abs(Offset)
 				if abs_offset > GetTimingWindow(1, "FA+") and abs_offset <= GetTimingWindow(2, "FA+") then
 					c = SL.JudgmentColors["FA+"][2]
 				end
@@ -200,19 +201,27 @@ for t in ivalues(sequential_offsets) do
 			g = 0
 			b = 0
 		end
-		-- else, a miss should be a quadrilateral that is the height of the entire graph and red
+		-- else, a miss should be a quadrilateral that is the height of half of the graph and red
+		-- if the miss is held, fill the upper half. otherwise, fill the lower half
+		-- if the graph is capped to Greats, use these too
+		local h1 = HeldMiss and GraphHeight/2 or 0
+		local h2 = HeldMiss and GraphHeight or GraphHeight/2
+		if Offset ~= "Miss" then
+			h1 = Offset>0 and 0 or GraphHeight/2
+			h2 = Offset>0 and GraphHeight/2 or GraphHeight
+		end
 		if death_second ~= nil and CurrentSecond / MusicRate > death_second then
-			col = {r,g,b,0.15}
-			table.insert( verts, {{x, 0, 0}, col} )
-			table.insert( verts, {{x+1, 0, 0}, col} )
-			table.insert( verts, {{x+1, GraphHeight, 0}, col} )
-			table.insert( verts, {{x, GraphHeight, 0}, col} )
+			col = {r,g,b,0.08}
+			table.insert( verts, {{x, h1, h1}, col} )
+			table.insert( verts, {{x+1, h1, h1}, col} )
+			table.insert( verts, {{x+1, h2, h2}, col} )
+			table.insert( verts, {{x, h2, h2}, col} )
 		else
 			col = {r,g,b,0.3}
-			table.insert( verts, {{x, 0, 0}, col} )
-			table.insert( verts, {{x+1, 0, 0}, col} )
-			table.insert( verts, {{x+1, GraphHeight, 0}, col} )
-			table.insert( verts, {{x, GraphHeight, 0}, col} )
+			table.insert( verts, {{x, h1, h1}, col} )
+			table.insert( verts, {{x+1, h1, h1}, col} )
+			table.insert( verts, {{x+1, h2, h2}, col} )
+			table.insert( verts, {{x, h2, h2}, col} )
 		end
 	end
 end
