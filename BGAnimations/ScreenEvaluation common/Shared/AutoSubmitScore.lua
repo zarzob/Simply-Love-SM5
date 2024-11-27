@@ -163,7 +163,7 @@ local ScreenshotQR = function(playernum)
 	--     (directory + filename) if write to disk was successful
 	--     (filename)             if write to disk failed
 		
-	local success, path = SaveScreenshot("P1", false, false , prefix, suffix)
+	local success, path = SaveScreenshot(playernum, false, false , prefix, suffix)
 
 	if success then
 		MESSAGEMAN:Broadcast("ScreenshotCurrentScreen")
@@ -572,29 +572,33 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		self:settext("Submit Failed 😞")
 		DiffuseEmojis(self)
 		
-		local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
-		if GAMESTATE:IsSideJoined(PLAYER_2) then
-			p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
-		else
-			p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		if PROFILEMAN:IsPersistentProfile(PLAYER_1) then
+			local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+			if PROFILEMAN:IsPersistentProfile(PLAYER_2) then
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			else
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			end
+			p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
+			self:sleep(0.1):queuecommand("SS")
 		end
-		p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
-		self:sleep(0.1):queuecommand("SS")
 	end,
 	TimedOutCommand=function(self)
 		self:settext("Timed Out")
 		
-		local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
-		if GAMESTATE:IsSideJoined(PLAYER_2) then
-			p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
-		else
-			p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		if PROFILEMAN:IsPersistentProfile(PLAYER_1) then
+			local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+			if PROFILEMAN:IsPersistentProfile(PLAYER_2) then
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			else
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			end
+			p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
+			self:sleep(0.1):queuecommand("SS")
 		end
-		p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
-		self:sleep(0.1):queuecommand("SS")
 	end,
 	SSCommand=function(self)
-		ScreenshotQR("PlayerNumber_P1")
+		ScreenshotQR("P1")
 	end
 }
 
@@ -615,29 +619,33 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		self:settext("Submit Failed 😞")
 		DiffuseEmojis(self)
 		
-		local p1pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
-		if GAMESTATE:IsSideJoined(PLAYER_1) then
-			p1pane:GetChild("Pane" .. SL["P1"].EvalPanePrimary .. "_SideP1"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
-		else
-			p1pane:GetChild("Pane" .. SL["P1"].EvalPaneSecondary .. "_SideP1"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		if PROFILEMAN:IsPersistentProfile(PLAYER_2) then
+			local p1pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+			if PROFILEMAN:IsPersistentProfile(PLAYER_1) then
+				p1pane:GetChild("Pane" .. SL["P1"].EvalPanePrimary .. "_SideP1"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			else
+				p1pane:GetChild("Pane" .. SL["P1"].EvalPaneSecondary .. "_SideP1"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			end
+			p1pane:GetChild("Pane7_SideP1"):visible(true):sleep(0.2):diffusealpha(0)
+			self:sleep(0.1):queuecommand("SS")
 		end
-		p1pane:GetChild("Pane7_SideP1"):visible(true):sleep(0.2):diffusealpha(0)
-		self:sleep(0.1):queuecommand("SS")
 	end,
 	TimedOutCommand=function(self)
 		self:settext("Timed Out")
 		
-		local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
-		if GAMESTATE:IsSideJoined(PLAYER_2) then
-			p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
-		else
-			p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+		if PROFILEMAN:IsPersistentProfile(PLAYER_2) then
+			local p2pane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild("Panes")
+			if PROFILEMAN:IsPersistentProfile(PLAYER_1) then
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPanePrimary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			else
+				p2pane:GetChild("Pane" .. SL["P2"].EvalPaneSecondary .. "_SideP2"):visible(false):diffusealpha(0):sleep(0.2):visible(true):diffusealpha(1)
+			end
+			p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
+			self:sleep(0.1):queuecommand("SS")
 		end
-		p2pane:GetChild("Pane7_SideP2"):visible(true):sleep(0.2):diffusealpha(0)
-		self:sleep(0.1):queuecommand("SS")
 	end,
 	SSCommand=function(self)
-		ScreenshotQR("PlayerNumber_P2")
+		ScreenshotQR("P2")
 	end
 }
 
