@@ -287,7 +287,7 @@ for i=1,4 do
 			self:zoom(1.4)
 			if IsNotWide then
 				self:zoom(1.05)
-				self:x(-170+columnWidth*(i+1))
+				self:x(-(columnWidth*params.bestGrade/2)+15+columnWidth*(i-(5-params.bestGrade)+0.5))
 				self:y(45)
 			end
 		end
@@ -307,7 +307,7 @@ for i=1,4 do
 			self:zoom(0.5)
 			if IsNotWide then
 				self:zoom(0.38)
-				self:x(-200+columnWidth*(i+1))
+				self:x(-(columnWidth*params.bestGrade/2)-15+columnWidth*(i-(5-params.bestGrade)+0.5))
 				self:y(45)
 			end
 		end
