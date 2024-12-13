@@ -127,7 +127,7 @@ for columnIndex=1,numColumns do
 				self:animate(false):visible(false)
 
 				local mini = mods.Mini:gsub("%%","") / 100
-				self:addx((mods.NoteFieldOffsetX * (1 + mini)) * 2)
+				self:addx(((mods.NoteFieldOffsetX * -1) * (1 + mini)) * 2)
 				self:addy((mods.NoteFieldOffsetY * (1 + mini)) * 2)
 				
 				-- if we are on ScreenEdit, judgment graphic is always "Love"
