@@ -706,7 +706,7 @@ GetExJudgmentCounts = function(player)
 		-- Get the count.
 		local number = stats:GetTapNoteScores( "TapNoteScore_"..window )
 		-- We need to extract the W0 count in ITG mode.
-		if window == "W1" then
+		if window == "W1" and SL.Global.GameMode == "ITG" then
 			local faPlus = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts.W0_total
 			local faPlus10 = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts.W010_total
 			-- Subtract FA+ count from the overall fantastic window count.
