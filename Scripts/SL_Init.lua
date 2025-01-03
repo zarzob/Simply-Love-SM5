@@ -470,6 +470,18 @@ SL = {
 		Held=1,
 		HitMine=-1
 	},
+	SuperExWeights = {
+		W010=3.5,
+		W110=3,
+		W2=1,
+		W3=0,
+		W4=0,
+		W5=0,
+		Miss=0,
+		LetGo=0,
+		Held=1,
+		HitMine=-1
+	},
 	-- Fields used to determine whether or not we can connect to the
 	-- GrooveStats services.
 	GrooveStats = {

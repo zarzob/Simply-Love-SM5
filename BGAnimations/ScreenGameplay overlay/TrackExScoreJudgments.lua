@@ -125,6 +125,7 @@ return Def.Actor{
 					Player=player, 
 					ExCounts=storage.ex_counts, 
 					ExScore=CalculateExScore(player,storage.ex_counts), 
+					SuperExScore=CalculateSuperExScore(player,storage.ex_counts),
 					actual_points=actual_points, 
 					actual_possible=actual_possible 
 				}

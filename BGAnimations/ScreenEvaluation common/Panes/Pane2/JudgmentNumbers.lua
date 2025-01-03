@@ -102,9 +102,21 @@ end
 
 -- then handle hands/ex, holds, mines, rolls
 for index, RCType in ipairs(RadarCategories.Types) do
-	-- Swap to displaying ITG score if we're showing EX score in gameplay.
+	-- Behavior
+	-- If ShowEXScore and not ShowSuperEXScore - show ITG score in white 
+	-- If ShowEXScore and ShowSuperEXScore - marquee between white ITG score and pink S.EX score
+	-- else show EX score in (judgment window color)
 	local percent = nil
-	if SL[pn].ActiveModifiers.ShowEXScore then
+	local percentSuperEX = nil
+	
+	if SL[pn].ActiveModifiers.ShowEXScore and SL[pn].ActiveModifiers.ShowSuperEXScore then
+		local PercentDP = pss:GetPercentDancePoints()
+		percent = FormatPercentScore(PercentDP):gsub("%%", "")
+		-- Format the Percentage string, removing the % symbol
+		percent = tonumber(percent)
+
+		percentSuperEX = CalculateSuperExScore(player, counts)
+	elseif SL[pn].ActiveModifiers.ShowEXScore then
 		local PercentDP = pss:GetPercentDancePoints()
 		percent = FormatPercentScore(PercentDP):gsub("%%", "")
 		-- Format the Percentage string, removing the % symbol
@@ -114,6 +126,9 @@ for index, RCType in ipairs(RadarCategories.Types) do
 	end
 
 	if index == 1 then
+		-- @TODO: Marquee flip between ITG and S.EX, currently hard-coding S.EX
+		local showSuperEX = true
+
 		t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 			Name="Percent",
 			Text=("%.2f"):format(percent),
@@ -127,7 +142,26 @@ for index, RCType in ipairs(RadarCategories.Types) do
 				else
 					self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 				end
+			end,
+			BeginCommand=function(self)
+				self:playcommand("Marquee")
+			end,
+			MarqueeCommand=function(self)
+				if not SL[pn].ActiveModifiers.ShowSuperEXScore or not SL[pn].ActiveModifiers.ShowEXScore then
+					return
+				end
+				if showSuperEX then
+					self:settext(("%.2f"):format(percentSuperEX))
+					self:diffuse(color("#FF00CC"))
+					showSuperEX = false
+				else
+					self:settext(("%.2f"):format(percent))
+					self:diffuse(Color.White)
+					showSuperEX = true
+				end
+				self:sleep(2):queuecommand("Marquee")
 			end
+			
 		}
 	end
 
