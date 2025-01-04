@@ -16,6 +16,7 @@ local permitted_profile_settings = {
 	SpeedModType     = "string",
 	SpeedMod         = "number",
 	Mini             = "string",
+	Spacing          = "string",
 	NoteSkin         = "string",
 	JudgmentGraphic  = "string",
 	ComboFont        = "string",

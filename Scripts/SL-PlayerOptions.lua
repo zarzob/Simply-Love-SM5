@@ -322,6 +322,29 @@ local Overrides = {
 		end
 	},
 	-------------------------------------------------------------------------
+	Spacing = {
+		Choices = function()
+			local first	= -100
+			local last 	= 100
+			local step 	= 1
+
+			return stringify( range(first, last, step), "%g%%")
+		end,
+		SaveSelections = function(self, list, pn)
+			local mods, playeroptions = GetModsAndPlayerOptions(pn)
+
+			for i=1,#self.Choices do
+				if list[i] then
+					mods.Spacing = self.Choices[i]
+				end
+			end
+
+			-- to make the arrows smaller, pass Mini() a value between 0 and 1
+			-- (to make the arrows bigger, pass Mini() a value larger than 1)
+			playeroptions:Flip( -mods.Spacing:gsub("%%","")/100 )
+		end
+	},
+	-------------------------------------------------------------------------
 	MusicRate = {
 		Choices = function()
 			local first	= 0.05

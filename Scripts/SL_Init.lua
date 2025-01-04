@@ -12,6 +12,7 @@ local PlayerDefaults = {
 				HoldJudgment = "Love 1x2 (doubleres).png",
 				NoteSkin = nil,
 				Mini = "0%",
+				Spacing = "0%",
 				BackgroundFilter = 0,
 				VisualDelay = "0ms",
 
