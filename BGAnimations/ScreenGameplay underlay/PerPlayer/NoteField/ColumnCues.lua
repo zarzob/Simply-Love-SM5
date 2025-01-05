@@ -144,6 +144,9 @@ for columnIndex=1,numColumns do
 					:vertalign(top)
 					:setsize(width/numColumns, _screen.h - yOffset)
 					:fadebottom(0.333)
+				
+				local spacing = mods.Spacing:gsub("%%","")/100
+				self:addx((columnIndex - (numColumns/2 + 0.5))*2 * (width/numColumns) * spacing)
 
 				if IsReversedColumn(player, columnIndex) then
 					self:rotationz(180)
