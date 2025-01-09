@@ -139,8 +139,6 @@ for index, label in ipairs(RadarCategories) do
 		end
 
 
-		-- @TODO - Marquee flip between ITG and S.EX scores
-		-- for now I'm essentially hardcoding the S.EX option
 		t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") == "Common" and "Wendy/_wendy small"
 							or ThemePrefs.Get("ThemeFont") == "Mega" and "Mega/_mega font"
 							or ThemePrefs.Get("ThemeFont") == "Unprofessional" and "Unprofessional/_unprofessional small")..{

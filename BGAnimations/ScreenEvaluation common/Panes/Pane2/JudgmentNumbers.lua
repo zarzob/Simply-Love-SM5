@@ -126,7 +126,6 @@ for index, RCType in ipairs(RadarCategories.Types) do
 	end
 
 	if index == 1 then
-		-- @TODO: Marquee flip between ITG and S.EX, currently hard-coding S.EX
 		local showSuperEX = true
 
 		t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
