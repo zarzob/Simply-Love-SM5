@@ -1,6 +1,8 @@
 local player = ...
 local pn = ToEnumShortString(player)
 
+if SL.Global.GameMode == "Casual" then return end
+
 -- We only want to count it if the user didn't fail
 local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player) 
 if stats:GetFailed() then return end
