@@ -118,6 +118,9 @@ local input = function(event)
 					else
 						SM("No Favorites Available")
 					end
+				elseif focus.new_overlay == "SetSummary" then
+					SCREENMAN:GetTopScreen():SetNextScreenName("ScreenEvaluationSummarySet")
+					SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 				end
 			end
 

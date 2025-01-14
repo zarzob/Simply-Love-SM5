@@ -341,6 +341,11 @@ local t = Def.ActorFrame {
 				break
 			end
 		end
+		
+		if SL.Global.Stages.PlayedThisGame > 0 then
+			table.insert(wheel_options, {"SetSummaryText", "SetSummary"})
+		end
+		
 		-- Override sick_wheel's default focus_pos, which is math.floor(num_items / 2)
 		--
 		-- keep in mind that num_items is the number of Actors in the wheel (here, 7)
