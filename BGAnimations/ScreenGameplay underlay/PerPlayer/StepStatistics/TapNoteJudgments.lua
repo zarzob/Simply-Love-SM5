@@ -185,7 +185,7 @@ for index, window in ipairs(TNS.Types) do
 			
 			if index == 1 and SL[pn].ActiveModifiers.SmallerWhite and ShowFaPlusWindow then
 				af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-					Text="(10ms)",
+					Text="(12ms)",
 					InitCommand=function(self)
 						self:zoom(0.6):maxwidth(72)
 						self:halign( PlayerNumber:Reverse()[player] )
