@@ -177,7 +177,7 @@ RequestResponseActor = function(x, y)
 					self:diffuse(GetHexColor(SL.Global.ActiveColorIndex, true))
 				end
 			},
-			LoadFont("Common Normal")..{
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				InitCommand=function(self)
 					self:zoom(0.9)
 					-- Leaderboard should be white since it's on a black background.

@@ -8,8 +8,8 @@ local day = DayOfMonth()
 local IsEventActive = function()
 	-- The file is only written to while the event is active.
 	-- These are just placeholder dates.
-	local startTimestamp = 20230601
-	local endTimestamp = 20240601
+	local startTimestamp = 202406017
+	local endTimestamp = 20250301
 
 	local today = year * 10000 + month * 100 + day
 
@@ -30,14 +30,14 @@ end
 local isRpgFolder=function(self)
 	local song = GAMESTATE:GetCurrentSong()
 	local group = song:GetGroupName()
-	local rpgsong = string.find(string.upper(group), "STAMINA RPG 7")
+	local rpgsong = string.find(string.upper(group), "STAMINA RPG 8")
 	return rpgsong
 end
 
 
 -- -----------------------------------------------------------------------
 WriteRpgFile = function(dir, song, rate)
-	local path = dir.. "SRPG7.rpg"
+	local path = dir.. "SRPG8.rpg"
 	local f = RageFileUtil:CreateRageFile()
 	local existing = ""
 	local recordType

@@ -92,7 +92,7 @@ for i, column in ipairs( cols ) do
 		-- don't add rows for TimingWindows that were turned off, but always add Miss
 		if SL[pn].ActiveModifiers.TimingWindows[j] or j==#rows or (mods.ShowFaPlusWindow and mods.ShowFaPlusPane and SL[pn].ActiveModifiers.TimingWindows[j-1]) then
 			-- add a BitmapText actor to be the number for this column
-			af[#af+1] = LoadFont("Common Normal")..{
+			af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				Text=SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].column_judgments[i][judgment],
 				InitCommand=function(self)
 					self:xy(_x, j*row_height + 4)
@@ -103,7 +103,7 @@ for i, column in ipairs( cols ) do
 			
 			if track_earlyjudgments and j ~= 1 then
 				-- the number of early judgments for this column
-				af[#af+1] = LoadFont("Common Normal")..{
+				af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 					Text=SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].column_judgments[i][judgment .. "early"],
 					InitCommand=function(self)
 						self:xy(_x - 1, j*row_height):zoom(0.65):halign(1)
@@ -117,7 +117,7 @@ for i, column in ipairs( cols ) do
 			end
 
 			if judgment == "W4" or judgment == "W5" then
-				af[#af+1] = LoadFont("Common Normal")..{
+				af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 					Text=SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].column_judgments[i]["Early"][judgment],
 					InitCommand=function(self)
 						self:xy(_x - 1, j*row_height - 6):zoom(0.65):halign(1)
@@ -136,7 +136,7 @@ for i, column in ipairs( cols ) do
 			
 			if track_foot and (i == 2 or i == 3) then
 				if judgment == "W4" or judgment == "W5" or judgment == "Miss" then
-					af[#af+1] = LoadFont("Common Normal")..{
+					af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 						Text=SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].column_judgments[i][judgment.."lf"],
 						InitCommand=function(self)
 							self:xy(_x - 1, j*row_height + 6):zoom(0.65):halign(1):diffuse(Color.Red)
@@ -149,7 +149,7 @@ for i, column in ipairs( cols ) do
 							end
 						end
 					}
-					af[#af+1] = LoadFont("Common Normal")..{
+					af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 						Text=SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].column_judgments[i][judgment.."rf"],
 						InitCommand=function(self)
 							self:xy(_x + 1, j*row_height + 6):zoom(0.65):halign(-1):diffuse(Color.Blue)
@@ -161,7 +161,7 @@ for i, column in ipairs( cols ) do
 	end
 
 	-- the number of MissBecauseHeld judgments for this column
-	af[#af+1] = LoadFont("Common Normal")..{
+	af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Text=SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].column_judgments[i].MissBecauseHeld,
 		InitCommand=function(self)
 			self:xy(_x - 1, 144):zoom(0.65):halign(1)

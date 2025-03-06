@@ -215,7 +215,7 @@ local af = Def.ActorFrame{
 	},
 
 	-- Main Body Text
-	LoadFont("Common Normal").. {
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		Name="BodyText",
 		Text="",
 		InitCommand=function(self)

@@ -66,7 +66,7 @@ return Def.ActorFrame{
 		},
 
 
-		LoadFont("Common Normal")..{
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			Text=Screen.String("Usage"),
 			InitCommand=function(self)
 				self:diffuse(Color.White)

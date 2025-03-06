@@ -351,7 +351,7 @@ bmt.SetScoreCommand=function(self, params)
 					self:settext( ("+%.2f%%"):format(math.floor(pace - rivalPace) / 100) )
 				end
 			elseif mods.MiniIndicator == "StreamProg" then
-				local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
+				local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn,true)
 				if streamMeasures == 0 then return end
 				local measuresCompleted = SL[pn].MeasuresCompleted
 				local completion = measuresCompleted / streamMeasures
@@ -376,12 +376,15 @@ bmt.GhostDataUpdatedMessageCommand=function(self,params)
 	if params.player == player then
 		-- Don't need mods check as it won't broadcast this message if ghost data is not enabled
 
-		-- Since there is rounding done for score, calculate each score from dance points independently
-		-- then subtract from each other
-		local score_target = math.floor(params.target/params.possible*10000)/100
-		local score_current = math.floor(params.current/params.possible*10000)/100
-		local display = score_current-score_target
-		
+		local current_possible = params.possible
+		local current_points = params.current
+		local ghost_current = params.target
+
+		local current_score = current_points/current_possible
+		local ghost_score = ghost_current/current_possible
+
+		local display = (current_score-ghost_score)*100
+
 		if display > 0 then	
 			self:settext("+" .. ("%.2f%%"):format(display))
 			self:diffuse(Color.Green)

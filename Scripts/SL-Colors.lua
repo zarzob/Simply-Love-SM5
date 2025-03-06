@@ -11,8 +11,8 @@ function GetHexColor( n, decorative, ITGdiff )
 	if decorative then
 		colorTable = SL.DecorativeColors
 	end
-	if style == "SRPG7" then
-		colorTable = SL.SRPG7.Colors
+	if style == "SRPG8" then
+		colorTable = SL.SRPG8.Colors
 	end
 	
 	if ITGdiff == "ITG" then 
@@ -28,7 +28,7 @@ function GetHexColor( n, decorative, ITGdiff )
 	local clr = ((n - 1) % #colorTable) + 1
 	if colorTable[clr] then
 		local c = color(colorTable[clr])
-		if (style == "SRPG7" or ITGdiff == "ITG") and not decorative then
+		if (style == "SRPG8" or ITGdiff == "ITG") and not decorative then
 			c = LightenColor(c)
 		end
 		return c
@@ -54,16 +54,18 @@ function DifficultyColor( difficulty, decorative )
 	
 	local currentSong = GAMESTATE:GetCurrentSong()
 	if currentSong then
-		if string.find(string.upper(currentSong:GetMainTitle()), "%(NOVICE%)") then
-			difficulty = 0
-		elseif string.find(string.upper(currentSong:GetMainTitle()), "%(EASY%)") then
-			difficulty = 1
-		elseif string.find(string.upper(currentSong:GetMainTitle()), "%(MEDIUM%)") then
-			difficulty = 2
-		elseif string.find(string.upper(currentSong:GetMainTitle()), "%(HARD%)") then
-			difficulty = 3
-		elseif string.find(string.upper(currentSong:GetMainTitle()), "%(EDIT%)") then
-			difficulty = 5
+		if difficulty == "Difficulty_Challenge" then
+			if string.find(string.upper(currentSong:GetMainTitle()), "%(NOVICE%)") then
+				difficulty = 0
+			elseif string.find(string.upper(currentSong:GetMainTitle()), "%(EASY%)") then
+				difficulty = 1
+			elseif string.find(string.upper(currentSong:GetMainTitle()), "%(MEDIUM%)") then
+				difficulty = 2
+			elseif string.find(string.upper(currentSong:GetMainTitle()), "%(HARD%)") then
+				difficulty = 3
+			elseif string.find(string.upper(currentSong:GetMainTitle()), "%(EDIT%)") then
+				difficulty = 5
+			end
 		end
 	end
 

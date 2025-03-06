@@ -31,7 +31,7 @@ local function GetLamp(song)
 	local steps = nil
 	
 	for check in ivalues(stepsList) do
-		if check:GetDifficulty() == diff then
+		if check:GetDifficulty() == diff and check:GetStepsType() == GAMESTATE:GetCurrentStyle():GetStepsType() then
 			steps = check
 			break
 		end
@@ -70,7 +70,7 @@ local function GetLamp(song)
 			best_lamp = math.min(best_lamp and best_lamp or 999, AwardMap[award])
 		end
 		
-		if best_lamp == 1 and score:GetScore() == 0 then
+		if AwardMap[award] == best_lamp and best_lamp == 1 and score:GetScore() == 0 then
 			best_lamp = 0
 		elseif best_lamp == nil then
 			if score:GetGrade() == "Grade_Failed" then best_lamp = 52
@@ -141,7 +141,9 @@ return Def.ActorFrame{
 				self:GetParent():GetChild("Grades"):visible(false)
 			else
 				self:visible(false)
-				if lamp ~= nil then self:GetParent():GetChild("Grades"):visible(true) end
+				if lamp ~= nil then
+					self:GetParent():GetChild("Grades"):visible(true)
+				end
 			end
 		end
 	},

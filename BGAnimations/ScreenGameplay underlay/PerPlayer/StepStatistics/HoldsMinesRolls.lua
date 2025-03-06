@@ -109,7 +109,7 @@ for i, category in ipairs(RadarCategories) do
 	local possibleAttr = { Diffuse=gray }
 
 	-- labels: holds, mines, rolls
-	af[#af+1] = LoadFont("Common Normal")..{
+	af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name=("%s_Label"):format(category),
 		Text=THEME:GetString("ScreenEvaluation", category),
 		InitCommand=function(self)

@@ -94,7 +94,7 @@ local meter = Def.ActorFrame{
 		end,
 	},
 	Def.BitmapText {
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		InitCommand=function(self)
 			self:visible(not IsNotWide and SL[pn].ActiveModifiers.ShowLifePercent)
 			self:diffuse(PlayerColor(player,true)):horizalign("left")

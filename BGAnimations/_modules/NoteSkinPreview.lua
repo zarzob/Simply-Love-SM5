@@ -8,6 +8,8 @@
 
 local args = ...
 local noteskin_name = args.noteskin_name or ""
+local offset = args.offset or 0
+local quant = args.quant or 0
 
 -- prepare a dummy Actor using the name of NoteSkin in case errors are
 -- encountered so that a valid (inert, not-drawing) actor still gets returned
@@ -72,8 +74,14 @@ if okay and noteskin_actor then
 	end
 
 	return noteskin_actor..{
-		Name="NoteSkin_"..noteskin_name,
-		InitCommand=function(self) self:visible(false) end
+		Name="NoteSkin_"..noteskin_name.."_arrow_"..column,
+		InitCommand=function(self)
+			self:visible(false):addx(offset)
+			local spacingX = NOTESKIN:GetMetricFForNoteSkin("Tap Note", "TapNoteNoteColorTextureCoordSpacingX", noteskin_name)
+			local spacingY = NOTESKIN:GetMetricFForNoteSkin("Tap Note", "TapNoteNoteColorTextureCoordSpacingY", noteskin_name)
+	
+			self:texturetranslate(spacingX*quant,spacingY*quant)
+		end
 	}
 end
 

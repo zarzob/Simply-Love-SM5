@@ -46,7 +46,7 @@ for section, offset in pairs(sections) do
 		Def.Quad{
 			InitCommand=function(self) self:y(10):zoomto(30,1):horizalign(left):diffusealpha(0.75) end
 		},
-		LoadFont("Common Normal")..{
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			Text=THEME:GetString("ScreenEdit", section.."Text"),
 			InitCommand=function(self) self:xy(10, 20):zoom(0.6):horizalign(left):vertalign(top):vertspacing(-1) end,
 		},

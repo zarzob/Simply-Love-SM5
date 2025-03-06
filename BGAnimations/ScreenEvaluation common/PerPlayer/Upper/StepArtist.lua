@@ -40,7 +40,7 @@ return Def.ActorFrame{
 			self:diffusealpha(0.7)
 		end
 	},
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		InitCommand=function(self) self:vertalign("VertAlign_Bottom"):zoom(0.7):xy(108,_screen.cy-42) end,
 		OnCommand=function(self)
 			local textColor = Color.White

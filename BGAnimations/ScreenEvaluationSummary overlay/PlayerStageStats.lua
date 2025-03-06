@@ -52,7 +52,7 @@ local af = Def.ActorFrame{
 
 -- profile name (only if there were any profile switches happening this session)
 if displayProfileNames then
-	af[#af+1] = LoadFont("Common Normal")..{
+	af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		InitCommand=function(self) self:zoom(0.5):horizalign(align1):x(col1x):y(-43) end,
 		DrawStageCommand=function(self)
 			if playerStats and profile then
@@ -69,6 +69,18 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 	InitCommand=function(self) self:zoom(0.5):horizalign(align1):x(col1x):y(-24) end,
 	DrawStageCommand=function(self)
 		if playerStats and score then
+		
+			if playerStats and playerStats.showex then
+				self:zoom(0.38):horizalign(align1):x(col1x):y(-12)
+			else
+				self:horizalign(align1):x(col1x)
+				if playerStats and playerStats.judgments.W0 then
+					self:zoom(0.48):y(-32)
+				else
+					self:zoom(0.5):y(-24)
+				end
+			end
+
 			-- trim off the % symbol
 			local score = string.sub(FormatPercentScore(score),1,-2)
 
@@ -82,17 +94,6 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 			end
 		else
 			self:settext("")
-		end
-		
-		if playerStats and playerStats.showex then
-			self:zoom(0.38):horizalign(align1):x(col1x):y(-12)
-		else
-			self:horizalign(align1):x(col1x)
-			if playerStats and playerStats.faplus then
-				self:zoom(0.48):y(-32)
-			else
-				self:zoom(0.5):y(-24)
-			end
 		end
 	end
 }
@@ -117,7 +118,7 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 
 -- stepchart style ("single" or "double" or etc.)
 -- difficulty text ("beginner" or "expert" or etc.)
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
 		self:y(17)
 		self:x(col1x + (player==PLAYER_1 and -1 or 1))
@@ -162,7 +163,7 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 }
 
 -- stepartist
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self) self:zoom(0.65):horizalign(align1):x(col1x):y(32) end,
 	DrawStageCommand=function(self)
 		if playerStats and stepartist then
@@ -203,22 +204,18 @@ for i=1,#TNSTypes do
 		end,
 		DrawStageCommand=function(self, params)
 			if playerStats and playerStats.judgments then
-				if playerStats.faplus then
+				if playerStats.judgments.W0 then
 					self:zoom(0.28):horizalign(align2):x(col2x):y(i*13 - 58):diffuse( Colors[i] )
 				else
 					self:zoom(0.28):horizalign(align2):x(col2x):y(i*13 - 63):diffuse( Colors[i] )
-					if i == 1 then
-						self:diffusealpha(0)
-					elseif i == 2 then
+					if i == 2 then
 						self:diffuse( Colors[1] )
 					end
 				end
-				if i ~= 1 or playerStats.faplus then
-					local val = playerStats.judgments[TNSTypes[i]]
-					if val then self:settext(val) end
-				end
+				local val = playerStats.judgments[TNSTypes[i]]
+				if val then self:settext(val) end
 
-				self:visible( (i == 1 and playerStats.timingwindows[1]) or playerStats.timingwindows[i-1] or i==#TNSTypes )
+				self:visible( (i == 1 and playerStats.judgments.W0 ~= nil) or playerStats.timingwindows[i-1] or i==#TNSTypes )
 			else
 				self:settext("")
 			end

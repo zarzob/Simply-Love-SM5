@@ -26,14 +26,14 @@ SL_CustomPrefs.Get = function()
 
 	if today >= 20230619 then
 		visualStyleChoices[#visualStyleChoices+1] = "😈"
-		visualStyleValues[#visualStyleValues+1] = "SRPG7"
+		visualStyleValues[#visualStyleValues+1] = "SRPG8"
 	else
 		local prefs = IniFile.ReadFile("/Save/ThemePrefs.ini")
 		local theme = PREFSMAN:GetPreference("Theme")
 		local lastActiveEvent = nil
-		if prefs[theme] and prefs[theme].LastActiveEvent == "SRPG7" then
+		if prefs[theme] and prefs[theme].LastActiveEvent == "SRPG8" then
 			visualStyleChoices[#visualStyleChoices+1] = "😈"
-			visualStyleValues[#visualStyleValues+1] = "SRPG7"
+			visualStyleValues[#visualStyleValues+1] = "SRPG8"
 		end
 	end
 
@@ -316,8 +316,8 @@ SL_CustomPrefs.Get = function()
 
 		ThemeFont = {
 			Default = "Common",
-			Choices = { THEME:GetString("ThemePrefs","Wendy"), THEME:GetString("ThemePrefs", "Mega") },
-			Values = { "Common", "Mega" }
+			Choices = { THEME:GetString("ThemePrefs","Wendy"), THEME:GetString("ThemePrefs", "Mega"), THEME:GetString("ThemePrefs", "Unprofessional") },
+			Values = { "Common", "Mega", "Unprofessional" }
 		},
 		MusicWheelGS =
 		{
@@ -348,6 +348,18 @@ SL_CustomPrefs.Get = function()
 			Values = { "Off", "Banner", "BG" }
 		},
 		ResultsBG =
+		{
+			Default = false,
+			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
+			Values = { true, false }
+		},
+		OutlineGrade =
+		{
+			Default = false,
+			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
+			Values = { true, false }
+		},
+		GradeCombo =
 		{
 			Default = false,
 			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },

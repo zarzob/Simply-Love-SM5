@@ -162,7 +162,7 @@ for index, window in ipairs(TNS.Types) do
 	if has_labels then
 		if windows[index] or index==#TNS.Names then
 
-			af[#af+1] = LoadFont("Common Normal")..{
+			af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				Text=TNS.Names[index]:upper(),
 				InitCommand=function(self)
 					self:zoom(0.833):maxwidth(72)
@@ -184,7 +184,7 @@ for index, window in ipairs(TNS.Types) do
 			}
 			
 			if index == 1 and SL[pn].ActiveModifiers.SmallerWhite and ShowFaPlusWindow then
-				af[#af+1] = LoadFont("Common Normal")..{
+				af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 					Text="(12ms)",
 					InitCommand=function(self)
 						self:zoom(0.6):maxwidth(72)

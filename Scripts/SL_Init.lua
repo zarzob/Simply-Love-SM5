@@ -12,6 +12,7 @@ local PlayerDefaults = {
 				HoldJudgment = "Love 1x2 (doubleres).png",
 				NoteSkin = nil,
 				Mini = "0%",
+				Spacing = "0%",
 				BackgroundFilter = 0,
 				VisualDelay = "0ms",
 
@@ -56,6 +57,10 @@ local PlayerDefaults = {
 				ShowEXScore = false,
 				ShowFaPlusPane = true,
 				
+				RainbowMax = false,
+				ResponsiveColors = false,
+				ShowLifePercent = false,
+				
 				PackBanner = false,
 				StepInfo = false,
 				SBITGScore = true,
@@ -73,6 +78,7 @@ local PlayerDefaults = {
 				ComboColors = "Glow",
 				ComboMode = "FullCombo",
 				TimerMode = "Time",
+				JudgmentAnimation = "Default",
 				RailBalance = "No",
 
 				NoteFieldOffsetX = 0,

@@ -45,7 +45,7 @@ return Def.ActorFrame{
 	},
 	
 	-- difficulty text ("beginner" or "expert" or etc.)
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		InitCommand=function(self)
 			self:y(_screen.cy-82)
 			self:x(149 * (player==PLAYER_1 and -1 or 1))
@@ -75,7 +75,7 @@ return Def.ActorFrame{
 		end
 	},
 	
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		InitCommand=function(self)
 			self:y(_screen.cy-82)
 			self:x(149 * (player==PLAYER_1 and -1 or 1))
@@ -104,16 +104,18 @@ return Def.ActorFrame{
 			-- underscore, transforming a string like "Difficulty_Hard" into "Hard"
 			local difficulty = ToEnumShortString( steps:GetDifficulty() )
 			
-			if string.find(string.upper(song:GetMainTitle()), "%(NOVICE%)") then
-				difficulty = ToEnumShortString("Difficulty_Beginner")
-			elseif string.find(string.upper(song:GetMainTitle()), "%(EASY%)") then
-				difficulty = ToEnumShortString("Difficulty_Easy")
-			elseif string.find(string.upper(song:GetMainTitle()), "%(MEDIUM%)") then
-				difficulty = ToEnumShortString("Difficulty_Medium")
-			elseif string.find(string.upper(song:GetMainTitle()), "%(HARD%)") then
-				difficulty = ToEnumShortString("Difficulty_Hard")
-			elseif string.find(string.upper(song:GetMainTitle()), "%(EDIT%)") then
-				difficulty = ToEnumShortString("Difficulty_Edit")
+			if difficulty == "Challenge" then
+				if string.find(string.upper(song:GetMainTitle()), "%(NOVICE%)") then
+					difficulty = ToEnumShortString("Difficulty_Beginner")
+				elseif string.find(string.upper(song:GetMainTitle()), "%(EASY%)") then
+					difficulty = ToEnumShortString("Difficulty_Easy")
+				elseif string.find(string.upper(song:GetMainTitle()), "%(MEDIUM%)") then
+					difficulty = ToEnumShortString("Difficulty_Medium")
+				elseif string.find(string.upper(song:GetMainTitle()), "%(HARD%)") then
+					difficulty = ToEnumShortString("Difficulty_Hard")
+				elseif string.find(string.upper(song:GetMainTitle()), "%(EDIT%)") then
+					difficulty = ToEnumShortString("Difficulty_Edit")
+				end
 			end
 			difficulty = THEME:GetString("Difficulty", difficulty)
 			--if difficulty == "Challenge" or difficulty == "Expert" then difficulty = "X"

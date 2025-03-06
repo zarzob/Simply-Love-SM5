@@ -63,3 +63,15 @@ Contact us on Discord at `zarzob` or `zankoku`. Alternatively you can join my [d
   * sorae
   * MegaSphere
   * @florczakraf
+  * @HURG-IIDX
+
+# Todo/Feature Request List
+
+Stuff that might be good to implement in the near future
+
+* SRPG support for corner event box (was removed due to new mainline implementation)
+* Automatic translation of player options from mainline profile into zmod, preserve mainline profile - `zankoku`
+* Automatically reset ratemod to 1.00 once a song is played - `zankoku`
+* Theme option to display leaderboard instead of event box in corner - `zankoku`
+* 10/15ms split functionality for error bars - `zarzob`
+* Variablise RPG / ITL iteration for folder name searches

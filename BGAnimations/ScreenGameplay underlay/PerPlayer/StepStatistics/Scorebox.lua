@@ -218,6 +218,10 @@ local LeaderboardRequestProcessor = function(res, master)
 										boogie_ex
 									)
 					end
+					numEntries = numEntries + 1
+					for i=math.max(2,numEntries),5,1 do
+						SetScoreData(1, i, "", "", "", "", "", "", true)
+					end
 				end
 			end
 
@@ -235,6 +239,10 @@ local LeaderboardRequestProcessor = function(res, master)
 										entry["isFail"],
 										true
 									)
+					end
+					numEntries = numEntries + 1
+					for i=math.max(2,numEntries),5,1 do
+						SetScoreData(2, i, "", "", "", "", "", "", true)
 					end
 				end
 			end
@@ -261,14 +269,8 @@ local LeaderboardRequestProcessor = function(res, master)
 									)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
-						SetScoreData(3, i,
-										"",
-										"",
-										"",
-										false,
-										false,
-										false)
+					for i=math.max(2,numEntries),5,1 do
+						SetScoreData(3, i, "", "", "", "", "", "", true)
 					end
 				end
 			end
@@ -292,14 +294,8 @@ local LeaderboardRequestProcessor = function(res, master)
 									)
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
-						SetScoreData(4, i,
-										"",
-										"",
-										"",
-										false,
-										false,
-										false)
+					for i=math.max(2,numEntries),5,1 do
+						SetScoreData(4, i, "", "", "", "", "", "", true)
 					end
 				end
 			end
@@ -452,7 +448,7 @@ local af = Def.ActorFrame{
 	},
 	-- EX Text
 	Def.BitmapText{
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		Text="EX",
 		InitCommand=function(self)
 			self:diffusealpha(0.3):x(2):y(-5)
@@ -467,10 +463,10 @@ local af = Def.ActorFrame{
 	},
 	-- SRPG Logo
 	Def.Sprite{
-		Texture=THEME:GetPathG("", "_VisualStyles/SRPG7/logo_main (doubleres).png"),
-		Name="SRPG7Logo",
+		Texture=THEME:GetPathG("", "_VisualStyles/SRPG8/logo_main (doubleres).png"),
+		Name="SRPG8Logo",
 		InitCommand=function(self)
-			self:diffusealpha(0.4):zoom(0.03):diffusealpha(0)
+			self:diffusealpha(0.4):zoom(0.05):diffusealpha(0)
 		end,
 		LoopScoreboxCommand=function(self)
 			if cur_style == 2 then
@@ -520,7 +516,7 @@ for i=1,NumEntries do
 			end
 		}
 	else
-		af[#af+1] = LoadFont("Common Normal")..{
+		af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			Name="Rank"..i,
 			Text="",
 			InitCommand=function(self)
@@ -543,7 +539,7 @@ for i=1,NumEntries do
 		}
 	end
 
-	af[#af+1] = LoadFont("Common Normal")..{
+	af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Name"..i,
 		Text="",
 		InitCommand=function(self)
@@ -565,7 +561,7 @@ for i=1,NumEntries do
 		end
 	}
 
-	af[#af+1] = LoadFont("Common Normal")..{
+	af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Score"..i,
 		Text="",
 		InitCommand=function(self)

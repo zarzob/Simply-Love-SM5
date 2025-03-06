@@ -69,6 +69,7 @@ for t in ivalues(sequential_offsets) do
 	
 	EarlyHit = t[6]
 	EarlyOffset = t[7]
+	HeldMiss = t[8]
 
 	if Offset ~= "Miss" then
 		CurrentSecond = CurrentSecond - Offset
@@ -131,17 +132,20 @@ for t in ivalues(sequential_offsets) do
 			end
 		end
 	else
-		-- else, a miss should be a quadrilateral that is the height of the entire graph and red
+		-- else, a miss should be a quadrilateral that is the height of half of the graph and red
+		-- if the miss is held, fill the upper half. otherwise, fill the lower half
+		local h1 = HeldMiss and GraphHeight/2 or 0
+		local h2 = HeldMiss and GraphHeight or GraphHeight/2
 		if death_second ~= nil and CurrentSecond / MusicRate > death_second then
-			table.insert( verts, {{x, 0, 0}, {r,g,b,0.111}} )
-			table.insert( verts, {{x+1, 0, 0}, {r,g,b,0.111}} )
-			table.insert( verts, {{x+1, GraphHeight, 0}, {r,g,b,0.111}} )
-			table.insert( verts, {{x, GraphHeight, 0}, {r,g,b,0.111}} )
+			table.insert( verts, {{x, h1, h1}, {r,g,b,0.08}} )
+			table.insert( verts, {{x+1, h1, h1}, {r,g,b,0.08}} )
+			table.insert( verts, {{x+1, h2, h2}, {r,g,b,0.08}} )
+			table.insert( verts, {{x, h2, h2}, {r,g,b,0.08}} )
 		else
-			table.insert( verts, {{x, 0, 0}, {r,g,b,0.333}} )
-			table.insert( verts, {{x+1, 0, 0}, {r,g,b,0.333}} )
-			table.insert( verts, {{x+1, GraphHeight, 0}, {r,g,b,0.333}} )
-			table.insert( verts, {{x, GraphHeight, 0}, {r,g,b,0.333}} )
+			table.insert( verts, {{x, h1, h1}, {r,g,b,0.333}} )
+			table.insert( verts, {{x+1, h1, h1}, {r,g,b,0.333}} )
+			table.insert( verts, {{x+1, h2, h2}, {r,g,b,0.333}} )
+			table.insert( verts, {{x, h2, h2}, {r,g,b,0.333}} )
 		end
 	end
 end

@@ -51,7 +51,7 @@ local text = ("%s%s\n%s\n%s"):format(
 	song_stats
 )
 
-return LoadFont("Common Normal")..{
+return LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Text=text,
 	InitCommand=function(self)
 		self:zoom(0.8):y(-150):diffusealpha(0)
@@ -64,8 +64,8 @@ return LoadFont("Common Normal")..{
 		if ThemePrefs.Get("RainbowMode") and not HolidayCheer() then
 			textColor = Color.Black
 		end
-		if ThemePrefs.Get("VisualStyle") == "SRPG7" then
-			textColor = color(SL.SRPG7.TextColor)
+		if ThemePrefs.Get("VisualStyle") == "SRPG8" then
+			textColor = color(SL.SRPG8.TextColor)
 			shadowLength = 0.4
 		end
 

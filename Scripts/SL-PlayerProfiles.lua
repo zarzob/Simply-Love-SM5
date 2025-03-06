@@ -16,6 +16,7 @@ local permitted_profile_settings = {
 	SpeedModType     = "string",
 	SpeedMod         = "number",
 	Mini             = "string",
+	Spacing          = "string",
 	NoteSkin         = "string",
 	JudgmentGraphic  = "string",
 	ComboFont        = "string",
@@ -71,11 +72,16 @@ local permitted_profile_settings = {
 	JudgmentTilt         = "boolean",
 	ColumnCues           = "boolean",
 	ColumnCountdown      = "boolean",
-	ShowHeldMiss         = "boolean",
 	TrackFoot            = "boolean",
 	ScaleGraph           = "boolean",
 
-	ErrorBar             = "string",
+	-- Error Bar Options --
+	Colorful             = "boolean",
+	Monochrome           = "boolean", 
+	Text                 = "boolean", 
+	Highlight            = "boolean",
+	Average              = "boolean",
+	--
 	ErrorBarUp           = "boolean",
 	ErrorBarMultiTick    = "boolean",
 	ErrorBarCap    		 = "number",
@@ -108,11 +114,13 @@ local permitted_profile_settings = {
 	ComboColors			 = "string",
 	ComboMode			 = "string",
 	TimerMode            = "string",
+	JudgmentAnimation    = "string",
 	RailBalance          = "string",
 	
 	JudgmentBack         = "boolean",
 	ErrorMSDisplay       = "boolean",
 	GhostFault           = "boolean",
+	SplitWhites          = "boolean",
 	BreakUI              = "boolean",
 
 	GrowCombo			 = "boolean",

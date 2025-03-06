@@ -92,7 +92,7 @@ local overlay = Def.ActorFrame {
 		end,
 	},
 
-	LoadFont("Common Normal").. {
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		Text="Search Results For:",
 		InitCommand=function(self)
 			self:diffuse(Color.White)
@@ -100,7 +100,7 @@ local overlay = Def.ActorFrame {
 		end,
 	},
 
-	LoadFont("Common Normal").. {
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		Name="SearchText",
 		InitCommand=function(self)
 			self:diffuse(Color.White)
@@ -112,7 +112,7 @@ local overlay = Def.ActorFrame {
 		end,
 	},
 
-	LoadFont("Common Normal").. {
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		Name="NumResults",
 		InitCommand=function(self)
 			self:diffuse(Color.White)
@@ -163,7 +163,7 @@ local songDetails = {
 for i, details in ipairs(songDetails) do
 	local name = details[1]
 	local formatter = details[2]
-	overlay[#overlay+1] = LoadFont("Common Normal").. {
+	overlay[#overlay+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		Name=name,
 		Text=name..": ",
 		InitCommand=function(self)
@@ -181,7 +181,7 @@ for i, details in ipairs(songDetails) do
 		end,
 	}
 
-	overlay[#overlay+1] = LoadFont("Common Normal").. {
+	overlay[#overlay+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 		Name=name.."Text",
 		Text=name,
 		InitCommand=function(self)

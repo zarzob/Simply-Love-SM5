@@ -48,7 +48,6 @@ if SL.Global.FastProfileSwitchInProgress then
 			break
 		end
 	end
-
 	-- If we haven't found a matching profile looking in profile_data, this has to
 	-- be [GUEST]
 	pos = pos or 0
@@ -141,7 +140,7 @@ return Def.ActorFrame{
 		Name='JoinFrame',
 		FrameBackground(Color.Black, player, frame.w*0.9),
 
-		LoadFont("Common Normal")..{
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			InitCommand=function(self)
 				self:diffuseshift():effectcolor1(1,1,1,1):effectcolor2(0.5,0.5,0.5,1)
 				self:diffusealpha(0):maxwidth(180)
@@ -195,8 +194,9 @@ return Def.ActorFrame{
 			end
 
 			scroller.focus_pos = 5
-
-			scroller:set_info_set(scroller_data, 0)
+			-- initialize to the guest profile in case we don't have a default profile
+			scroller:set_info_set(scroller_data, 1)
+			scroller:scroll_by_amount(-1)
 
 			-- Scroll to the current player profile, if any
 			if pos then
@@ -207,17 +207,13 @@ return Def.ActorFrame{
 				if PREFSMAN:GetPreference("DefaultLocalProfileID"..pn) ~= "" then
 					local default_profile_id = PREFSMAN:GetPreference("DefaultLocalProfileID"..pn)
 					local profile_dir = PROFILEMAN:LocalProfileIDToDir(default_profile_id)
-					
 					for i, profile_item in ipairs(scroller_data) do
 						if profile_item.dir == profile_dir then
-							scroller:set_info_set(scroller_data, 1)
-							scroller:scroll_by_amount(i-5)
+							scroller:scroll_by_amount(i-4)
+							initial_data = profile_data[i-4]
 							break
 						end
 					end
-				else
-					scroller:set_info_set(scroller_data, 1)
-					scroller:scroll_by_amount(-1 )
 				end
 			end
 		end,
@@ -280,9 +276,12 @@ return Def.ActorFrame{
 						LoadActor(THEME:GetPathG("", "_VisualStyles/".. ThemePrefs.Get("VisualStyle") .."/SelectColor"))..{
 							InitCommand=function(self)
 								self:align(0,0):zoom(0.09):diffusealpha(0.9):xy(13, 8)
+								if ThemePrefs.Get("VisualStyle") == "SRPG8" then
+									self:zoom(0.3):xy(5, 0)
+								end
 							end
 						},
-						LoadFont("Common Normal")..{
+						LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 							Text=THEME:GetString("ProfileAvatar","NoAvatar"),
 							InitCommand=function(self)
 								self:valign(0):zoom(0.815):diffusealpha(0.9):xy(self:GetWidth()*0.5 + 13, 67)
@@ -317,7 +316,7 @@ return Def.ActorFrame{
 				-- how many songs this player has completed in gameplay
 				-- failing a song will increment this count, but backing out will not
 
-				LoadFont("Common Normal")..{
+				LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 					Name="TotalSongs",
 					InitCommand=function(self)
 						self:align(0,0):xy(info.padding*1.25,0):zoom(0.65):vertspacing(-2)
@@ -339,7 +338,7 @@ return Def.ActorFrame{
 					SetCommand=function(self, params)
 						local underlay = SCREENMAN:GetTopScreen():GetChild("Underlay")
 						if params and params.noteskin then
-							local noteskin = underlay:GetChild("NoteSkin_"..params.noteskin)
+							local noteskin = underlay:GetChild("NoteSkin_"..params.noteskin.."_arrow_Up")
 							if noteskin then
 								self:visible(true):SetTarget(noteskin)
 							else
@@ -373,7 +372,7 @@ return Def.ActorFrame{
 				-- (some of) the modifiers saved to this player's UserPrefs.ini file
 				-- if the list is long, it will line break and eventually be masked
 				-- to prevent it from visually spilling out of the FrameBackground
-				LoadFont("Common Normal")..{
+				LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 					Name="RecentMods",
 					InitCommand=function(self)
 						self:align(0,0):xy(info.padding*1.25,47):zoom(0.625)
@@ -410,7 +409,7 @@ return Def.ActorFrame{
 		end
 	},
 
-	LoadFont("Common Normal")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name='SelectedProfileText',
 		InitCommand=function(self)
 			self:settext(initial_data and initial_data.displayname or "")

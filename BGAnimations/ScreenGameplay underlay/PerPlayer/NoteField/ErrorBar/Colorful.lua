@@ -5,6 +5,8 @@ local player, layout = ...
 local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 
+local hideEarlyJudgment = mods.HideEarlyDecentWayOffJudgments and true or false
+
 local barWidth = 160
 local barHeight = 10
 local tickWidth = 2
@@ -70,7 +72,7 @@ local af = Def.ActorFrame{
         self:GetChild("Bar"):zoom(0)
     end,
     EarlyHitMessageCommand=function(self, params)
-        if params.Player ~= player then return end
+        if params.Player ~= player or hideEarlyJudgment then return end
 
         DisplayTick(self, params)
     end,
@@ -146,13 +148,13 @@ for i, window in ipairs(windows.timing) do
     bar_af[#bar_af+1] = Def.Quad{
         Name="EarlyW" .. windowNum,
         InitCommand = function(self)
-            self:x(-x):horizalign("left"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(0.3)
+            self:x(-x):horizalign("left"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(1)
         end
     }
     bar_af[#bar_af+1] = Def.Quad{
         Name="LateW" .. windowNum,
         InitCommand = function(self)
-            self:x(x):horizalign("right"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(0.3)
+            self:x(x):horizalign("right"):zoomto(width, barHeight):diffuse(judgmentColor):diffusealpha(1)
         end
     }
 

@@ -79,7 +79,7 @@ for i=1, #TapNoteScores.Types do
 			label = THEME:GetString("TapNoteScoreFA+", "W1")
 		end
 
-		t[#t+1] = LoadFont("Common Normal")..{
+		t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			Text=label:upper(),
 			InitCommand=function(self)
 				judge_bmt[i] = self
@@ -93,7 +93,7 @@ for i=1, #TapNoteScores.Types do
 		}
 		
 		if track_earlyjudgments and i ~= #TapNoteScores.Types and i > 1 then
-			t[#t+1] = LoadFont("Common Normal")..{
+			t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				Text=ScreenString("Early"),
 				InitCommand=function(self)
 					self:y(140):zoom(0.6):halign(1)
@@ -113,7 +113,7 @@ for i=1, #TapNoteScores.Types do
 			}
 			
 			if TapNoteScores.Types[i] == 'W4' or TapNoteScores.Types[i] == 'W5' then
-				t[#t+1] = LoadFont("Common Normal")..{
+				t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 					Text="(All)",
 					InitCommand=function(self)
 						self:y(140):zoom(0.6):halign(1)
@@ -133,7 +133,7 @@ for i=1, #TapNoteScores.Types do
 	end
 end
 
-t[#t+1] = LoadFont("Common Normal")..{
+t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Text=ScreenString("Held"),
 	InitCommand=function(self)
 		self:y(140):zoom(0.6):halign(1)

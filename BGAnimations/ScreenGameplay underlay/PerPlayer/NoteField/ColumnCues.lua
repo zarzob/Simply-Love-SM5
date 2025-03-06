@@ -3,7 +3,7 @@ local pn = ToEnumShortString(player)
 
 local mods = SL[pn].ActiveModifiers
 if SL.Global.GameMode == "Casual" then return end
-if not mods.ColumnCues then return end
+if not mods.ColumnCues and not mods.ColumnCountdown then return end
 
 local columnMapping = GetColumnMapping(player)
 
@@ -144,6 +144,9 @@ for columnIndex=1,numColumns do
 					:vertalign(top)
 					:setsize(width/numColumns, _screen.h - yOffset)
 					:fadebottom(0.333)
+				
+				local spacing = mods.Spacing:gsub("%%","")/100
+				self:addx((columnIndex - (numColumns/2 + 0.5))*2 * (width/numColumns) * spacing)
 
 				if IsReversedColumn(player, columnIndex) then
 					self:rotationz(180)
@@ -153,12 +156,14 @@ for columnIndex=1,numColumns do
 			FlashCommand=function(self, params)
 				local flashDuration = params.duration
 				local clr = params.isMine and color("1,0,0,0.12") or color("0.3,1,1,0.12")
-				self:stoptweening()
-					:decelerate(fadeTime)
-					:diffuse(clr)
-					:sleep(flashDuration - 2*fadeTime)
-					:accelerate(fadeTime)
-					:diffuse(0,0,0,0)
+				if mods.ColumnCues then
+					self:stoptweening()
+						:decelerate(fadeTime)
+						:diffuse(clr)
+						:sleep(flashDuration - 2*fadeTime)
+						:accelerate(fadeTime)
+						:diffuse(0,0,0,0)
+				end
 				if flashDuration >= 5 and mods.ColumnCountdown then
 					breakTime = flashDuration
 					if text ~= nil then

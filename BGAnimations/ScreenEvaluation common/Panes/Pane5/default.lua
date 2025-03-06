@@ -160,7 +160,7 @@ pane[#pane+1] = Def.Quad{
 
 -- centered text for W1
 pane[#pane+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=abbreviations[SL.Global.GameMode][1],
 	InitCommand=function(self)
 		local x = pane_width/2
@@ -177,7 +177,7 @@ for i=2,num_judgments_available do
 
 	-- early (left) judgment text
 	pane[#pane+1] = Def.BitmapText{
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		Text=abbreviations[SL.Global.GameMode][i],
 		InitCommand=function(self)
 			local window = -1 * GetTimingWindow(i)
@@ -199,7 +199,7 @@ for i=2,num_judgments_available do
 
 	-- late (right) judgment text
 	pane[#pane+1] = Def.BitmapText{
-		Font="Common Normal",
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 		Text=abbreviations[SL.Global.GameMode][i],
 		InitCommand=function(self)
 			local window = GetTimingWindow(i)
@@ -281,7 +281,7 @@ label.max_width = ((pane_width/3)/label.zoom) - ((label.padding/label.zoom)*3)
 
 -- avg_timing_error label
 pane[#pane+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=ScreenString("MeanTimingError"),
 	InitCommand=function(self)
 		self:x(40):y(label.y)
@@ -295,7 +295,7 @@ pane[#pane+1] = Def.BitmapText{
 
 -- avg_timing_error label
 pane[#pane+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=ScreenString("MeanOffset"),
 	InitCommand=function(self)
 		self:x(40 + (pane_width-80)/3):y(label.y)
@@ -309,7 +309,7 @@ pane[#pane+1] = Def.BitmapText{
 
 -- std_dev label
 pane[#pane+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=ScreenString("StdDev"),
 	InitCommand=function(self)
 		self:x(40 + (pane_width-80)/3 * 2):y(label.y)
@@ -319,7 +319,7 @@ pane[#pane+1] = Def.BitmapText{
 
 -- max_error label
 pane[#pane+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=ScreenString("MaxError"),
 	InitCommand=function(self)
 		self:x(pane_width-40):y(label.y)

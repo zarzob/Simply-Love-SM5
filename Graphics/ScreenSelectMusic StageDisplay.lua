@@ -8,7 +8,7 @@ t[#t+1] = Def.ActorFrame {
 			InitCommand=cmd(diffuse,color("#000000");zoomto,100,30;);
 			OnCommand=cmd(diffusealpha,0.4;fadeleft,0.2;faderight,0.2;);
 		};
-	LoadFont("Common Normal") .. {
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal") .. {
 		InitCommand=cmd(y,-1;shadowlength,1;zoom,1;strokecolor,color("#000000"));
 		BeginCommand=function(self)
 			local top = SCREENMAN:GetTopScreen()
@@ -25,13 +25,8 @@ t[#t+1] = Def.ActorFrame {
 			elseif GAMESTATE:IsEventMode() then
 				self:settextf("Stage %s", curStageIndex);
 			else
-				if THEME:GetMetric(curScreen,"StageDisplayUseShortString") then
-				  self:settextf("%s", ToEnumShortString(curStage));
-				  self:zoom(0.75);
-				else
-				  self:settextf("%s Stage", ToEnumShortString(curStage));
-				  self:zoom(1);
-				end;
+				self:settextf("%s Stage", ToEnumShortString(curStage));
+				self:zoom(1);
 			end;
 			-- StepMania is being stupid so we have to do this here;
 			self:diffuse(StageToColor(curStage));

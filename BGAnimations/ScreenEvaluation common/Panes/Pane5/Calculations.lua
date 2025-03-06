@@ -170,7 +170,7 @@ local pad = 40
 
 -- avg_timing_error value with "ms" label
 bmts[#bmts+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=("%.2fms"):format(avg_timing_error),
 	InitCommand=function(self)
 		self:x(pad):zoom(0.8)
@@ -179,7 +179,7 @@ bmts[#bmts+1] = Def.BitmapText{
 
 -- avg_offset value with "ms" label
 bmts[#bmts+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=("%.2fms"):format(avg_offset),
 	InitCommand=function(self)
 		self:x(pad + (pane_width-2*pad)/3):zoom(0.8)
@@ -188,7 +188,7 @@ bmts[#bmts+1] = Def.BitmapText{
 
 -- std_dev value with "ms" label
 bmts[#bmts+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=("%.2fms"):format(std_dev * 3),
 	InitCommand=function(self)
 		self:x(pad + (pane_width-2*pad)/3 * 2):zoom(0.8)
@@ -197,7 +197,7 @@ bmts[#bmts+1] = Def.BitmapText{
 
 -- max_error value with "ms" label
 bmts[#bmts+1] = Def.BitmapText{
-	Font="Common Normal",
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
 	Text=("%.2fms"):format(max_error),
 	InitCommand=function(self)
 		self:x(pane_width-pad):zoom(0.8)

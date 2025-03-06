@@ -322,6 +322,29 @@ local Overrides = {
 		end
 	},
 	-------------------------------------------------------------------------
+	Spacing = {
+		Choices = function()
+			local first	= -100
+			local last 	= 100
+			local step 	= 1
+
+			return stringify( range(first, last, step), "%g%%")
+		end,
+		SaveSelections = function(self, list, pn)
+			local mods, playeroptions = GetModsAndPlayerOptions(pn)
+
+			for i=1,#self.Choices do
+				if list[i] then
+					mods.Spacing = self.Choices[i]
+				end
+			end
+
+			-- to make the arrows smaller, pass Mini() a value between 0 and 1
+			-- (to make the arrows bigger, pass Mini() a value larger than 1)
+			playeroptions:Flip( -mods.Spacing:gsub("%%","")/100 )
+		end
+	},
+	-------------------------------------------------------------------------
 	MusicRate = {
 		Choices = function()
 			local first	= 0.05
@@ -620,7 +643,7 @@ local Overrides = {
 		SelectType = "SelectMultiple",
 		Values = function()
 			-- GameplayExtras will be presented as a single OptionRow when WideScreen
-			local vals = { "ColumnFlashOnMiss", "Pacemaker", "NPSGraphAtTop", "ShowHeldMiss" }
+			local vals = { "ColumnFlashOnMiss", "Pacemaker", "NPSGraphAtTop" }
 
 			-- if not WideScreen (traditional DDR cabinets running at 640x480)
 			-- remove the last two choices to be appended an additional OptionRow (GameplayExtrasB below).
@@ -652,7 +675,8 @@ local Overrides = {
 	},
 	-------------------------------------------------------------------------
 	ErrorBar = {
-		Values = { "None", "Colorful", "Monochrome", "Text", "Highlight" },
+		SelectType = "SelectMultiple",
+		Values = { "Colorful", "Monochrome", "Text", "Highlight", "Average" },
 	},
 	-------------------------------------------------------------------------
 	ErrorBarOptions = {
@@ -769,15 +793,6 @@ local Overrides = {
 	-------------------------------------------------------------------------
 	MeasureLines = {
 		Values = { "Off", "Measure", "Quarter", "Eighth" },
-		SaveSelections = function(self, list, pn)
-			local mods, playeroptions = GetModsAndPlayerOptions(pn)
-
-			for i=1,#self.Choices do
-				if list[i] then
-					mods.MeasureLines = self.Choices[i]
-				end
-			end
-		end
 	},
 	-------------------------------------------------------------------------
 	VisualDelay = {
@@ -965,13 +980,17 @@ local Overrides = {
 		Values = { "Time", "Measures" }
 	},
 	-------------------------------------------------------------------------
+	JudgmentAnimation = {
+		Choices = { "Default", "Still", "ITG" }
+	},
+	-------------------------------------------------------------------------
 	RailBalance = {
 		Values = { "No", "What" }
 	},
 	-------------------------------------------------------------------------
 	ExtraAesthetics = {
 		SelectType = "SelectMultiple",
-		Values = { "JudgmentBack", "ErrorMSDisplay", "GhostFault", "BreakUI" }
+		Values = { "JudgmentBack", "ErrorMSDisplay", "GhostFault", "SplitWhites", "BreakUI" }
 	},
 	-------------------------------------------------------------------------
 	ScreenAfterPlayerOptions = {

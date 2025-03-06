@@ -85,7 +85,7 @@ if style == "OnePlayerTwoSides" then
 			pane:visible(false)
 		end
 		-- and only show the one full-width pane
-		panes[cn][active_pane[cn]]:visible(true)
+		panes[cn][active_pane[cn]]:visible(true):diffusealpha(1)
 	end
 
 	-- if the player wanted their secondary pane to be something that is full-width in double
@@ -100,7 +100,7 @@ if style == "OnePlayerTwoSides" then
 			if active_pane[ocn] ~= active_pane[cn]
 			and not panes[cn][active_pane[ocn]]:GetChild(""):GetCommand("ExpandForDouble")
 			then
-				panes[ocn][active_pane[ocn]]:visible(true)
+				panes[ocn][active_pane[ocn]]:visible(true):diffusealpha(1)
 				break
 			end
 		end
@@ -318,19 +318,19 @@ return function(event)
 						end
 					end
 					-- and only show the one full-width pane
-					panes[cn][active_pane[cn]]:visible(true)
+					panes[cn][active_pane[cn]]:visible(true):diffusealpha(1)
 
 
 				-- if this controller is switching panes while the OTHER controller was viewing Pane3 or Pane6
 				elseif panes[ocn][active_pane[ocn]]:GetChild(""):GetCommand("ExpandForDouble") then
 					panes[ocn][active_pane[ocn]]:visible(false)
-					panes[cn][active_pane[cn]]:visible(true)
+					panes[cn][active_pane[cn]]:visible(true):diffusealpha(1)
 					-- atribitarily choose to decrement other controller pane
 					active_pane[ocn] = ((active_pane[ocn] - 2) % #panes[ocn]) + 1
 					if active_pane[cn] == active_pane[ocn] then
 						active_pane[ocn] = ((active_pane[ocn] - 2) % #panes[ocn]) + 1
 					end
-					panes[ocn][active_pane[ocn]]:visible(true)
+					panes[ocn][active_pane[ocn]]:visible(true):diffusealpha(1)
 
 				else
 
@@ -339,8 +339,8 @@ return function(event)
 						panes[cn][i]:visible(false)
 					end
 					-- show the panes we want on both sides
-					panes[cn][active_pane[cn]]:visible(true)
-					panes[ocn][active_pane[ocn]]:visible(true)
+					panes[cn][active_pane[cn]]:visible(true):diffusealpha(1)
+					panes[ocn][active_pane[ocn]]:visible(true):diffusealpha(1)
 				end
 
 
@@ -351,7 +351,7 @@ return function(event)
 					panes[cn][i]:visible(false)
 				end
 				-- only show the pane we want on this side
-				panes[cn][active_pane[cn]]:visible(true)
+				panes[cn][active_pane[cn]]:visible(true):diffusealpha(1)
 			end
 
 			af:queuecommand("PaneSwitch")

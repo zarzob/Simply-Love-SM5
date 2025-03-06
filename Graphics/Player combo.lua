@@ -207,7 +207,13 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 			elseif mods.ComboColors ~= "Rainbow" and mods.ComboColors ~= "RainbowScroll" then
 				self:diffuseshift():effectperiod(0.8)
 				if not params.Misses then
-					if worst_judgment == 1 then
+					if worst_judgment == 1 and quintin_tarandimo then
+						if mods.ComboColors == "Glow" then
+							self:effectcolor1(colors.FullComboW0[1]):effectcolor2(colors.FullComboW0[2])
+						elseif mods.ComboColors == "Solid" then
+							self:stopeffect():diffuse(solidColors.FullComboW0)
+						end
+					elseif worst_judgment == 1 then
 						if mods.ComboColors == "Glow" then
 							self:effectcolor1(colors.FullComboW1[1]):effectcolor2(colors.FullComboW1[2])
 						elseif mods.ComboColors == "Solid" then

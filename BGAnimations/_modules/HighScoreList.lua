@@ -22,7 +22,7 @@ local SongOrCourse = args.SongOrCourse or (GAMESTATE:IsCourseMode() and GAMESTAT
 local StepsOrTrail = args.StepsOrTrail or ((args.RoundsAgo==nil or args.RoundsAgo==1) and (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player) or GAMESTATE:GetCurrentSteps(player)))
 if not (SongOrCourse and StepsOrTrail) then return af end
 
-local Font = args.Font or "Common Normal"
+local Font = args.Font or ThemePrefs.Get("ThemeFont") .. " Normal"
 local row_height = args.RowHeight or 22
 
 -- ---------------------------------------------
