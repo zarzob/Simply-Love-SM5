@@ -10,7 +10,7 @@ local oldlife = 0
 if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides"
 -- or center1player preference is enabled and only one player is playing
 or PREFSMAN:GetPreference("Center1Player") and #GAMESTATE:GetHumanPlayers() == 1 then
-	_x =  _screen.cx + ((GetNotefieldWidth()/2 + 30) * (player==PLAYER_1 and -1 or 1))
+	_x =  _screen.cx + ((GetNotefieldWidth()/2 + 10) * (player==PLAYER_1 and -1 or 1))
 
 -- for the highly-specific scenario where aspect ratio is ultrawide or wider
 -- and both players are joined, and this player wants both a vertical lifemeter

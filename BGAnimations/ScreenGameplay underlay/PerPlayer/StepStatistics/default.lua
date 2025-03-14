@@ -9,14 +9,16 @@ local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 
 local stylename = GAMESTATE:GetCurrentStyle():GetName()
 
+if SL[pn].ActiveModifiers.DataVisualizations ~= "Step Statistics" then return end
+
 if (not IsUltraWide and stylename == "versus")
 	or (not ThemePrefs.Get("EnableTournamentMode") and
 	    SL[pn].ActiveModifiers.DataVisualizations ~= "Step Statistics")
 	or (ThemePrefs.Get("EnableTournamentMode") and ThemePrefs.Get("StepStats") == "Hide")
 	or (SL.Global.GameMode == "Casual")
-	or (GetNotefieldWidth() > _screen.w/2)
+	or (GetNotefieldWidth() > _screen.w/2 and stylename ~= "double")
 	or (NoteFieldIsCentered and not IsUsingWideScreen())
-	or (not IsUltraWide and stylename ~= "single")
+	or (not IsUltraWide and stylename ~= "single" and stylename ~= "double")
 	or (    IsUltraWide and not (stylename == "single" or stylename == "versus"))
 then
 	return
@@ -39,6 +41,8 @@ if not IsUltraWide then
 		else
 			sidepane_pos_x = _screen.cx - notefield_width - (sidepane_width-notefield_width)/2
 		end
+		
+		if stylename == "double" then sidepane_pos_x = _screen.cx; end
 	end
 
 -- ultrawide or wider
@@ -66,26 +70,26 @@ af[#af+1] = LoadActor("./DarkBackground.lua", {player, header_height, sidepane_w
 
 -- banner, judgment labels, and judgment numbers will be collectively shrunk
 -- if Center1Player is enabled to accommodate the smaller space
-af[#af+1] = Def.ActorFrame{
-	Name="BannerAndData",
-	InitCommand=function(self)
-		local zoomfactor = {
-			ultrawide    = 0.725,
-			sixteen_ten  = 0.825,
-			sixteen_nine = 0.925
-		}
+	af[#af+1] = Def.ActorFrame{
+		Name="BannerAndData",
+		InitCommand=function(self)
+			local zoomfactor = {
+				ultrawide    = 0.725,
+				sixteen_ten  = 0.825,
+				sixteen_nine = 0.925
+			}
 
-		if not IsUltraWide then
-			if (NoteFieldIsCentered and IsUsingWideScreen()) then
-				local zoom = scale(GetScreenAspectRatio(), 16/10, 16/9, zoomfactor.sixteen_ten, zoomfactor.sixteen_nine)
-				self:zoom( zoom )
+			if not IsUltraWide then
+				if (NoteFieldIsCentered and IsUsingWideScreen()) then
+					local zoom = scale(GetScreenAspectRatio(), 16/10, 16/9, zoomfactor.sixteen_ten, zoomfactor.sixteen_nine)
+					self:zoom( zoom )
+				end
+			else
+				if #GAMESTATE:GetHumanPlayers() > 1 then
+					self:zoom(zoomfactor.ultrawide):addy(-55)
+				end
 			end
-		else
-			if #GAMESTATE:GetHumanPlayers() > 1 then
-				self:zoom(zoomfactor.ultrawide):addy(-55)
-			end
-		end
-	end,
+		end,
 
 	LoadActor("./Banner.lua", player),
 	LoadActor("./Banner2.lua", player),
@@ -98,6 +102,6 @@ af[#af+1] = Def.ActorFrame{
 	LoadActor("./OffsetCalc.lua", player)
 }
 
-af[#af+1] = LoadActor("./DensityGraph.lua", {player, sidepane_width})
+	af[#af+1] = LoadActor("./DensityGraph.lua", {player, sidepane_width})
 
 return af

@@ -251,9 +251,9 @@ local GetScoresRequestProcessor = function(res, params)
 					elseif boogie_ex then
 						loadingText:settext("Boogie EX")
 					elseif SL["P"..i].ActiveModifiers.ShowEXScore then
-						loadingText:settext("EX Score")
+						loadingText:settext(THEME:GetString("Groovestats", "EXScore"))
 					else
-						loadingText:settext("GrooveStats")
+						loadingText:settext(THEME:GetString("Groovestats", "GrooveStats"))
 					end
 				else
 					if boogie then
@@ -261,9 +261,9 @@ local GetScoresRequestProcessor = function(res, params)
 					elseif boogie_ex then
 						loadingText:settext("No Boogie EX")
 					elseif SL["P"..i].ActiveModifiers.ShowEXScore then
-						loadingText:settext("No EX Data")
+						loadingText:settext(THEME:GetString("Groovestats", "NoEXData"))
 					else
-						loadingText:settext("No Data")
+						loadingText:settext(THEME:GetString("Groovestats", "NoData"))
 					end
 				end
 			else
@@ -331,7 +331,7 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 				-- If we disable the service from a previous request, surface it to the user here.
 				for i=1,2 do
 					local loadingText = master:GetChild("PaneDisplayP"..i):GetChild("Loading")
-					loadingText:settext("Disabled")
+					loadingText:settext(THEME:GetString("Groovestats", "Disabled"))
 					loadingText:visible(true)
 				end
 			end
@@ -361,7 +361,7 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 					requestCacheKey = requestCacheKey .. SL[pn].Streams.Hash .. SL[pn].ApiKey .. pn
 					local loadingText = master:GetChild("PaneDisplayP"..i):GetChild("Loading")
 					loadingText:visible(true)
-					loadingText:settext("Loading ..."):diffuse(Color.Black)
+					loadingText:settext(THEME:GetString("Groovestats", "Loading")):diffuse(Color.Black)
 					sendRequest = true
 				end
 			end
@@ -616,7 +616,7 @@ for player in ivalues(PlayerNumber) do
 
 	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Loading",
-		Text="Loading ... ",
+		Text=THEME:GetString("Groovestats", "Loading"),
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black)
 			self:x(pos.col[3]-15)
@@ -624,7 +624,7 @@ for player in ivalues(PlayerNumber) do
 			self:visible(false)
 		end,
 		SetCommand=function(self)
-			self:settext("Loading ...")
+			self:settext(THEME:GetString("Groovestats", "Loading"))
 			self:visible(false)
 		end
 	}

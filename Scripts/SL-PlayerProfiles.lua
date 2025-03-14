@@ -16,6 +16,7 @@ local permitted_profile_settings = {
 	SpeedModType     = "string",
 	SpeedMod         = "number",
 	Mini             = "string",
+	Spacing          = "string",
 	NoteSkin         = "string",
 	JudgmentGraphic  = "string",
 	ComboFont        = "string",
@@ -69,6 +70,7 @@ local permitted_profile_settings = {
 	TrackRecalc          = "boolean",
 	NPSGraphAtTop        = "boolean",
 	JudgmentTilt         = "boolean",
+	TiltMultiplier       = "number",
 	ColumnCues           = "boolean",
 	ColumnCountdown      = "boolean",
 	TrackFoot            = "boolean",
@@ -87,9 +89,8 @@ local permitted_profile_settings = {
 
 	ShowFaPlusWindow     = "boolean",
 	ShowEXScore          = "boolean",
-	ShowSuperEXScore     = "boolean",
 	ShowFaPlusPane       = "boolean",
-	SmallerWhite     	 = "boolean",
+	SmallerWhite     = "boolean",
 
 	HideEarlyDecentWayOffJudgments = "boolean",
 	HideEarlyDecentWayOffFlash     = "boolean",
@@ -163,7 +164,6 @@ end
 
 -- function assigned to "CustomLoadFunction" under [Profile] in metrics.ini
 LoadProfileCustom = function(profile, dir)
-
 	local path =  dir .. filename
 	local player, pn, filecontents
 
@@ -253,6 +253,7 @@ SaveProfileCustom = function(profile, dir)
 
 			IniFile.WriteFile( path, {[theme_name]=output} )
 
+			WriteGrooveStatsIni(player)
 			-- Write to the ITL file if we need to.
 			-- This is relevant for memory cards.
 			WriteItlFile(player)

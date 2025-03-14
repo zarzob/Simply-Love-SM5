@@ -23,8 +23,21 @@ local input = function(event)
 				MESSAGEMAN:Broadcast('Sort', { order = focus.sort_by })
 				MESSAGEMAN:Broadcast('ResetHeaderText')
 				overlay:queuecommand("DirectInputToEngine")
-
-				-- the player wants to change modes, for example from ITG to FA+
+			elseif focus.kind == "PersonalPlaylist" then
+				local profileDir = PROFILEMAN:GetProfileDir(ProfileSlot[PlayerNumber:Reverse()[event.PlayerNumber] + 1])
+				SONGMAN:SetPreferredSongs(profileDir .."Playlists/" .. focus.new_overlay .. ".txt", --[[isAbsolute=]]true);
+				if SONGMAN:GetPreferredSortSongs() then
+					overlay:queuecommand("DirectInputToEngine")
+					SCREENMAN:GetTopScreen():GetMusicWheel():ChangeSort("SortOrder_Preferred")
+				end
+			elseif focus.kind == "MachinePlaylist" then
+				local path = THEME:GetPathO("", "Playlists/" .. focus.new_overlay .. ".txt")
+				SONGMAN:SetPreferredSongs(path, --[[isAbsolute=]]true);
+				if SONGMAN:GetPreferredSortSongs() then
+					overlay:queuecommand("DirectInputToEngine")
+					SCREENMAN:GetTopScreen():GetMusicWheel():ChangeSort("SortOrder_Preferred")
+				end
+			-- the player wants to change modes, for example from ITG to FA+
 			elseif focus.kind == "ChangeMode" then
 				SL.Global.GameMode = focus.change
 				for player in ivalues(GAMESTATE:GetHumanPlayers()) do
@@ -64,7 +77,13 @@ local input = function(event)
 				screen:SetNextScreenName("ScreenReloadSSM")
 				screen:StartTransitioningScreen("SM_GoToNextScreen")
 			elseif focus.new_overlay then
-				if focus.new_overlay == "TestInput" then
+				if focus.new_overlay == "GoBack" then
+					sortmenu:playcommand("AssessAvailableChoices")
+				-- if the overlay starts with "Category"
+				elseif focus.new_overlay:match("^Category") then
+					-- Pass in everything after "Category" to the broadcast
+					MESSAGEMAN:Broadcast('EnterCategory', { Category = focus.new_overlay })
+				elseif focus.new_overlay == "TestInput" then
 					sortmenu:queuecommand("DirectInputToTestInput")
 				elseif focus.new_overlay == "Leaderboard" then
 					-- The leaderboard entry is removed altogether if the service isn't available.
@@ -102,6 +121,9 @@ local input = function(event)
 					screen:GetMusicWheel():Move(1)
 					screen:GetMusicWheel():Move(-1)
 					screen:GetMusicWheel():Move(0)
+				elseif focus.new_overlay == "PracticeMode" then
+					SCREENMAN:GetTopScreen():SetNextScreenName("ScreenPractice")
+					SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 				elseif focus.new_overlay == "Preferred" then
 					-- Only allow sorting by favorites if there are favorites available
 					if (#SL[ToEnumShortString(event.PlayerNumber)].Favorites > 0) then
@@ -118,6 +140,9 @@ local input = function(event)
 					else
 						SM("No Favorites Available")
 					end
+				elseif focus.new_overlay == "SetSummary" then
+					SCREENMAN:GetTopScreen():SetNextScreenName("ScreenEvaluationSummarySet")
+					SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 				end
 			end
 

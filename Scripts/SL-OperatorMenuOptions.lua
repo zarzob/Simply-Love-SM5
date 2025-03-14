@@ -82,6 +82,71 @@ end
 -- -----------------------------------------------------------------------
 -- Advanced Options
 
+
+OperatorMenuOptionRows.DefaultFailType = function()
+	local failTypes = { "Immediate", "ImmediateContinue", "Off" }
+	return {
+		Name = "DefaultFailType",
+		LayoutType = "ShowAllInRow",
+		SelectType = "SelectOne",
+		OneChoiceForAllPlayers = true,
+		ExportOnChange = false,
+		Choices = failTypes,
+		LoadSelections = function(self, list, pn)
+			local failType = GetDefaultFailType()
+			if not failType then return end
+			local i = FindInTable(ToEnumShortString(failType), failTypes) or 1
+			list[i] = true
+		end,
+		SaveSelections = function(self, list, pn)
+			for i = 1, #failTypes do
+				if list[i] then
+					local default_mods = PREFSMAN:GetPreference("DefaultModifiers")
+					local selected_fail = failTypes[i]
+					local default_fail = "" -- An empty string means Immediate fail
+					local new_fail = "failimmediatecontinue"
+					local fail_strings = {}
+				
+					for mod in string.gmatch(default_mods, "%w+") do
+						if mod:lower():find("fail") then
+							-- we found something matches "fail", so set our default_fail variable
+							-- if we don't find anything that means the fail type is Immediate
+							default_fail = mod:lower()
+							break;
+						end
+					end
+
+					-- -------------------------------------------------------------------
+					-- these mappings just recreate the if/else chain in PlayerOptions.cpp
+					fail_strings.failimmediate         = "Immediate"
+					fail_strings.failimmediatecontinue = "ImmediateContinue"
+					fail_strings.failoff               = "Off"
+					fail_strings.failatend             = "EndOfSong"
+
+					-- Map the selected fail type to the failtype string for DefaultModifiers
+					for k, v in pairs(fail_strings) do
+						if selected_fail == v then
+							new_fail = k
+							break
+						end
+					end
+
+					-- If default_fail is empty, then we need to append the new fail type to the front
+					-- of the DefaultModifiers string.  Otherwise, we need to replace the old fail type
+					-- with the new fail type.
+					if default_fail == "" then
+						PREFSMAN:SetPreference("DefaultModifiers", new_fail .. ", " .. default_mods)
+					else
+						default_mods = string.gsub(default_mods, default_fail, new_fail)
+						PREFSMAN:SetPreference("DefaultModifiers", default_mods)	
+					end
+					break
+				end
+			end
+		end,
+	}
+end
+
 OperatorMenuOptionRows.LongAndMarathonTime = function( str )
 	-- define a range of reasonable choices first
 	-- 150 seconds is 2.5 minutes
@@ -179,21 +244,17 @@ OperatorMenuOptionRows.VideoRenderer = function()
 	local choices = { "opengl" }
 	local values  = { "opengl" }
 
-	-- Windows also has d3d as a VideoRenderer on SM 5.1, and SM 5.3
-	-- features a modern OpenGL based backend (glad) on all supported
-	-- platforms. The convention(?) there is to list both available
+	-- Windows also has d3d as a VideoRenderer on ITGm.
+	-- The convention(?) there is to list both available
 	-- backends in Preferences.ini, but only use the first
 	local architecture = HOOKS:GetArchName():lower()
-	if IsOutFox() then
-		table.insert(choices, "glad")
-		values = { "opengl,glad", "glad,opengl" }
-	elseif architecture:match("windows") then
+	if architecture:match("windows") then
 		table.insert(choices, "d3d")
 		values = { "opengl,d3d", "d3d,opengl" }
 	end
 
 	return {
-		Name = IsOutFox() and "VideoRendererSM5.3" or "VideoRenderer",
+		Name = "VideoRenderer",
 		Choices = choices,
 		LayoutType = "ShowAllInRow",
 		SelectType = "SelectOne",
@@ -264,8 +325,8 @@ function offsetMS(pref, low, high)
 end
 
 OperatorMenuOptionRows.GlobalOffsetSeconds = function()
-	-- 100ms should be sufficient to accomodate for audio delay
-	return offsetMS("GlobalOffsetSeconds", -100, 100)
+	-- up to 1s of audio delay (via HDMI), because some TVs are really slow
+	return offsetMS("GlobalOffsetSeconds", -1000, 1000)
 end
 
 OperatorMenuOptionRows.VisualDelaySeconds = function()

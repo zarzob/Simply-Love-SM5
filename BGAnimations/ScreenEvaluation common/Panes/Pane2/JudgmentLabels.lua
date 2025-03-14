@@ -129,9 +129,6 @@ end
 for index, label in ipairs(RadarCategories) do
 	if index == 1 then
 		text = nil
-		local textSuperEx = "S.EX"
-		local showSuperEX = true
-
 		if SL[pn].ActiveModifiers.ShowEXScore then
 			text = "ITG"
 		else
@@ -153,26 +150,7 @@ for index, label in ipairs(RadarCategories) do
 				else
 					self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 				end
-				self:playcommand("Marquee")
-			end,
-			MarqueeCommand=function(self)
-				if not SL[pn].ActiveModifiers.ShowSuperEXScore or not SL[pn].ActiveModifiers.ShowEXScore then
-					return
-				end
-				if showSuperEX then
-					self:settext(textSuperEx)
-					self:diffuse(color('#FF00CC'))
-					self:x( (controller == PLAYER_1 and -145) or 105 )
-					showSuperEX = false
-				else
-					self:x( (controller == PLAYER_1 and -160) or 90 )
-					self:settext(text)
-					self:diffuse(Color.White)
-					showSuperEX = true
-				end
-				self:sleep(2):queuecommand("Marquee")
 			end
-
 		}
 	end
 

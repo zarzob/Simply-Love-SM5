@@ -167,13 +167,14 @@ af2[#af2+1] = NPS_Histogram(player, width, height)..{
 af2[#af2]["CurrentSteps"..pn.."ChangedMessageCommand"] = nil
 
 -- The Peak NPS text
+local peakNPSText = THEME:GetString("ScreenGameplay", "PeakNPS")
 af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Name="NPS",
 	Text="",
 	InitCommand=function(self)
 		self:zoom(0.8)
 		if #GAMESTATE:GetHumanPlayers() == 1 then 
-			self:settext("Peak NPS: \nPeak eBPM: ")
+			self:settext(peakNPSText..": \nPeak eBPM: ")
 			self:horizalign(left)
 			self:y(-50)
 			if player == PLAYER_1 then
@@ -196,9 +197,9 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	end,
 	HideCommand=function(self)
 		if #GAMESTATE:GetHumanPlayers() == 1 then 
-			self:settext("Peak NPS: \nPeak eBPM: ")
+			self:settext(peakNPSText..": \nPeak eBPM: ")
 		else
-			self:settext("Peak NPS: ")
+			self:settext(peakNPSText..": ")
 		end
 		self:visible(false)
 	end,
@@ -214,7 +215,7 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 				else					
 					self:x(-136)
 				end
-				self:settext(("Peak NPS: %.1f\nPeak eBPM: %.0f"):format(nps,nps*15))
+				self:settext((peakNPSText..": %.1f\nPeak eBPM: %.0f"):format(nps,nps*15))
 			else
 				self:horizalign("right")
 				self:y(-40)
@@ -348,7 +349,7 @@ af2[#af2+1] = Def.ActorFrame{
 	TogglePatternInfoCommand=function(self)
 		self:visible(showPatternInfo)
 	end,
-	
+
 	-- Background for the additional chart info.
 	-- Only shown in 1 Player mode
 	Def.Quad{
@@ -371,11 +372,13 @@ local layout = {
 
 local colSpacing = 150
 local rowSpacing = 17
+local noneText = THEME:GetString("SLPlayerOptions", "None")
+local totalStreamText = THEME:GetString("SLPlayerOptions", "TotalStream")
 
 for i, row in ipairs(layout) do
 	for j, col in pairs(row) do
 		af3[#af3+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-			Text=col ~= "Total Stream" and "0" or "None (0.0%)",
+			Text=(col ~= totalStreamText and "0" or noneText).." (0.0%)",
 			Name=col .. "Value",
 			InitCommand=function(self)
 				local textHeight = 17
@@ -392,7 +395,7 @@ for i, row in ipairs(layout) do
 				if col ~= "Total Stream" then
 					self:settext("0")
 				else
-					self:settext("None (0.0%)")
+					self:settext(noneText.." (0.0%)")
 				end
 			end,
 			RedrawCommand=function(self)
@@ -402,7 +405,7 @@ for i, row in ipairs(layout) do
 					local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
 					local totalMeasures = streamMeasures + breakMeasures
 					if streamMeasures == 0 then
-						self:settext("None (0.0%)")
+						self:settext(noneText.." (0.0%)")
 					else
 						self:settext(string.format("%d/%d (%0.2f%%)", streamMeasures, totalMeasures, streamMeasures/totalMeasures*100))
 					end
@@ -410,8 +413,8 @@ for i, row in ipairs(layout) do
 			end
 		}
 
-		af3[#af3+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-			Text=col,
+		af3[#af3+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal") ..{
+			Text=THEME:GetString("TechCategory", col),
 			Name=col,
 			InitCommand=function(self)
 				local textHeight = 17

@@ -3,6 +3,8 @@ local player = ...
 local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 
+local style = GAMESTATE:GetCurrentStyle():GetName()
+
 -- gray is used for leading 0s
 local gray = color("#5A6166")
 local row_height = 28
@@ -88,16 +90,20 @@ local af = Def.ActorFrame{ Name="HoldsMinesRolls" }
 
 -- position the ActorFrame
 af.InitCommand=function(self)
-	self:x(player==PLAYER_1 and 155 or -85)
-	self:y(-140)
+	if style ~= "double" then
+		self:x(player==PLAYER_1 and 155 or -85)
+		self:y(-140)
 
-	if NoteFieldIsCentered and IsUsingWideScreen() then
-		self:x( player==PLAYER_1 and 155 or -88 )
-	end
+		if NoteFieldIsCentered and IsUsingWideScreen() then
+			self:x( player==PLAYER_1 and 155 or -88 )
+		end
 
-	-- adjust for smaller panes when ultrawide and both players joined
-	if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
-		self:x( player==PLAYER_1 and 14 or 50 )
+		-- adjust for smaller panes when ultrawide and both players joined
+		if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
+			self:x( player==PLAYER_1 and 14 or 50 )
+		end
+	else
+		self:x(-GetNotefieldWidth() + 212):y(-10):zoom(0.8)
 	end
 end
 
@@ -117,7 +123,11 @@ for i, category in ipairs(RadarCategories) do
 			self:y( (i-1)*row_height )
 		end,
 		PositionCommand=function(self, params)
-			self:x((player==PLAYER_1 and -10 or 90) - (params.Offset or 0))
+			if style ~= "double" then
+				self:x((player==PLAYER_1 and -10 or 90) - (params.Offset or 0))
+			else
+				self:x(-10 - (params.Offset or 0))
+			end
 		end
 	}
 
@@ -126,7 +136,11 @@ for i, category in ipairs(RadarCategories) do
 		Name=("%s_Values"):format(category),
 		InitCommand=function(self)
 			self:zoom(0.4):horizalign( right )
-			self:x( player==PLAYER_1 and 0 or 100 )
+			if style ~= "double" then
+				self:x(player==PLAYER_1 and 0 or 100)
+			else
+				self:x(0)
+			end
 			self:y( (i-1)*row_height )
 		end,
 		BeginCommand=function(self)

@@ -1,7 +1,7 @@
 local songs = {
-	Hearts = "feel",
-	Arrows = "cloud break",
-	Bears  = "crystalis",
+	Hearts = "in_two",
+	Arrows = "halcyon farms",
+	Bears  = "vrtuous faults",
 	Ducks  = "Xuxa fami VRC6",
 	Cats   = "Beanmania IIDX",
 	Spooky = "Spooky Scary Chiptunes",

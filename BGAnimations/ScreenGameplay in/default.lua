@@ -29,8 +29,8 @@ elseif SL.Global.GameplayReloadCheck then
 elseif string.find(string.upper(GAMESTATE:GetCurrentSong():GetGroupName()), "STAMINA RPG 8") then
 	text = "Stamina RPG 8"
 	
-elseif string.find(string.upper(GAMESTATE:GetCurrentSong():GetGroupName()), "ITL ONLINE 2024") then
-	text = "ITL Online 2024"
+elseif string.find(string.upper(GAMESTATE:GetCurrentSong():GetGroupName()), "ITL ONLINE 2025") then
+	text = "ITL Online 2025"
 
 elseif not PREFSMAN:GetPreference("EventMode") then
 	text = THEME:GetString("Stage", "Stage") .. " " .. tostring(SL.Global.Stages.PlayedThisGame + 1)

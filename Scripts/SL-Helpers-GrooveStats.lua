@@ -203,7 +203,7 @@ end
 -- Sets the API key for a player if it's found in their profile.
 
 ParseGrooveStatsIni = function(player)
-	if not player then return "" end
+	if not player then return end
 
 	local profile_slot = {
 		[PLAYER_1] = "ProfileSlot_Player1",
@@ -224,6 +224,7 @@ ParseGrooveStatsIni = function(player)
 		IniFile.WriteFile(path, {
 			["GrooveStats"]={
 				["ApiKey"]="",
+				["Username"]="",
 				["IsPadPlayer"]=0,
 			}
 		})
@@ -240,6 +241,8 @@ ParseGrooveStatsIni = function(player)
 				else
 					SL[pn].ApiKey = v
 				end
+			elseif k == "Username" then
+				SL[pn].GrooveStatsUsername = v
 			elseif k == "IsPadPlayer" then
 				-- Must be explicitly set to 1.
 				if v == 1 then
@@ -249,7 +252,44 @@ ParseGrooveStatsIni = function(player)
 				end
 			end
 		end
+
+		-- Always write the file back to disk to ensure it's up to date with
+		-- any new fields that may have been added.
+		IniFile.WriteFile(path, {
+			["GrooveStats"]={
+				["ApiKey"]=SL[pn].ApiKey,
+				["Username"]=SL[pn].GrooveStatsUsername,
+				["IsPadPlayer"]=SL[pn].IsPadPlayer and "1" or "0",
+			}
+		})
 	end
+end
+
+-- -----------------------------------------------------------------------
+WriteGrooveStatsIni = function(player)
+	if not player then return end
+
+	local profile_slot = {
+		[PLAYER_1] = "ProfileSlot_Player1",
+		[PLAYER_2] = "ProfileSlot_Player2"
+	}
+	
+	if not profile_slot[player] then return "" end
+
+	local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
+	local pn = ToEnumShortString(player)
+	-- We require an explicit profile to be loaded.
+	if not dir or #dir == 0 then return "" end
+
+	local path = dir .. "GrooveStats.ini"
+
+	IniFile.WriteFile(path, {
+		["GrooveStats"]={
+			["ApiKey"]=SL[pn].ApiKey,
+			["Username"]=SL[pn].GrooveStatsUsername,
+			["IsPadPlayer"]=SL[pn].IsPadPlayer and "1" or "0",
+		}
+	})
 end
 
 -- -----------------------------------------------------------------------
@@ -458,8 +498,11 @@ ValidForGrooveStats = function(player)
 		or po:Big()
 	)
 
+	-- we can't use po:FailSetting() here because effective fail type can be overridden by preferences
+	-- use GAMESTATE:GetPlayerFailType() since ScreenGameplay uses the same function internally
+	local failType = GAMESTATE:GetPlayerFailType(player);
 	-- only FailTypes "Immediate" and "ImmediateContinue" are valid for GrooveStats
-	valid[11] = (po:FailSetting() == "FailType_Immediate" or po:FailSetting() == "FailType_ImmediateContinue")
+	valid[11] = (failType == "FailType_Immediate" or failType == "FailType_ImmediateContinue")
 
 	-- AutoPlay/AutoplayCPU is not allowed
 	valid[12] = IsHumanPlayer(player)
@@ -761,13 +804,35 @@ DownloadEventUnlock = function(url, unlockName, packName)
 				if response.headers["Content-Type"] == "application/zip" then
 					-- Downloads are usually of the form:
 					--    /Downloads/<name>.zip/<song_folders/
-					if not FILEMAN:Unzip("/Downloads/"..downloadfile, "/Songs/"..packName.."/") then
+					local destinationPack = "/Songs/"..packName.."/"
+					if not FILEMAN:Unzip("/Downloads/"..downloadfile, destinationPack) then
 						downloadInfo.ErrorMessage = "Failed to Unzip!"
 					else
 						if SL.GrooveStats.UnlocksCache[url] == nil then
 							SL.GrooveStats.UnlocksCache[url] = {}
 						end
 						SL.GrooveStats.UnlocksCache[url][packName] = true
+
+						-- If Pack.ini doesn't exist (new unlock for this player), create it.
+						local group = string.lower(packName)
+						local year = 2025
+						if string.find(group, "itl online "..year.." unlocks") then
+							local packIniPath = destinationPack.."Pack.ini"
+							if not FILEMAN:DoesFileExist(packIniPath) then
+								IniFile.WriteFile(packIniPath, {
+									["Group"]={
+										["Version"]=1,
+										["DisplayTitle"]=packName,
+										["TranslitTitle"]=packName,
+										["SortTitle"]=packName,
+										["Series"]="ITL Online",
+										["Year"]=year,
+										["Banner"]="",
+										["SyncOffset"]="ITG",
+									}
+								})
+							end
+						end
 
 						WriteUnlocksCache()
 					end

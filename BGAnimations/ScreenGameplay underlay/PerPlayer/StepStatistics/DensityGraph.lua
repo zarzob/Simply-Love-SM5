@@ -1,5 +1,8 @@
 local player, width = unpack(...)
 
+local style = GAMESTATE:GetCurrentStyle():GetName();
+if style == "double" then width = width * 0.95 end
+
 local pn = ToEnumShortString(player)
 -- height is how tall, in pixels, the density graph will be
 local height = 105
@@ -37,7 +40,12 @@ local UpdateRate, first_second, last_second
 
 local af = Def.ActorFrame{
 	InitCommand=function(self)
-		self:xy( pos_x, 55 ):queuecommand("Update")
+		if style ~= "double" then
+			self:xy(pos_x, 55)
+		else
+			self:xy(260, 40)
+		end
+		self:queuecommand("Update")
 	end,
 	OnCommand=function(self)
 		LifeMeter = SCREENMAN:GetTopScreen():GetChild("Life"..pn)
@@ -87,8 +95,12 @@ local histogram_amv = Scrolling_NPS_Histogram(player, width, height)..{
 -- PeakNPS text
 local text = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
-		self:zoom(0.5)
-		self:halign( PlayerNumber:Reverse()[OtherPlayer[player]] )
+		if style ~= "double" then
+			self:zoom(0.5)
+			self:halign( PlayerNumber:Reverse()[OtherPlayer[player]] )
+		else
+			self:halign(3.4):zoom(0.9)
+		end
 		self:vertalign(bottom)
 
 		-- flip alignment if ultrawide and both players joined because the pane
@@ -105,8 +117,8 @@ local text = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			return
 		end
 
-		if player == PLAYER_1 then
-			self:x(_screen.w*0.5 - SL_WideScale(6,329))
+		if player == PLAYER_1 or style == "double" then
+			self:x(_screen.w*0.5 - SL_WideScale(6,59))
 
 			if NoteFieldIsCentered then
 				self:x(_screen.w*0.5 - 134)

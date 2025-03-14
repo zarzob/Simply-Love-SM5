@@ -86,7 +86,7 @@ end
 -- ----------------------------------------------------
 -- retrieves profile data from disk without applying it to the SL table
 
-local RetrieveProfileData = function(profile, dir)
+local RetrieveProfileData = function(dir)
 	local theme_name = THEME:GetThemeDisplayName()
 	local path = dir .. theme_name .. " UserPrefs.ini"
 	if FILEMAN:DoesFileExist(path) then
@@ -111,7 +111,7 @@ for i=1, PROFILEMAN:GetNumLocalProfiles() do
 	-- GetLocalProfileIDFromIndex() also expects indices to start at 0
 	local id = PROFILEMAN:GetLocalProfileIDFromIndex(i-1)
 	local dir = PROFILEMAN:LocalProfileIDToDir(id)
-	local userprefs = RetrieveProfileData(profile, dir)
+	local userprefs = RetrieveProfileData(dir)
 	local mods, noteskin, judgment = RecentMods(userprefs)
 
 	local data = {

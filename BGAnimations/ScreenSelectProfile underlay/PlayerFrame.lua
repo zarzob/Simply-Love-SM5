@@ -163,7 +163,7 @@ return Def.ActorFrame{
 			SelectedProfileMessageCommand=function(self, params)
 				if params.PlayerNumber ~= player then return end
 
-				self:settext("Waiting...")
+				self:settext(THEME:GetString("ScreenSelectProfile", "Waiting"))
 			end,
 			CoinsChangedMessageCommand=function(self)
 				if IsArcade() and GAMESTATE:EnoughCreditsToJoin() then

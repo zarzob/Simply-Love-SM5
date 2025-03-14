@@ -96,7 +96,9 @@ local TNSFrames = {
 	TapNoteScore_W3 = 2,
 	TapNoteScore_W4 = 3,
 	TapNoteScore_W5 = 4,
-	TapNoteScore_Miss = 5
+	TapNoteScore_Miss = 5,
+	TapNoteScore_CheckpointHit = -1,
+	TapNoteScore_CheckpointMiss = 5
 }
 
 local enabledTimingWindows = {}
@@ -169,7 +171,7 @@ return Def.ActorFrame{
 
 			sprite:visible(true):setstate(frame)
 
-			if SL[ToEnumShortString(player)].ActiveModifiers.JudgmentTilt then
+			if mods.JudgmentTilt then
 				-- How much to rotate.
 				-- We cap it at 50ms (15px) since anything after likely to be too distracting.
 				local extraOffset = (math.abs(param.TapNoteOffset) > capTimingOffset and math.abs(param.TapNoteOffset) - capTimingOffset or 0) * 300 * mods.TiltMultiplier

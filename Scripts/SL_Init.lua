@@ -4,14 +4,15 @@ local PlayerDefaults = {
 	__index = {
 		initialize = function(self)
 			self.ActiveModifiers = {
-				SpeedModType = "X",
-				SpeedMod = 1.00,
+				SpeedModType = "M",
+				SpeedMod = 250,
 				JudgmentGraphic = "Love 2x6 (doubleres).png",
 				HeldGraphic = "None",
 				ComboFont = "Wendy",
 				HoldJudgment = "Love 1x2 (doubleres).png",
 				NoteSkin = nil,
 				Mini = "0%",
+				Spacing = "0%",
 				BackgroundFilter = 0,
 				VisualDelay = "0ms",
 
@@ -38,6 +39,7 @@ local PlayerDefaults = {
 				LifeMeterType = "Standard",
 				NPSGraphAtTop = false,
 				JudgmentTilt = false,
+				TiltMultiplier = 1,
 				ColumnCues = false,
 				ColumnCountdown = false,
 				ShowHeldMiss = false,
@@ -51,7 +53,6 @@ local PlayerDefaults = {
 				HideEarlyDecentWayOffJudgments = false,
 				HideEarlyDecentWayOffFlash = false,
 
-				TimingWindows = {true, true, true, true, true},
 				ShowFaPlusWindow = false,
 				ShowEXScore = false,
 				ShowFaPlusPane = true,
@@ -130,6 +131,7 @@ local PlayerDefaults = {
 
 			-- The Groovestats API key loaded for this player
 			self.ApiKey = ""
+			self.GrooveStatsUsername = ""
 			-- Whether or not the player is playing on pad.
 			self.IsPadPlayer = false
 			self.Favorites = {}
@@ -470,18 +472,6 @@ SL = {
 		Held=1,
 		HitMine=-1
 	},
-	SuperExWeights = {
-		W010=3.5,
-		W110=3,
-		W2=1,
-		W3=0,
-		W4=0,
-		W5=0,
-		Miss=0,
-		LetGo=0,
-		Held=1,
-		HitMine=-1
-	},
 	-- Fields used to determine whether or not we can connect to the
 	-- GrooveStats services.
 	GrooveStats = {
@@ -544,6 +534,16 @@ function InitializeSimplyLove()
 	SL.P1:initialize()
 	SL.P2:initialize()
 	SL.Global:initialize()
+	
+	-- Temporary fix so late joining players aren't getting the last person's profile.
+	-- This obsoletes the handling for defaulting to the DefaultLocalProfile in SelectProfile
+	-- However, the addition of the ProfileSortOrder_Recent will ensure the last used profile is
+	-- always at the top of the list anyways
+	-- If the SelectProfile screen is not being used, we should continue to use the default profiles
+	if ThemePrefs.Get("AllowScreenSelectProfile") then
+		PREFSMAN:SetPreference("DefaultLocalProfileIDP1", "")
+		PREFSMAN:SetPreference("DefaultLocalProfileIDP2", "")
+	end
 end
 
 InitializeSimplyLove()

@@ -205,7 +205,7 @@ local t = Def.ActorFrame{
 if style == "SRPG8" then
 	t[#t+1] = Def.BitmapText{
 		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
-		Text="Choose your faction!",
+		Text=THEME:GetString("SRPG", "SelectFaction"),
 		InitCommand=function(self)
 			self:xy(_screen.cx, 80)
 			self:zoom(1.5)

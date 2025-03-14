@@ -76,6 +76,7 @@ SL_CustomPrefs.Get = function()
 			},
 			Values = { "Casual", "ITG" }
 		},
+
 		AutoStyle =
 		{
 			Default = "none",
@@ -297,6 +298,15 @@ SL_CustomPrefs.Get = function()
 			Default = false,
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values  = { true, false }
+		},
+		QRLogin = {
+			Default = "Sometimes",
+			Choices = {
+				THEME:GetString("ThemePrefs", "Always"),
+				THEME:GetString("ThemePrefs", "Sometimes"),
+				THEME:GetString("ThemePrefs", "Never"),
+			},
+			Values = { "Always", "Sometimes", "Never" }
 		},
 
 		-- - - - - - - - - - - - - - - - - - - -

@@ -173,34 +173,6 @@ local Overrides = {
 					}
 				}
 
-				-- additional OutFox stock note skins
-				if IsOutFox() then
-					local stockOutfox = {
-						dance = {
-							"defaultsm5", "delta2019", "outfox-itg", "outfox-note",
-							"paw"
-						},
-						pump = {
-							"defaultsm5", "pawprint", "rhythmsm5"
-						},
-						global = {
-							"broadhead", "crystal", "crystal4k", "exact3d", "fourv2",
-							"glider-note", "paws", "shadowtip"
-						}
-					}
-
-					if stockOutfox[game] then
-						for name in ivalues(stockOutfox[game]) do
-							table.insert(stock[game], name)
-						end
-					end
-					if stock[game] then
-						for name in ivalues(stockOutfox.global) do
-							table.insert(stock[game], name)
-						end
-					end
-				end
-
 				if stock[game] then
 					for stock_noteskin in ivalues(stock[game]) do
 						for i=1,#all do
@@ -319,6 +291,29 @@ local Overrides = {
 			-- to make the arrows smaller, pass Mini() a value between 0 and 1
 			-- (to make the arrows bigger, pass Mini() a value larger than 1)
 			playeroptions:Mini( mods.Mini:gsub("%%","")/100 )
+		end
+	},
+	-------------------------------------------------------------------------
+	Spacing = {
+		Choices = function()
+			local first	= -100
+			local last 	= 100
+			local step 	= 1
+
+			return stringify( range(first, last, step), "%g%%")
+		end,
+		SaveSelections = function(self, list, pn)
+			local mods, playeroptions = GetModsAndPlayerOptions(pn)
+
+			for i=1,#self.Choices do
+				if list[i] then
+					mods.Spacing = self.Choices[i]
+				end
+			end
+
+			-- to make the arrows smaller, pass Mini() a value between 0 and 1
+			-- (to make the arrows bigger, pass Mini() a value larger than 1)
+			playeroptions:Flip( -mods.Spacing:gsub("%%","")/100 )
 		end
 	},
 	-------------------------------------------------------------------------
@@ -447,7 +442,7 @@ local Overrides = {
 				return { "ShowFaPlusWindow" }
 			end
 
-			return { "ShowFaPlusWindow", "ShowEXScore", "ShowSuperEXScore", "ShowFaPlusPane", "SmallerWhite" }
+			return { "ShowFaPlusWindow", "ShowEXScore", "ShowFaPlusPane", "SmallerWhite" }
 		end,
 		LoadSelections = function(self, list, pn)
 			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
@@ -464,9 +459,8 @@ local Overrides = {
 
 			list[1] = mods.ShowFaPlusWindow or false
 			list[2] = mods.ShowEXScore or false
-			list[3] = mods.ShowSuperEXScore or false
-			list[4] = mods.ShowFaPlusPane or false
-			list[5] = mods.SmallerWhite or false
+			list[3] = mods.ShowFaPlusPane or false
+			list[4] = mods.SmallerWhite or false
 			return list
 		end,
 		SaveSelections = function(self, list, pn)
@@ -494,9 +488,8 @@ local Overrides = {
 
 			mods.ShowFaPlusWindow = list[1]
 			mods.ShowEXScore = list[2]
-			mods.ShowSuperEXScore = list[3]
-			mods.ShowFaPlusPane = list[4]
-			mods.SmallerWhite = list[5]
+			mods.ShowFaPlusPane = list[3]
+			mods.SmallerWhite = list[4]
 			-- Default to FA+ pane if either options are active.
 			sl_pn.EvalPanePrimary = ((list[1] or list[2]) and list[3]) and 2 or 1
 		end
@@ -544,12 +537,8 @@ local Overrides = {
 			local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 			local mpn = GAMESTATE:GetMasterPlayerNumber()
 
-			-- Never available in double
-			if style and style:GetName() == "double"
-			-- In 4:3 versus mode
-			or (not IsUsingWideScreen() and style and style:GetName() == "versus")
-			-- if the notefield takes up more than half the screen width
-			or (notefieldwidth and notefieldwidth > _screen.w/2)
+			-- Not in 4:3 versus mode
+			if (not IsUsingWideScreen() and style and style:GetName() == "versus")
 			-- if the notefield is centered with 4:3 aspect ratio
 			or (mpn and GetNotefieldX(mpn) == _screen.cx and not IsUsingWideScreen())
 			-- Tournament Mode always enforces whether to display/hide step stats so remove that as an option.
@@ -652,19 +641,40 @@ local Overrides = {
 			return vals
 		end
 	},
+	
+	TiltMultiplier = {
+		Choices = function()
+			local first	= 1
+			local last 	= 3
+			local step 	= 0.5
+
+			return stringify(range(first, last, step), "%g")
+		end,
+		LoadSelections = function(self, list, pn)
+			local mods =SL[ToEnumShortString(pn)].ActiveModifiers
+			local tiltMultiplier = ("%g"):format(mods.TiltMultiplier)
+			local i = FindInTable(tiltMultiplier, self.Choices) or 1
+			list[i] = true
+			return list
+		end,
+		SaveSelections = function(self, list, pn)
+			local mods =SL[ToEnumShortString(pn)].ActiveModifiers
+
+			for i=1,#self.Choices do
+				if list[i] then
+					mods.TiltMultiplier = tonumber( self.Choices[i] )
+				end
+			end
+		end
+	},
 	-------------------------------------------------------------------------
 	ErrorBar = {
 		SelectType = "SelectMultiple",
 		Values = { "Colorful", "Monochrome", "Text", "Highlight", "Average" },
 	},
 	-------------------------------------------------------------------------
-	ErrorBarOptions = {
-		SelectType = "SelectMultiple",
-		Values = { "ErrorBarUp", "ErrorBarMultiTick" },
-	},
-	-------------------------------------------------------------------------
-	ErrorBarCap = {
-		Values = { 5, 1, 2, 3 },
+	ErrorBarTrim = {
+		Values = { "Off", "Fantastic", "Excellent", "Great" },
 		Choices = function()
 			local tns = "TapNoteScore" .. (SL.Global.GameMode=="ITG" and "" or SL.Global.GameMode)
 			local t = {THEME:GetString("SLPlayerOptions","None")}
@@ -674,6 +684,11 @@ local Overrides = {
 			t[4] = THEME:GetString(tns,"W3")
 			return t
 		end,
+	},
+	-------------------------------------------------------------------------
+	ErrorBarOptions = {
+		SelectType = "SelectMultiple",
+		Values = { "ErrorBarUp", "ErrorBarMultiTick" },
 	},
 	-------------------------------------------------------------------------
 	RainbowComboOptions = {

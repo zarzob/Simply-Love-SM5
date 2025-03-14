@@ -127,7 +127,7 @@ for offset=-worst_window, worst_window, 0.001 do
 
 		c = colors[DetermineTimingWindow(offset)]
 
-		if mods.ShowFaPlusWindow and mods.ShowFaPlusPane then
+		if mods.ShowFaPlusPane and mods.ShowFaPlusWindow then
 			abs_offset = math.abs(offset)
 			if mods.SmallerWhite and abs_offset > GetTimingWindow(1, "FA+", true) and abs_offset <= GetTimingWindow(1, "FA+", false) then
 				c = BlendColors(SL.JudgmentColors["FA+"][2], colors[1])

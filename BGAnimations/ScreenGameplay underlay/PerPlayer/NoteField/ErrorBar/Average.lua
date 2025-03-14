@@ -23,11 +23,18 @@ local offsetScale = 1 --Make the movements on the error bar more or less pronoun
 local enabledTimingWindows = {}
 
 -- Find out maximum timing window for error bar
-local maxError = mods.ErrorBarCap < NumJudgmentsAvailable() and mods.ErrorBarCap or NumJudgmentsAvailable()
+local judgmentToTrim = {
+	TapNoteScore_W2 = mods.ErrorBarTrim == "Fantastic" and SL.Global.GameMode == "ITG",
+    TapNoteScore_W3 = mods.ErrorBarTrim == "Excellent" and SL.Global.GameMode == "ITG",
+    TapNoteScore_W4 = (mods.ErrorBarTrim ~= "Off" and SL.Global.GameMode == "ITG") or (mods.ErrorBarTrim == "Excellent" and SL.Global.GameMode == "FA+"),
+    TapNoteScore_W5 = mods.ErrorBarTrim ~= "Off"
+}
 
-for i = 1, maxError do
+for i = 1, NumJudgmentsAvailable() do
     if mods.TimingWindows[i] then
-        enabledTimingWindows[#enabledTimingWindows+1] = i
+        if not judgmentToTrim["TapNoteScore_W" .. tostring(i)] then
+            enabledTimingWindows[#enabledTimingWindows + 1] = i
+        end
     end
 end
 

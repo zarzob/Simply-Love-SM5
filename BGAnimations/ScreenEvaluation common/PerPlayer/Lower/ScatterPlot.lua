@@ -245,7 +245,7 @@ if iscourse then
 				self:x(startX):zoomto(endX, GraphHeight):diffuse(LightenColor(LightenColor(color("#101519")))):diffusealpha(0.5):vertalign(top):horizalign(left)
 				if i%2 == 0 then self:visible(false) end
 				if ThemePrefs.Get("VisualStyle") == "Technique" then
-					self:diffusealpha(0.75)
+					self:diffusealpha(0.6)
 				end
 			end
 		}

@@ -101,7 +101,7 @@ local BannerAndSong = function(x, y, zoom)
 					self:LoadFromSong( GAMESTATE:GetCurrentSong() )
 				end
 			end
-			self:setsize(418, 164)
+			self:setsize(418, 164):animate(false) 
 		end
 	}
 	af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
@@ -412,30 +412,11 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 	local steps = GAMESTATE:GetCurrentSteps(player)
 	local chartName = steps:GetChartName()
 
-	local maxPoints = 0
-	local hash = SL[pn].Streams.Hash
-	if itlData["maxPoints"] ~= nil then
-		-- First try and fetch the maxPoints from the response.
-		maxPoints = itlData["maxPoints"]
-	elseif SL[pn].ITLData["hashMap"][hash] ~= nil then
-		-- Then if it doesn't exist, try and parse it from ITL hashMap
-		maxPoints = SL[pn].ITLData["hashMap"][hash]["maxPoints"]
-	else
-		-- Then if it still doesn't exist, try and parse it from the chartName.
-
-		-- Note that playing OUTSIDE of the ITL pack will result in 0 points for all
-		-- upscores since it won't have the relevant points data.
-		local pointsStr = chartName:gsub(" pts", "")
-		maxPoints = tonumber(pointsStr)
-	end
-
-	if maxPoints == nil then
-		maxPoints = 0
-	end
-
-	local currentPoints = GetITLPointsForSong(maxPoints, score)
-	local previousPoints = itlData["topScorePoints"]
+	local currentPoints = itlData["topScorePoints"]
+	local previousPoints = itlData["prevTopScorePoints"]
 	local pointDelta = currentPoints - previousPoints
+
+	local totalPasses = itlData["totalPasses"]
 
 	local currentRankingPointTotal = itlData["currentRankingPointTotal"]
 	local previousRankingPointTotal = itlData["previousRankingPointTotal"]
@@ -476,7 +457,8 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 				["currentExPointTotal"] = currentExPointTotal,
 				["totalExDelta"] = totalExDelta,
 				["currentPointTotal"] = currentPointTotal,
-				["totalDelta"] = totalDelta
+				["totalDelta"] = totalDelta,
+				["totalPasses"] = totalPasses,
 			},
 		})
 	end
@@ -484,13 +466,7 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 
 	local statImprovements = {}
 	local quests = {}
-
-	local box_quests = {}
-	local box_rp = {prev=previousRankingPointTotal,curr=currentRankingPointTotal,delta=rankingDelta}
-	local box_tp = {prev=previousPointTotal,curr=currentPointTotal,delta=totalDelta}
-	local box_score = {score=score,delta=scoreDelta}
-	local box_clearType = {}
-
+	local achievements = {}
 	local progress = itlData["progress"]
 	if progress then
 		if progress["statImprovements"] then
@@ -507,8 +483,6 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 						}
 						local curr = improvement["current"]
 						local prev = curr - improvement["gained"]
-						
-						table.insert(box_clearType,prev,curr)
 
 						table.insert(
 							statImprovements,
@@ -542,7 +516,6 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 
 		if progress["questsCompleted"] then
 			for quest in ivalues(progress["questsCompleted"]) do
-				table.insert(box_quests,quest["title"])
 				local questStrings = {}
 				table.insert(questStrings, string.format(
 					"Completed \"%s\"!\n",
@@ -570,6 +543,43 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 				table.insert(quests, table.concat(questStrings, "\n"))
 			end
 		end
+
+		if progress["achievementsCompleted"] then
+			for achievement in ivalues(progress["achievementsCompleted"]) do
+				local achievementStrings = {}
+				table.insert(achievementStrings, string.format(
+					"Completed the \"%s\" Achievement!\n",
+					achievement["title"]
+				))
+
+				for reward in ivalues(achievement["rewards"]) do
+					local tier = reward["tier"]
+					if tier ~= "Default" then
+						table.insert(achievementStrings, string.format(
+							"\"%s\" Tier",
+							tier
+						))
+					end
+
+					for requirement in ivalues(reward["requirements"]) do
+						table.insert(achievementStrings, string.format(
+							"%s",
+							requirement
+						))
+					end
+
+					if reward["titleUnlocked"] then
+						table.insert(achievementStrings, string.format(
+							"Unlocked the \"%s\" Title!",
+							reward["titleUnlocked"]
+						))
+					end
+					table.insert(achievementStrings, "")
+				end
+
+				table.insert(achievements, table.concat(achievementStrings, "\n"))
+			end
+		end
 	end
 
 	table.insert(paneTexts, string.format(
@@ -579,6 +589,7 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 		"Song Points: %d (%+d)\n"..
 		"EX Points: %d (%+d)\n"..
 		"Total Points: %d (%+d)\n\n"..
+		"You've passed the chart %d times\n\n"..
 		"%s",
 		score, scoreDelta,
 		currentPoints, pointDelta,
@@ -586,11 +597,16 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 		currentSongPointTotal, totalSongDelta,
 		currentExPointTotal, totalExDelta,
 		currentPointTotal, totalDelta,
+		totalPasses,
 		#statImprovements == 0 and "" or table.concat(statImprovements, "\n").."\n\n"
 	))
 
 	for quest in ivalues(quests) do
 		table.insert(paneTexts, quest)
+	end
+
+	for achievement in ivalues(achievements) do
+		table.insert(paneTexts, achievement)
 	end
 
 	for text in ivalues(paneTexts) do
@@ -645,8 +661,15 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 				offset = j + 1
 			end
 
-			offset = 0
+			-- Have special coloring for the quoted tiers.
+			local tierMap = {
+				["Bronze"] = color("#966832"),
+				["Silver"] = color("#A1AEC1"),
+				["Gold"] = color("#F6AB2D"),
+				["Prismatic"] = color("#8731D2"),
+			}
 
+			offset = 0
 			while offset <= #text do
 				-- Search for all quoted strings.
 				local i, j = string.find(text, "\".-\"", offset)
@@ -656,11 +679,18 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 				end
 				-- Extract the actual quoted text.
 				local substring = string.sub(text, i, j)
-
-				bodyText:AddAttribute(i-1, {
-					Length=#substring,
-					Diffuse=Color.Green
-				})
+				local text = string.sub(substring, 2, #substring-1)
+				if tierMap[text] ~= nil then
+					bodyText:AddAttribute(i-1, {
+						Length=#substring,
+						Diffuse=tierMap[text]
+					})
+				else
+					bodyText:AddAttribute(i-1, {
+						Length=#substring,
+						Diffuse=Color.Green
+					})
+				end
 
 				offset = j + 1
 			end

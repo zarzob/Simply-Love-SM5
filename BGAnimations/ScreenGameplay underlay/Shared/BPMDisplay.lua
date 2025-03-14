@@ -8,6 +8,8 @@ local bpmDisplay, SongPosition
 
 -- -----------------------------------------------------------------------
 
+local xRateText = THEME:GetString("OptionTitles", "MusicRateMultiplier")
+
 -- the update function when a single BPM Display is in use
 local UpdateSingleBPM = function(af)
 	-- BPM stuff first
@@ -21,7 +23,7 @@ local UpdateSingleBPM = function(af)
 
 	-- MusicRate Display
 	MusicRate = string.format("%.2f", MusicRate )
-	MusicRateDisplay:settext( MusicRate ~= "1.00" and MusicRate.."x rate" or "" )
+	MusicRateDisplay:settext( MusicRate ~= "1.00" and MusicRate..xRateText or "" )
 end
 
 -- the update function when two BPM Displays are needed for divergent TimingData (split BPMs)
@@ -36,7 +38,7 @@ local Update2PBPM = function(self)
 	end
 
 	MusicRate = string.format("%.2f", MusicRate )
-	MusicRateDisplay:settext( MusicRate ~= "1.00" and MusicRate.."x rate" or "" )
+	MusicRateDisplay:settext( MusicRate ~= "1.00" and MusicRate..xRateText or "" )
 end
 
 

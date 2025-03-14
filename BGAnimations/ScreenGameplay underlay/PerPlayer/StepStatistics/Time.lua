@@ -6,6 +6,8 @@ local rate = SL.Global.ActiveModifiers.MusicRate
 local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 
+local style = GAMESTATE:GetCurrentStyle():GetName()
+
 -- -----------------------------------------------------------------------
 -- reference to the BitmapText actor that will display remaining time
 local remBMT
@@ -87,16 +89,20 @@ end
 local af = Def.ActorFrame{}
 af.InitCommand=function(self)
 	self:SetUpdateFunction(Update)
-	self:x(SL_WideScale(150,202) * (player==PLAYER_1 and -1 or 1))
-	self:y(-40)
+	if style ~= "double" then
+		self:x(SL_WideScale(150,202) * (player==PLAYER_1 and -1 or 1))
+		self:y(-40)
 
-	if NoteFieldIsCentered and IsUsingWideScreen() then
-		self:x( 154 * (player==PLAYER_1 and -1 or 1) )
-	end
+		if NoteFieldIsCentered and IsUsingWideScreen() then
+			self:x( 154 * (player==PLAYER_1 and -1 or 1) )
+		end
 
-	-- flip alignment when ultrawide and both players joined
-	if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
-		self:x(self:GetX() * -1)
+		-- flip alignment when ultrawide and both players joined
+		if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
+			self:x(self:GetX() * -1)
+		end
+	else
+		self:x(-GetNotefieldWidth() + 150):y(75)
 	end
 end
 
@@ -123,7 +129,11 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
 		remBMT = self
 		self:x(0)
-		self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
+		if style ~= "double" then
+			self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
+		else
+			self:halign(-1.2)
+		end
 
 		-- flip alignment and adjust for smaller pane size
 		-- when ultrawide and both players joined
@@ -150,7 +160,11 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Text=("%s "):format( THEME:GetString("ScreenGameplay", "Remaining") ),
 	InitCommand=function(self)
-		self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
+		if style ~= "double" then
+			self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
+		else
+			self:halign(1)
+		end
 		self:zoom(0.833)
 
 		-- flip alignment and adjust for smaller pane size
@@ -161,7 +175,7 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		end
 	end,
 	OnCommand=function(self)
-		if player==PLAYER_1 then
+		if player == PLAYER_1 or style == "double" then
 			self:x( 32 + (total_width-28))
 		else
 			self:x(-32 - (total_width-28))
@@ -184,7 +198,12 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
 		self:xy(0,20)
-		self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
+		if style ~= "double" then
+			self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
+		else
+			self:halign(-1.2)
+		end
+		
 		if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 			self:halign( PlayerNumber:Reverse()[OtherPlayer[player]] )
 			self:x(50 * (player==PLAYER_1 and -1 or 1))
@@ -200,7 +219,12 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	InitCommand=function(self)
 		self:zoom(0.833)
-		self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
+		if style ~= "double" then
+			self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
+		else
+			self:halign(1)
+		end
+		
 		if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 			self:halign( PlayerNumber:Reverse()[OtherPlayer[player]] )
 		end
@@ -209,7 +233,7 @@ af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		self:settext( ("%s "):format(s) )
 	end,
 	OnCommand=function(self)
-		if player==PLAYER_1 then
+		if player == PLAYER_1 or style == "double" then
 			self:x(32 + (total_width-28))
 		else
 			self:x(-32 - (total_width-28))

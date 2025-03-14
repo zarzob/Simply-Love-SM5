@@ -62,48 +62,32 @@ function IsMinimumProductVersion(...)
 	return true
 end
 
-
-function IsStepMania()
-	if type(ProductFamily) ~= "function" then return false end
-	return ProductFamily() == "StepMania"
-end
-
-
-function IsOutFox()
-	if type(ProductFamily) ~= "function" then return false end
-	return ProductFamily() == "OutFox"
-end
-
-
 function IsITGmania()
 	if type(ProductFamily) ~= "function" then return false end
 	return ProductFamily() == "ITGmania"
 end
 
+-- define the required version here
+local MinimumVersion = {1, 0, 0}
 
 -- -----------------------------------------------------------------------
 -- use StepManiaVersionIsSupported() to check if Simply Love supports the version of SM5 in use
 
 StepManiaVersionIsSupported = function()
-	-- SM5.0.12 is supported (latest stable release)
-	-- SM5.1.x is supported
-	-- SM5.2 is not supported because it saw significant
-	--       backwards-incompatible API changes and is now abandoned
-	if IsStepMania() then
-		return IsProductVersion(5, 0, 12) or IsProductVersion(5, 1)
-	end
-
-	-- OutFox >= 0.4 is supported (beta status because it's not open source yet)
-	if IsOutFox() then
-		return IsMinimumProductVersion(0, 4)
-	end
-
+	-- SM5.0.12, SM5.1.x and OutFox are no longer supported
 	-- ITGmania >= 0.8.0
 	if IsITGmania() then
-		return IsMinimumProductVersion(0, 8, 0)
+		return IsMinimumProductVersion(MinimumVersion[1], MinimumVersion[2], MinimumVersion[3])
 	end
 
 	return false
+end
+
+-- -----------------------------------------------------------------------
+-- used for the unsupported engine message to avoid having to change every language file for every release
+
+MinimumVersionString = function()
+	return string.format("%i.%i.%i", MinimumVersion[1], MinimumVersion[2], MinimumVersion[3])
 end
 
 -- -----------------------------------------------------------------------
