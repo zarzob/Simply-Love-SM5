@@ -153,6 +153,7 @@ for index, label in ipairs(RadarCategories) do
 				else
 					self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 				end
+				self:playcommand("Marquee")
 			end,
 			MarqueeCommand=function(self)
 				if not SL[pn].ActiveModifiers.ShowSuperEXScore or not SL[pn].ActiveModifiers.ShowEXScore then
