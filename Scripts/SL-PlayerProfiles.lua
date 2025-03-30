@@ -89,6 +89,7 @@ local permitted_profile_settings = {
 
 	ShowFaPlusWindow     = "boolean",
 	ShowExScore          = "boolean",
+	ShowSuperEXScore     = "boolean",
 	ShowFaPlusPane       = "boolean",
 	SmallerWhite     = "boolean",
 
