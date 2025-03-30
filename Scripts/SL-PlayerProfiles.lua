@@ -85,14 +85,12 @@ local permitted_profile_settings = {
 	--
 	ErrorBarUp           = "boolean",
 	ErrorBarMultiTick    = "boolean",
-	ErrorBarCap    		 = "number",
 	ErrorBarTrim         = "string",
 
 	ShowFaPlusWindow     = "boolean",
-	ShowEXScore          = "boolean",
-	ShowSuperEXScore     = "boolean",
+	ShowExScore          = "boolean",
 	ShowFaPlusPane       = "boolean",
-	SmallerWhite         = "boolean",
+	SmallerWhite     = "boolean",
 
 	HideEarlyDecentWayOffJudgments = "boolean",
 	HideEarlyDecentWayOffFlash     = "boolean",
@@ -102,7 +100,7 @@ local permitted_profile_settings = {
 	DisplayScorebox      = "boolean",
 	
 	SBITGScore           = "boolean",
-	SBEXScore            = "boolean",
+	SBExScore            = "boolean",
 	SBEvents             = "boolean",
 	
 	FlashMiss            = "boolean",

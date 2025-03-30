@@ -38,7 +38,7 @@ local pacemaker = Def.BitmapText{
 	end,
 	
 	ExCountsChangedMessageCommand=function(self, params)
-		if SL[pn].ActiveModifiers.ShowEXScore then
+		if SL[pn].ActiveModifiers.ShowExScore then
 			local PercentMax, DPCurrMax = GetPossibleExScore(params.ExCounts)
 			local DPCurr = params.actual_points
 			local DPMax = params.actual_possible
@@ -75,7 +75,7 @@ local pacemaker = Def.BitmapText{
 
 	-- common logic used for both the Pacemaker text and the ActionOnTargetMissed mod
 	UpdateCommand=function(self)
-		if not SL[pn].ActiveModifiers.ShowEXScore then
+		if not SL[pn].ActiveModifiers.ShowExScore then
 			local DPCurr = pss:GetActualDancePoints()
 			local DPCurrMax = pss:GetCurrentPossibleDancePoints()
 			local DPMax = pss:GetPossibleDancePoints()

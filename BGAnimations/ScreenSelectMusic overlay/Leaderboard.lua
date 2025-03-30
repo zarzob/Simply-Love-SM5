@@ -57,7 +57,7 @@ local SetLeaderboardForPlayer = function(player_num, leaderboard, leaderboardDat
 					gsEntry["rank"]..".",
 					gsEntry["name"],
 					string.format("%.2f%%", gsEntry["score"]/100),
-					ParseGroovestatsDate(gsEntry["date"]),
+					ParseGrooveStatsDate(gsEntry["date"]),
 					entry
 				)
 				if gsEntry["isRival"] then
@@ -213,7 +213,7 @@ local LeaderboardRequestProcessor = function(res, master)
 					}
 					master[pn]["LeaderboardIndex"] = 1
 				end
-			elseif SL["P"..i].ActiveModifiers.ShowEXScore then
+			elseif SL["P"..i].ActiveModifiers.ShowExScore then
 				-- If the player is using EX scoring, then we want to display the EX leaderboard first.
 				if data[playerStr]["exLeaderboard"] then
 					leaderboardList[#leaderboardList + 1] = {
@@ -369,7 +369,7 @@ local af = Def.ActorFrame{
 						local leaderboard = self:GetParent():GetChild(pn.."Leaderboard")
 						local leaderboardList = self:GetParent()[pn]["Leaderboards"]
 						leaderboardList[#leaderboardList + 1] = {
-							Name="Groovestats",
+							Name="GrooveStats",
 							Disabled=true,
 							IsEX=false
 						}
@@ -586,7 +586,7 @@ for player in ivalues( PlayerNumber ) do
 
 			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Text",
-				Text=THEME:GetString("Groovestats", "MoreLeaderboards"),
+				Text=THEME:GetString("GrooveStats", "MoreLeaderboards"),
 				InitCommand=function(self)
 					self:diffuse(Color.White)
 				end,
@@ -642,7 +642,7 @@ for player in ivalues( PlayerNumber ) do
 
 			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal").. {
 				Name="Name",
-				Text=(i==1 and THEME:GetString("Groovestats", "Loading") or ""),
+				Text=(i==1 and THEME:GetString("GrooveStats", "Loading") or ""),
 				InitCommand=function(self)
 					self:horizalign(center)
 					self:maxwidth(130)
@@ -650,7 +650,7 @@ for player in ivalues( PlayerNumber ) do
 					self:diffuse(Color.White)
 				end,
 				ResetEntryMessageCommand=function(self)
-					self:settext(i==1 and THEME:GetString("Groovestats", "Loading") or "")
+					self:settext(i==1 and THEME:GetString("GrooveStats", "Loading") or "")
 					self:diffuse(Color.White)
 				end
 			},

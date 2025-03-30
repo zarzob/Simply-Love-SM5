@@ -57,13 +57,13 @@ local af = Def.ActorFrame {
 		end,
 		-- follow the player's score
 		UpdateCommand=function(self)
-			if not SL[pn].ActiveModifiers.ShowEXScore then
+			if not SL[pn].ActiveModifiers.ShowExScore then
 				local dp = pss:GetPercentDancePoints()
 				self:zoomy(-percentToYCoordinate(dp))
 			end
 		end,
 		ExCountsChangedMessageCommand=function(self, params)
-			if SL[pn].ActiveModifiers.ShowEXScore then
+			if SL[pn].ActiveModifiers.ShowExScore then
 				local dp = params.actual_points / params.actual_possible
 				self:zoomy(-percentToYCoordinate(dp))
 			end
@@ -85,7 +85,7 @@ local af = Def.ActorFrame {
 			self:zoomy(-percentToYCoordinate(currentDP))
 		end,
 		ExCountsChangedMessageCommand=function(self, params)
-			if SL[pn].ActiveModifiers.ShowEXScore then
+			if SL[pn].ActiveModifiers.ShowExScore then
 				local PercentMax, DPCurrMax = GetPossibleExScore(params.ExCounts)
 				local currentDP = personal_best * GetCurMaxPercentDancePoints(DPCurrMax, params.actual_possible)
 				self:zoomy(-percentToYCoordinate(currentDP))
@@ -104,13 +104,13 @@ local af = Def.ActorFrame {
 			self:diffuse(Color.Red)
 		end,
 		UpdateCommand = function(self)
-			if not SL[pn].ActiveModifiers.ShowEXScore then
+			if not SL[pn].ActiveModifiers.ShowExScore then
 				local currentDP = target_score * GetCurMaxPercentDancePoints()
 				self:zoomy(-percentToYCoordinate(currentDP))
 			end
 		end,
 		ExCountsChangedMessageCommand=function(self, params)
-			if SL[pn].ActiveModifiers.ShowEXScore then
+			if SL[pn].ActiveModifiers.ShowExScore then
 				local PercentMax, DPCurrMax = GetPossibleExScore(params.ExCounts)
 				local currentDP = target_score * GetCurMaxPercentDancePoints(DPCurrMax, params.actual_possible)
 				self:zoomy(-percentToYCoordinate(currentDP))

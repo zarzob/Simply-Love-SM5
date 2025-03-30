@@ -26,9 +26,11 @@ return function(SongNumberInCourse)
 			-- The function will only do work iff we're parsing a chart different than what's in the cache.
 			ParseChartInfo(steps, pn)
 
-			-- Set the actual stream information for the player based on their selected notes threshold.
-			local notesThreshold = tonumber(mods.MeasureCounter:match("%d+"))
-			SL[pn].Streams.Measures = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, notesThreshold)
+			if (mods.MeasureCounter and mods.MeasureCounter ~= "None") then
+				-- Set the actual stream information for the player based on their selected notes threshold.
+				local notesThreshold = tonumber(mods.MeasureCounter:match("%d+"))
+				SL[pn].Streams.Measures = GetStreamSequences(SL[pn].Streams.NotesPerMeasure, notesThreshold)
+			end
 		end
 	end
 end

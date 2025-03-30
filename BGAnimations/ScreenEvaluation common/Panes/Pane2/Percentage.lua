@@ -3,7 +3,7 @@ local player, controller = unpack(...)
 local percent = nil
 local diffuse = nil
 
-if SL[ToEnumShortString(player)].ActiveModifiers.ShowEXScore then
+if SL[ToEnumShortString(player)].ActiveModifiers.ShowExScore then
 	percent = CalculateExScore(player, GetExJudgmentCounts(player))
 	diffuse = SL.JudgmentColors[SL.Global.GameMode][1]
 else

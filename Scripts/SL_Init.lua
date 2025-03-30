@@ -49,13 +49,12 @@ local PlayerDefaults = {
 				ErrorBarUp = false,
 				ErrorBarMultiTick = false,
 				ErrorBarCap = 5,
-				ErrorBarTrim = "Off",
 
 				HideEarlyDecentWayOffJudgments = false,
 				HideEarlyDecentWayOffFlash = false,
 
 				ShowFaPlusWindow = false,
-				ShowEXScore = false,
+				ShowExScore = false,
 				ShowFaPlusPane = true,
 				
 				RainbowMax = false,
@@ -65,7 +64,7 @@ local PlayerDefaults = {
 				PackBanner = false,
 				StepInfo = false,
 				SBITGScore = true,
-				SBEXScore = true,
+				SBExScore = true,
 				SBEvents = true,
 				
 				FlashMiss = true,
@@ -130,7 +129,7 @@ local PlayerDefaults = {
 			self.EvalPanePrimary   = 1 -- large score and judgment counts
 			self.EvalPaneSecondary = 5 -- offset histogram
 
-			-- The Groovestats API key loaded for this player
+			-- The GrooveStats API key loaded for this player
 			self.ApiKey = ""
 			self.GrooveStatsUsername = ""
 			-- Whether or not the player is playing on pad.
@@ -473,18 +472,6 @@ SL = {
 		Held=1,
 		HitMine=-1
 	},
-	SuperExWeights = {
-		W010=3.5,
-		W110=3,
-		W2=1,
-		W3=0,
-		W4=0,
-		W5=0,
-		Miss=0,
-		LetGo=0,
-		Held=1,
-		HitMine=-1
-	},
 	-- Fields used to determine whether or not we can connect to the
 	-- GrooveStats services.
 	GrooveStats = {
@@ -547,16 +534,7 @@ function InitializeSimplyLove()
 	SL.P1:initialize()
 	SL.P2:initialize()
 	SL.Global:initialize()
-	
-	-- Temporary fix so late joining players aren't getting the last person's profile.
-	-- This obsoletes the handling for defaulting to the DefaultLocalProfile in SelectProfile
-	-- However, the addition of the ProfileSortOrder_Recent will ensure the last used profile is
-	-- always at the top of the list anyways
-	-- If the SelectProfile screen is not being used, we should continue to use the default profiles
-	if ThemePrefs.Get("AllowScreenSelectProfile") then
-		PREFSMAN:SetPreference("DefaultLocalProfileIDP1", "")
-		PREFSMAN:SetPreference("DefaultLocalProfileIDP2", "")
-	end
+
 end
 
 InitializeSimplyLove()

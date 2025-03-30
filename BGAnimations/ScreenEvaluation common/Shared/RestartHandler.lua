@@ -1,3 +1,5 @@
+local holdingCtrl = false
+
 local RestartHandler = function(event)
 	if not event then return end
 

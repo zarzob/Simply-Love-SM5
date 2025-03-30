@@ -442,7 +442,11 @@ local Overrides = {
 				return { "ShowFaPlusWindow" }
 			end
 
-			return { "ShowFaPlusWindow", "ShowEXScore", "ShowSuperEXScore", "ShowFaPlusPane", "SmallerWhite" }
+			if SL.Global.GameMode == "FA+" then
+				return { "ShowExScore", "SmallerWhite" }
+			end
+
+			return { "ShowFaPlusWindow", "ShowExScore", "ShowFaPlusPane", "SmallerWhite" }
 		end,
 		LoadSelections = function(self, list, pn)
 			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
@@ -452,16 +456,15 @@ local Overrides = {
 			end
 
 			if SL.Global.GameMode == "FA+" then
-				list[1] = mods.ShowEXScore or false
+				list[1] = mods.ShowExScore or false
 				list[2] = mods.SmallerWhite or false
 				return list
 			end		
 
 			list[1] = mods.ShowFaPlusWindow or false
-			list[2] = mods.ShowEXScore or false
-			list[3] = mods.ShowSuperEXScore or false
-			list[4] = mods.ShowFaPlusPane or false
-			list[5] = mods.SmallerWhite or false
+			list[2] = mods.ShowExScore or false
+			list[3] = mods.ShowFaPlusPane or false
+			list[4] = mods.SmallerWhite or false
 			return list
 		end,
 		SaveSelections = function(self, list, pn)
@@ -470,7 +473,7 @@ local Overrides = {
 
 			if ThemePrefs.Get("EnableTournamentMode") then
 				mods.ShowFaPlusWindow = list[1]
-				mods.ShowEXScore = ThemePrefs.Get("ScoringSystem") == "EX"
+				mods.ShowExScore = ThemePrefs.Get("ScoringSystem") == "EX"
 				mods.ShowFaPlusPane = true
 				mods.SmallerWhite = false
 				-- Default to FA+ pane in Tournament Mode
@@ -481,17 +484,17 @@ local Overrides = {
 			if SL.Global.GameMode == "FA+" then
 				-- always disable in FA+ mode since it's handled engine side.
 				mods.ShowFaPlusWindow = false
-				mods.ShowEXScore = list[1]
-				-- mods.ShowFaPlusPane = list[3]
+				mods.ShowExScore = list[1]
+				-- the main score pane is already the FA+ pane
+				mods.ShowFaPlusPane = false
 				mods.SmallerWhite = list[2]
 				return
 			end
 
 			mods.ShowFaPlusWindow = list[1]
-			mods.ShowEXScore = list[2]
-			mods.ShowSuperEXScore = list[3]
-			mods.ShowFaPlusPane = list[4]
-			mods.SmallerWhite = list[5]
+			mods.ShowExScore = list[2]
+			mods.ShowFaPlusPane = list[3]
+			mods.SmallerWhite = list[4]
 			-- Default to FA+ pane if either options are active.
 			sl_pn.EvalPanePrimary = ((list[1] or list[2]) and list[3]) and 2 or 1
 		end
@@ -566,7 +569,7 @@ local Overrides = {
 	-------------------------------------------------------------------------
 	ScoreBoxOptions = {
 		SelectType = "SelectMultiple",
-		Values = { "SBITGScore", "SBEXScore", "SBEvents" },
+		Values = { "SBITGScore", "SBExScore", "SBEvents" },
 	},
 	-------------------------------------------------------------------------
 	StepStatsExtra = {

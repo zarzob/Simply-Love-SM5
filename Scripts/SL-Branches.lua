@@ -59,18 +59,14 @@ Branch.AllowScreenSelectProfile = function()
 	if ThemePrefs.Get("AllowScreenSelectProfile") then
 		return "ScreenSelectProfile"
 	else
-		if SL.GrooveStats.IsConnected then
-			return "ScreenGrooveStatsLogin"
-		else
-			return Branch.AfterSelectProfile()
-		end
+		return Branch.AfterSelectProfile()
 	end
 end
 
 Branch.AfterSelectProfile = function()
 	-- If we only want to sometimes display QR Login, only do so if at least one
 	-- of the chosen profiles doesn't already have an API key saved.
-	local allApiKeys = false
+	local allApiKeys = true
 	for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 		local pn = ToEnumShortString(player)
 		if SL[pn].ApiKey == "" then
@@ -120,10 +116,26 @@ Branch.AfterScreenSelectColor = function()
 		-- the engine, but I guess we're doing it here, in SL-Branches.lua, for now.
 		GAMESTATE:SetCurrentStyle( preferred_style )
 
-		return "ScreenSelectPlayMode"
+		return Branch.AllowScreenSelectPlayMode()
 	end
 
 	return "ScreenSelectStyle"
+end
+
+Branch.AllowScreenSelectPlayMode = function()
+	if ThemePrefs.Get("AllowScreenSelectPlayMode") then
+		return "ScreenSelectPlayMode"
+	else
+		return Branch.AllowScreenSelectPlayMode2()
+	end
+end
+
+Branch.AllowScreenSelectPlayMode2 = function()
+	if SL.Global.GameMode == "ITG" and ThemePrefs.Get("AllowScreenSelectPlayMode2") then
+		return "ScreenSelectPlayMode2"
+	else
+		return "ScreenProfileLoad"
+	end
 end
 
 Branch.AfterEvaluationStage = function()

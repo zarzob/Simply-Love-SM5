@@ -163,6 +163,7 @@ ReadItlFile = function(player)
 	end
 
 	SL[pn].ITLData = itlData
+	CalculateITLSongRanks(player)
 end
 
 -- EX score is a number like 92.67
@@ -371,8 +372,12 @@ CalculateITLSongRanks = function(player)
 	itlData["points"] = points
 
 	-- Create and populate tables to rank each hash score by stepsType
+	local playsSingle = 0
+	local playsDouble = 0
+	
 	local pointsSingle = {}
 	local pointsDouble = {}
+	local unknownSongs = {}
 	
 	local songPointsSingle = {}
 	local songPointsDouble = {}
@@ -380,11 +385,25 @@ CalculateITLSongRanks = function(player)
 		if songHashes[key]["stepsType"] == "single" then			
 			songPointsSingle[key] = songHashes[key]["points"]
 			table.insert(pointsSingle,songHashes[key]["points"])
-		else -- don't need to specify doubles right? unless there will ITL Couples will become a thing lol
+			playsSingle = playsSingle + 1
+		elseif songHashes[key]["stepsType"] == "double" then
+			songPointsDouble[key] = songHashes[key]["points"]
+			table.insert(pointsDouble,songHashes[key]["points"])
+			playsDouble = playsDouble + 1
+		else	-- if there's no stepsType (common for songs not played in zmod) then hold it for now
+			table.insert(unknownSongs,key)
+		end
+	end
+	-- now copy the unspecified stepsType charts into whichever mode was played more
+	for key in ivalues(unknownSongs) do
+		if playsSingle > playsDouble then
+			songPointsSingle[key] = songHashes[key]["points"]
+			table.insert(pointsSingle,songHashes[key]["points"])
+		else
 			songPointsDouble[key] = songHashes[key]["points"]
 			table.insert(pointsDouble,songHashes[key]["points"])
 		end
-	end		 
+	end
 	-- Reverse sort points values
 	table.sort(pointsSingle,function(a,b) return a > b end)
 	table.sort(pointsDouble,function(a,b) return a > b end)
@@ -434,6 +453,8 @@ UpdateItlExScore = function(player, hash, exscore)
 			["points"] = 0,
 			["usedCmod"] = false,
 			["date"] = "",
+			["passingPoints"] = 0,
+			["maxScoringPoints"] = 0,
 			["maxPoints"] = 0,
 			["noCmod"] = false,
 			-- ITL has doubles now. populate the steps type of the song
@@ -450,30 +471,41 @@ UpdateItlExScore = function(player, hash, exscore)
 		local chartName = steps:GetChartName()
 		
 
-		local maxPoints = nil
-		if steps:GetDescription() == SL[pn].Streams.Description then
-			maxPoints = chartName:gsub(" pts", "")
-			if #maxPoints == 0 then
-				maxPoints = nil
+		-- Note that playing OUTSIDE of the ITL pack will result in 0 points for all upscores.
+		-- Technically this number isn't displayed, but players can opt to swap the EX score in the
+		-- wheel with this value instead if they prefer.
+		function ParseNumbers(input)
+				local num1, num2 = input:match("(%d+)%s+%(P%)%s+%+%s+(%d+)%s+%(S%)")
+				return tonumber(num1) or nil, tonumber(num2) or nil
+		end
+
+		local passingPoints, maxScoringPoints = ParseNumbers(chartName)
+
+		if passingPoints == nil then
+			-- See if we already have these points stored if we failed to parse it.
+			if prevData ~= nil and prevData["passingPoints"] ~= nil then
+				passingPoints = prevData["passingPoints"]
+			-- Otherwise we don't know how many points this chart is. Default to 0.
 			else
-				maxPoints = tonumber(maxPoints)
-				hashMap[hash]["maxPoints"] = maxPoints
+				passingPoints = 0
 			end
 		end
 
-		if maxPoints == nil then
-			--  See if we already have these points stored if we failed to parse it.
-			if prevData ~= nil and prevData["maxPoints"] ~= nil then
-				maxPoints = prevData["maxPoints"]
+		if maxScoringPoints == nil then
+			-- See if we already have these points stored if we failed to parse it.
+			if prevData ~= nil and prevData["maxScoringPoints"] ~= nil then
+				maxScoringPoints = prevData["maxScoringPoints"]
 			-- Otherwise we don't know how many points this chart is. Default to 0.
 			else
-				maxPoints = 0
+				maxScoringPoints = 0
 			end
 		end
+
+		local maxPoints = passingPoints + maxScoringPoints
 		
 		-- Do not recalculate points if maxPoints is 0
 		if maxPoints > 0 then
-			hashMap[hash]["points"] = GetPointsForSong(maxPoints, exscore/100)
+			hashMap[hash]["points"] = GetITLPointsForSong(passingPoints, maxScoringPoints, exscore/100)
 		end
 		
 		updated = true

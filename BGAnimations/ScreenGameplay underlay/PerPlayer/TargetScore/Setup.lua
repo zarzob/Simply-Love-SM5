@@ -25,7 +25,7 @@ local GetTopScore = function(kind)
 	if scorelist then
 		local topscore = scorelist:GetHighScores()[1]
 		if topscore then
-			if SL[pn].ActiveModifiers.ShowEXScore then
+			if SL[pn].ActiveModifiers.ShowExScore then
 				local counts = {}
 				counts["W0"] = topscore:GetTapNoteScore("TapNoteScore_W1") - topscore:GetScore()
 				counts["W1"] = topscore:GetScore()

@@ -90,61 +90,72 @@ local num_tiers = THEME:GetMetric("PlayerStageStats", "NumGradeTiersUsed")
 --
 -- keys will be in the format of "Grade_Tier01", "Grade_Tier02", "Grade_Tier03", etc.
 -- values will start at 0 and go to (num_tiers-1)
-local grades = {}
+local grades = {
+ 	["Grade_Tier00"] = 0  -- Manually add a key for Quints
+ }
 for i=1,num_tiers do
-	grades[ ("Grade_Tier%02d"):format(i) ] = i-1
+	grades[ ("Grade_Tier%02d"):format(i) ] = i
 end
 -- assign the "Grade_Failed" key a value equal to num_tiers
-grades["Grade_Failed"] = num_tiers
+grades["Grade_Failed"] = num_tiers + 1
+
+-- This is a quick way to check if a score is a quint.
+ -- Technically a hack until we actually get engine support for quints/tracking
+ -- W0 but this is good enough for now.
+ -- We do this by checking if:
+ --  1. Any score exists that has a percentDP of 1.0 (they've quadded)
+ --  2. The high score tracked whites (by determining if score < #Fantastics)
+ --  3. The number of whites is actually 0
+ local function IsQuint(hsl)
+ 	if hsl == nil then return false end
+ 
+ 	for hs in ivalues(hsl:GetHighScores()) do
+ 		if (hs:GetPercentDP() == 1.0 and
+ 					hs:GetScore() < hs:GetTapNoteScore("TapNoteScore_W1")
+ 					and hs:GetScore() == 0) then
+ 			return true
+ 		end
+ 	end
+ 
+ 	return false
+ end
 
 return Def.ActorFrame{
+	LoadActor("GetLamp.lua"),
+	
 	Def.Sprite{
 		Name="Grades",
-		Texture=THEME:GetPathG("MusicWheelItem","Grades/grades 1x18.png"),
+		Texture=THEME:GetPathG("MusicWheelItem","Grades/grades 1x19.png"),
 		InitCommand=function(self) self:zoom( SL_WideScale(0.18, 0.3) ):animate(false) end,
 
 		-- "SetGrade" is broadcast by the engine in MusicWheelItem.cpp.
 		-- It will be passed a table with, at minimum, one parameter:
 		--     PlayerNumber (PlayerNumber enum as string)
 		--
-	   -- and potentially two more if the current song/course and steps/trail have a non-null HighScoreList
+	   -- and potentially three more if the current song/course and steps/trail have a non-null HighScoreList
 		--     Grade (GradeTier as number)
 		--     NumTimesPlayed (number)
+		--     HighScoreList (as of ITGmania 1.0.1 -- NOTE: can be removed in a future version)
 		SetGradeCommand=function(self, params)
-			if not (params.Grade and grades[params.Grade]) then
+			if not params.Grade then
+				self:visible(false)
+				return
+			end
+	 
+			local grade = params.Grade
+			if IsQuint(params.HighScoreList) then
+				grade = "Grade_Tier00"
+			end
+	 
+			local state = grades[grade]
+			if not state then
 				self:visible(false)
 				return
 			end
 			
-			if params.PlayerNumber ~= nil then
-				player=params.PlayerNumber
-				pn=ToEnumShortString(params.PlayerNumber)
-			end
-
-			self:setstate(grades[params.Grade])
+			self:visible(true):setstate(state)
 		end,
 		
 		
-	},
-	
-	Def.Sprite{
-		Name="Quint",
-		Texture=THEME:GetPathG("MusicWheelItem","Grades/quint.png"),
-		InitCommand=function(self) self:zoom( SL_WideScale(0.18, 0.3) ):animate(false):visible(false) end,
-		SetCommand=function(self, params)
-			if not params.Song then return end
-			if pn == nil then return end
-			
-			local lamp = GetLamp(params.Song)
-			if lamp == 0 then
-				self:visible(true)
-				self:GetParent():GetChild("Grades"):visible(false)
-			else
-				self:visible(false)
-				if lamp ~= nil then
-					self:GetParent():GetChild("Grades"):visible(true)
-				end
-			end
-		end
-	},
+	}
 }

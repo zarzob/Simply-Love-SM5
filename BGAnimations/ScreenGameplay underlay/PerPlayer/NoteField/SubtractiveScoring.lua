@@ -108,7 +108,7 @@ bmt.InitCommand=function(self)
 end
 
 bmt.JudgmentMessageCommand=function(self, params)
-	if player == params.Player and not mods.ShowEXScore and (mods.TargetScore ~= "Ghost Data" or (mods.TargetScore == "Ghost Data" and not ghostdata)) then
+	if player == params.Player and not mods.ShowExScore and (mods.TargetScore ~= "Ghost Data" or (mods.TargetScore == "Ghost Data" and not ghostdata)) then
 		tns = ToEnumShortString(params.TapNoteScore)
 		hns = params.HoldNoteScore and ToEnumShortString(params.HoldNoteScore)
 		self:queuecommand("SetScore")
@@ -117,7 +117,7 @@ end
 
 
 bmt.ExCountsChangedMessageCommand=function(self, params)
-	if player == params.Player and mods.ShowEXScore  and (mods.TargetScore ~= "Ghost Data" or (mods.TargetScore == "Ghost Data" and not ghostdata)) then
+	if player == params.Player and mods.ShowExScore  and (mods.TargetScore ~= "Ghost Data" or (mods.TargetScore == "Ghost Data" and not ghostdata)) then
 		local possible_ex_score, current_possible = GetPossibleExScore(params.ExCounts)
 
 		local total_possible = params.actual_possible
@@ -185,11 +185,11 @@ bmt.ExCountsChangedMessageCommand=function(self, params)
 			if SL[pn].Rival.Score == 0 then
 				rivalPace = math.floor((current_possible_dp / possible_dp) * 10000 * SL[pn].Rival.WRScore) / 10000
 			end
-			if SL[pn].Rival.EXScore > 0 or SL[pn].Rival.WREXScore > 0 then
+			if SL[pn].Rival.ExScore > 0 or SL[pn].Rival.WRExScore > 0 then
 				pace = math.floor((current_points / total_possible) * 10000) / 100
-				rivalPace = math.floor((current_possible / total_possible) * 1000000 * SL[pn].Rival.EXScore) / 10000
-				if SL[pn].Rival.EXScore == 0 then
-					rivalPace = math.floor((current_possible / total_possible) * 1000000 * SL[pn].Rival.WREXScore) / 10000
+				rivalPace = math.floor((current_possible / total_possible) * 1000000 * SL[pn].Rival.ExScore) / 10000
+				if SL[pn].Rival.ExScore == 0 then
+					rivalPace = math.floor((current_possible / total_possible) * 1000000 * SL[pn].Rival.WRExScore) / 10000
 				end
 			end
 			

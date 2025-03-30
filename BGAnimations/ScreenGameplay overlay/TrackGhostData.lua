@@ -75,7 +75,7 @@ return Def.Actor{
 					ghost = JsonDecode(ghost)
 		
 					-- Get ghost data for the scoring system in use
-					if mods.ShowEXScore then ghost = ghost["ex"] else ghost = ghost["itg"] end
+					if mods.ShowExScore then ghost = ghost["ex"] else ghost = ghost["itg"] end
 		
 					f:Close()
 				end
@@ -142,7 +142,7 @@ return Def.Actor{
 
 		-- If the user is doing Ghost Data, also calculate pace against ghost because we're already doing the calculations here
 		if mods.TargetScore == "Ghost Data" and ghostdata then
-			if mods.ShowEXScore then
+			if mods.ShowExScore then
 				currentScore = currentdp_ex
 				TargetScore = ghost[#ex]
 				possible = possibleex

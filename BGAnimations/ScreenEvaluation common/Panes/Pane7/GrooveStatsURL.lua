@@ -37,7 +37,7 @@ local cmod = GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"
 local used_cmod = cmod ~= nil and "1" or "0"
 
 local failed = stats:GetFailed() and "1" or "0"
-local rate = math.floor(SL.Global.ActiveModifiers.MusicRate * 100)
+local rate = tonumber(string.format("%.0f", SL.Global.ActiveModifiers.MusicRate * 100))
 
 local steps = GAMESTATE:GetCurrentSteps(player)
 

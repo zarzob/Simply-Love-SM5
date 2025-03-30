@@ -827,74 +827,6 @@ CalculateExScore = function(player, ex_counts, use_actual_w0_weight)
 end
 
 -- -----------------------------------------------------------------------
--- Calculate the EX score given for a given player.
---
--- The ex_counts default to those computed in BGAnimations/ScreenGameplay underlay/TrackExScoreJudgments.lua
--- They are computed from the HoldNoteScore and TapNotScore from the JudgmentMessageCommands.
--- We look for the following keys:
--- {
---             "W010" -> the fantasticPlus count for 10ms window
---             "W0" -> the fantasticPlus count
---             "W110" -> the fantastic count for 10ms window
---             "W2" -> the excellent count
---             "W3" -> the great count
---             "W4" -> the decent count
---             "W5" -> the way off count
---           "Miss" -> the miss count
---           "Held" -> the number of holds/rolds held
---          "LetGo" -> the number of holds/rolds dropped
---        "HitMine" -> total number of mines hit
--- }
---
--- The W0 weight may have been modified for Tournament mode purposes.
--- Use the optional boolean argument use_actual_w0_weight to choose to fallback to the proper W0 weight.
-CalculateSuperExScore = function(player, ex_counts, use_actual_w0_weight)
-	-- No EX scores in Casual mode, just return some dummy number early.
-	if SL.Global.GameMode == "Casual" then return 0 end
-	local StepsOrTrail = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player)) or GAMESTATE:GetCurrentSteps(player)
-
-	local totalSteps = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_TapsAndHolds" )
-	local totalHolds = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_Holds" )
-	local totalRolls = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_Rolls" )
-
-	local W0Weight = use_actual_w0_weight and 3.5 or SL.SuperExWeights["W010"]
-	local total_possible = totalSteps * W0Weight + (totalHolds + totalRolls) * SL.SuperExWeights["Held"]
-
-	local total_points = 0
-
-	local po = GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Preferred")
-
-	-- If mines are disabled, they should still be accounted for in EX Scoring based on the weight assigned to it.
-	-- Stamina community does often play with no-mines on, but because EX scoring is more timing centric where mines
-	-- generally have a negative weight, it's a better experience to make sure the EX score reflects that.
-	if po:NoMines() then
-		local totalMines = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_Mines" )
-		total_points = total_points + totalMines * SL.SuperExWeights["HitMine"];
-	end
-
-	local FAplus = (SL.Metrics[SL.Global.GameMode].PercentScoreWeightW1 == SL.Metrics[SL.Global.GameMode].PercentScoreWeightW2)
-	local keys = { "W010", "W110", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" }
-	local counts = ex_counts or SL[ToEnumShortString(player)].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts
-	-- Just for validation, but shouldn't happen in normal gameplay.
-	if counts == nil then return 0 end
-
-	for key in ivalues(keys) do
-		local value = counts[key]
-		if value ~= nil then
-			total_points = total_points + value * SL.SuperExWeights[key]
-		end
-	end
-
-	-- Run calculation for ex_counts custom keys
-	if ex_counts and counts["Holds"] and counts["Rolls"] and counts["Mines"] then
-		total_points = total_points + ((counts["Holds"] + counts["Rolls"]) * SL.SuperExWeights["Held"])
-		total_points = total_points + (counts["Mines"] * SL.SuperExWeights["HitMine"])
-	end
-
-	return math.max(0, math.floor(total_points/total_possible * 10000) / 100), total_points, total_possible
-end
-
--- -----------------------------------------------------------------------
 -- Generates the column mapping in case of any turn mods.
 -- Returns a table containing the column swaps.
 -- Returns nil if we can't compute it
@@ -1062,7 +994,8 @@ GetPlayerOptionsString = function(player, modsLevel)
 	for i,option in ipairs(PlayerOptions) do
 
 		-- these don't need to show up in the mods list
-		if option ~= "FailAtEnd" and option ~= "FailImmediateContinue" and option ~= "FailImmediate" then
+		if option ~= "FailAtEnd" and option ~= "FailImmediateContinue" and option ~= "FailImmediate" and 
+			not string.find(option, "Lights") then
 			-- 100% Mini will be in the PlayerOptions as just "Mini" so use the value from the SL table instead
 			if option:match("Mini") then
 				option = SL[pn].ActiveModifiers.Mini .. " Mini"
@@ -1098,4 +1031,57 @@ GetPlayerOptionsString = function(player, modsLevel)
 	end
 
 	return optionslist
+end
+
+-- -----------------------------------------------------------------------
+-- helper function for returning the player AF
+-- Works as expected in ScreenGameplay + Edit + Practice Mode
+--     arguments:  pn is short string PlayerNumber like "P1" or "P2"
+--     returns:    the "PlayerP1" or "PlayerP2" ActorFrame in ScreenGameplay
+--                 or, the unnamed equivalent in ScrenEdit
+GetPlayerAF = function(pn)
+	local topscreen = SCREENMAN:GetTopScreen()
+	if not topscreen then
+		lua.ReportScriptError("GetPlayerAF() failed to find the player ActorFrame because there is no Screen yet.")
+		return nil
+	end
+
+	local playerAF = nil
+
+	-- Get the player ActorFrame on ScreenGameplay
+	-- It's a direct child of the screen and named "PlayerP1" for P1
+	-- and "PlayerP2" for P2.
+	-- This naming convention is hardcoded in the SM5 engine.
+	--
+	-- ScreenEdit does not name its player ActorFrame, but we can still find it.
+
+	-- find the player ActorFrame in edit mode
+	local notefields = {}
+	if (THEME:GetMetric(topscreen:GetName(), "Class") == "ScreenEdit") then
+		-- loop through all nameless children of topscreen
+		-- and find the one that contains the NoteField
+		-- which is thankfully still named "NoteField"1
+
+		for _,nameless_child in ipairs(topscreen:GetChild("")) do
+			if nameless_child:GetChild("NoteField") then
+				notefields[#notefields+1] = nameless_child
+			end
+		end
+		-- If there is only one side joined always return the first one.
+		if #notefields == 1 then
+			return notefields[1]
+		-- If there are two sides joined, return the one that matches the player number.
+		else
+			return notefields[pn == "P1" and 1 or 2]
+		end
+
+	-- find the player ActorFrame in gameplay
+	else
+		local player_af = topscreen:GetChild("Player"..pn)
+		if player_af then
+			playerAF = player_af
+		end
+	end
+
+	return playerAF
 end

@@ -101,17 +101,17 @@ OperatorMenuOptionRows.DefaultFailType = function()
 		SaveSelections = function(self, list, pn)
 			for i = 1, #failTypes do
 				if list[i] then
-					local default_mods = PREFSMAN:GetPreference("DefaultModifiers")
+					local default_mods = PREFSMAN:GetPreference("DefaultModifiers") or "failimmediate"
 					local selected_fail = failTypes[i]
 					local default_fail = "" -- An empty string means Immediate fail
-					local new_fail = "failimmediatecontinue"
+					local new_fail = "failimmediate"
 					local fail_strings = {}
 				
 					for mod in string.gmatch(default_mods, "%w+") do
 						if mod:lower():find("fail") then
 							-- we found something matches "fail", so set our default_fail variable
 							-- if we don't find anything that means the fail type is Immediate
-							default_fail = mod:lower()
+							default_fail = mod
 							break;
 						end
 					end
@@ -122,7 +122,6 @@ OperatorMenuOptionRows.DefaultFailType = function()
 					fail_strings.failimmediatecontinue = "ImmediateContinue"
 					fail_strings.failoff               = "Off"
 					fail_strings.failatend             = "EndOfSong"
-
 					-- Map the selected fail type to the failtype string for DefaultModifiers
 					for k, v in pairs(fail_strings) do
 						if selected_fail == v then
@@ -134,8 +133,13 @@ OperatorMenuOptionRows.DefaultFailType = function()
 					-- If default_fail is empty, then we need to append the new fail type to the front
 					-- of the DefaultModifiers string.  Otherwise, we need to replace the old fail type
 					-- with the new fail type.
-					if default_fail == "" then
-						PREFSMAN:SetPreference("DefaultModifiers", new_fail .. ", " .. default_mods)
+					if default_fail == "" and (new_fail ~= "failimmediate") then
+						-- if default_mods is empty we cant have the comma
+						if default_mods == "" then
+							PREFSMAN:SetPreference("DefaultModifiers", new_fail)
+						else
+							PREFSMAN:SetPreference("DefaultModifiers", new_fail .. "," .. default_mods)
+						end
 					else
 						default_mods = string.gsub(default_mods, default_fail, new_fail)
 						PREFSMAN:SetPreference("DefaultModifiers", default_mods)	

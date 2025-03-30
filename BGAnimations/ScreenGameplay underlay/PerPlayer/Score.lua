@@ -4,7 +4,7 @@ local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
 local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 local NumPlayers = #GAMESTATE:GetHumanPlayers()
-local IsEX = SL[pn].ActiveModifiers.ShowEXScore
+local IsEX = SL[pn].ActiveModifiers.ShowExScore
 
 -- -----------------------------------------------------------------------
 -- first, check for conditions where we might not draw the score actor at all

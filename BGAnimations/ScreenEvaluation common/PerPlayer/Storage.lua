@@ -43,11 +43,11 @@ return Def.Actor{
 			Miss = pss:GetTapNoteScores(TNSTypes[6])
 		}
 		
-		if (mods.ShowFaPlusWindow and mods.ShowFaPlusPane) or mods.ShowEXScore then
+		if (mods.ShowFaPlusWindow and mods.ShowFaPlusPane) or mods.ShowExScore then
 			local counts = GetExJudgmentCounts(player)
 			storage.judgments.W0 = counts.W0
 			storage.judgments.W1 = counts.W1
-			storage.showex = mods.ShowEXScore
+			storage.showex = mods.ShowExScore
 		else
 			storage.showex = false
 		end

@@ -251,26 +251,7 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		end
 	end
 }
-af2[#af2+1] = Def.Sprite{
-	Texture=THEME:GetPathG("MusicWheelItem","Grades/quint.png"),
-	InitCommand=function(self) self:zoom( SL_WideScale(0.18, 0.3) ):animate(false) end,
-	FolderSummaryCommand=function(self, params)
-		if params.bestGrade < 5 then
-			self:visible(false)
-			return
-		end
-		self:visible(true)
-		self:x(-260+columnWidth)
-		self:y(52)
-		self:zoom(0.5)
-		if IsNotWide then
-			self:zoom(0.38)
-			self:x(-200+columnWidth)
-			self:y(45)
-		end
-	end
-}
-for i=1,4 do
+for i=0,4 do
 	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		Name="Grade" ..i,
 		Text="",
@@ -293,7 +274,7 @@ for i=1,4 do
 		end
 	}
 	af2[#af2+1] = Def.Sprite{
-		Texture=THEME:GetPathG("MusicWheelItem","Grades/grades 1x18.png"),
+		Texture=THEME:GetPathG("MusicWheelItem","Grades/grades 1x19.png"),
 		InitCommand=function(self) self:zoom( SL_WideScale(0.18, 0.3) ):animate(false) end,
 		FolderSummaryCommand=function(self, params)
 			if params.bestGrade < 5-i then
@@ -301,7 +282,7 @@ for i=1,4 do
 				return
 			end
 			self:visible(true)
-			self:setstate(grades["Grade_Tier0"..i])
+			self:setstate(grades["Grade_Tier0"..i+1])
 			self:x(-(columnWidth*params.bestGrade/2)-20+columnWidth*(i-(5-params.bestGrade)+0.5))
 			self:y(52)
 			self:zoom(0.5)

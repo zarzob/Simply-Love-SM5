@@ -145,7 +145,7 @@ local SetLeaderboardData = function(eventAf, leaderboardData, event)
 			gsEntry["rank"]..".",
 			gsEntry["name"],
 			string.format("%.2f%%", gsEntry["score"]/100),
-			ParseGroovestatsDate(gsEntry["date"]),
+			ParseGrooveStatsDate(gsEntry["date"]),
 			entry
 		)
 		if gsEntry["isRival"] then
