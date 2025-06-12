@@ -296,7 +296,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								gsEntry["rank"]..".",
 								GetMachineTag(gsEntry),
 								string.format("%.2f%%", gsEntry["score"]/100),
-								ParseGroovestatsDate(gsEntry["date"]),
+								ParseGrooveStatsDate(gsEntry["date"]),
 								entry
 							)
 							if gsEntry["isRival"] then

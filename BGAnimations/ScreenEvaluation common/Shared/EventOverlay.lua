@@ -195,6 +195,8 @@ local SetLeaderboardData = function(eventAf, leaderboardData, event)
 end
 
 local GetRpgPaneFunctions = function(eventAf, rpgData, player)
+	local pn = ToEnumShortString(player)
+	
 	local score, scoreDelta, rate, rateDelta = 0, 0, 0, 0
 	local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 	local paneTexts = {}
@@ -297,9 +299,25 @@ local GetRpgPaneFunctions = function(eventAf, rpgData, player)
 				table.insert(quests, table.concat(questStrings, "\n"))
 			end
 		end
-		-- TODO: Disabled until RPG pane is re-implemented
-		-- QuestPane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild(ToEnumShortString(player).."_AF_Upper"):GetChild("Events"..ToEnumShortString(player)):GetChild("RPGQuest"..ToEnumShortString(player))
-		-- QuestPane:playcommand("RpgQuests",{ box_score=box_score, box_progress=box_progress, box_stats=box_stats, box_quests=box_quests })
+		
+		-- Also pass the response data to the progress box.
+		local progressBox = SCREENMAN:GetTopScreen()
+				:GetChild("Overlay")
+				:GetChild("ScreenEval Common")
+				:GetChild(pn.."_AF_Upper")
+				:GetChild("EventProgress"..pn)
+		if progressBox ~= nil then
+			progressBox:playcommand("SetData",{
+				rpgData = {
+					["name"] = rpgData["name"],
+					["score"] = score,
+					["scoreDelta"] = scoreDelta,
+					["rate"] = rate,
+					["rateDelta"] = rateDelta,
+					["statImprovements"] = progress["statImprovements"],
+				},
+			})
+		end
 	end
 
 	table.insert(paneTexts, string.format(
