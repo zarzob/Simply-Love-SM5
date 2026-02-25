@@ -1,0 +1,392 @@
+{
+  "success": true,
+  "eventLeaderboards": [
+    {
+      "eventId": "blueshift-beta",
+      "eventName": "Blue Shift Beta",
+      "leaderboards": [
+        {
+          "type": "Blue Shift EX (Beta)",
+          "leaderboardId": 6,
+          "entries": [
+            {
+              "rank": 1,
+              "userId": "a5dd627d-c5c7-47a7-99b2-854dbb80bfe7",
+              "userAlias": "dimo",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/a5dd627d-c5c7-47a7-99b2-854dbb80bfe7/1760627649114_IMG_5792.jpeg",
+              "chartHash": "7625732c22937630",
+              "score": "100.00",
+              "grade": "Quint",
+              "points": 10000,
+              "delta": 0
+            },
+            {
+              "rank": 2,
+              "userId": "a143c9ee-1078-408b-a39e-bd0e2802c3cb",
+              "userAlias": "Berserker",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/a143c9ee-1078-408b-a39e-bd0e2802c3cb/1760735666260_avataralejo.jpg",
+              "chartHash": "7625732c22937630",
+              "score": "99.72",
+              "grade": "Quad",
+              "points": 8462,
+              "delta": 0
+            },
+            {
+              "rank": 3,
+              "userId": "27cfc687-8d10-4132-bd29-da3b4ef54dfb",
+              "userAlias": "Wafles",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/27cfc687-8d10-4132-bd29-da3b4ef54dfb/1754053714799_Screenshot 2025-07-31 201944.png",
+              "chartHash": "7625732c22937630",
+              "score": "99.61",
+              "grade": "Tristar",
+              "points": 7161,
+              "delta": 0
+            },
+            {
+              "rank": 4,
+              "userId": "c7013a05-b4a1-41be-8228-d70e75144d49",
+              "userAlias": "RootReducer",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "99.59",
+              "grade": "Tristar",
+              "points": 6059,
+              "delta": 0
+            },
+            {
+              "rank": 5,
+              "userId": "c05a810b-d736-4015-87f8-621105d4d875",
+              "userAlias": "Pocho",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "99.42",
+              "grade": "Tristar",
+              "points": 5127,
+              "delta": 0
+            },
+            {
+              "rank": 6,
+              "userId": "b7dd2dcd-640c-4a9b-9f20-1b207703bca0",
+              "userAlias": "glitchbear",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "97.45",
+              "grade": "Twostar",
+              "points": 4339,
+              "delta": 0
+            },
+            {
+              "rank": 7,
+              "userId": "6e21367f-1cd3-4de0-82eb-76f2c13c5017",
+              "userAlias": "ddrulox",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "96.87",
+              "grade": "Star",
+              "points": 3671,
+              "delta": 0
+            },
+            {
+              "rank": 8,
+              "userId": "84e2cf09-86bd-4fe1-a86f-0ddbbb819e03",
+              "userAlias": "SAN!",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "95.70",
+              "grade": "Twostar",
+              "points": 3107,
+              "delta": 0
+            },
+            {
+              "rank": 9,
+              "userId": "e140c341-04a0-4a68-a9d4-3b2060c93251",
+              "userAlias": "STVB",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "93.56",
+              "grade": "S",
+              "points": 2629,
+              "delta": 0
+            },
+            {
+              "rank": 10,
+              "userId": "34c37f0a-8eac-40dd-b411-448d97ad2d12",
+              "userAlias": "Cathadan",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/34c37f0a-8eac-40dd-b411-448d97ad2d12/1760318503329_Twitch-Headshots-1083.jpg",
+              "chartHash": "7625732c22937630",
+              "score": "85.76",
+              "grade": "A",
+              "points": 2225,
+              "delta": 0
+            },
+            {
+              "rank": 11,
+              "userId": "3ac37479-c87f-459c-b3aa-c17e95c1a0d8",
+              "userAlias": "AutoPlayCPU",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "69.15",
+              "grade": "C+",
+              "points": 1882,
+              "delta": 1882
+            }
+          ]
+        },
+        {
+          "type": "Blue Shift HardEX (Beta)",
+          "leaderboardId": 5,
+          "entries": [
+            {
+              "rank": 1,
+              "userId": "a5dd627d-c5c7-47a7-99b2-854dbb80bfe7",
+              "userAlias": "dimo",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/a5dd627d-c5c7-47a7-99b2-854dbb80bfe7/1760627649114_IMG_5792.jpeg",
+              "chartHash": "7625732c22937630",
+              "score": "99.59",
+              "grade": "Quint",
+              "points": 10000,
+              "delta": 0
+            },
+            {
+              "rank": 2,
+              "userId": "a143c9ee-1078-408b-a39e-bd0e2802c3cb",
+              "userAlias": "Berserker",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/a143c9ee-1078-408b-a39e-bd0e2802c3cb/1760735666260_avataralejo.jpg",
+              "chartHash": "7625732c22937630",
+              "score": "98.50",
+              "grade": "Quad",
+              "points": 8462,
+              "delta": 0
+            },
+            {
+              "rank": 3,
+              "userId": "c7013a05-b4a1-41be-8228-d70e75144d49",
+              "userAlias": "RootReducer",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "98.22",
+              "grade": "Tristar",
+              "points": 7161,
+              "delta": 0
+            },
+            {
+              "rank": 4,
+              "userId": "27cfc687-8d10-4132-bd29-da3b4ef54dfb",
+              "userAlias": "Wafles",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/27cfc687-8d10-4132-bd29-da3b4ef54dfb/1754053714799_Screenshot 2025-07-31 201944.png",
+              "chartHash": "7625732c22937630",
+              "score": "98.16",
+              "grade": "Tristar",
+              "points": 6059,
+              "delta": 0
+            },
+            {
+              "rank": 5,
+              "userId": "c05a810b-d736-4015-87f8-621105d4d875",
+              "userAlias": "Pocho",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "98.01",
+              "grade": "Tristar",
+              "points": 5127,
+              "delta": 0
+            },
+            {
+              "rank": 6,
+              "userId": "b7dd2dcd-640c-4a9b-9f20-1b207703bca0",
+              "userAlias": "glitchbear",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "94.39",
+              "grade": "Twostar",
+              "points": 4339,
+              "delta": 0
+            },
+            {
+              "rank": 7,
+              "userId": "6e21367f-1cd3-4de0-82eb-76f2c13c5017",
+              "userAlias": "ddrulox",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "93.20",
+              "grade": "Star",
+              "points": 3671,
+              "delta": 0
+            },
+            {
+              "rank": 8,
+              "userId": "84e2cf09-86bd-4fe1-a86f-0ddbbb819e03",
+              "userAlias": "SAN!",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "91.72",
+              "grade": "Twostar",
+              "points": 3107,
+              "delta": 0
+            },
+            {
+              "rank": 9,
+              "userId": "e140c341-04a0-4a68-a9d4-3b2060c93251",
+              "userAlias": "STVB",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "89.71",
+              "grade": "S",
+              "points": 2629,
+              "delta": 0
+            },
+            {
+              "rank": 10,
+              "userId": "34c37f0a-8eac-40dd-b411-448d97ad2d12",
+              "userAlias": "Cathadan",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/34c37f0a-8eac-40dd-b411-448d97ad2d12/1760318503329_Twitch-Headshots-1083.jpg",
+              "chartHash": "7625732c22937630",
+              "score": "78.83",
+              "grade": "A",
+              "points": 2225,
+              "delta": 0
+            },
+            {
+              "rank": 11,
+              "userId": "3ac37479-c87f-459c-b3aa-c17e95c1a0d8",
+              "userAlias": "AutoPlayCPU",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "57.26",
+              "grade": "C+",
+              "points": 1882,
+              "delta": 1882
+            }
+          ]
+        },
+        {
+          "type": "Blue Shift Money (Beta)",
+          "leaderboardId": 7,
+          "entries": [
+            {
+              "rank": 1,
+              "userId": "a5dd627d-c5c7-47a7-99b2-854dbb80bfe7",
+              "userAlias": "dimo",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/a5dd627d-c5c7-47a7-99b2-854dbb80bfe7/1760627649114_IMG_5792.jpeg",
+              "chartHash": "7625732c22937630",
+              "score": "100.00",
+              "grade": "Quad",
+              "points": 10000,
+              "delta": 0
+            },
+            {
+              "rank": 2,
+              "userId": "a143c9ee-1078-408b-a39e-bd0e2802c3cb",
+              "userAlias": "Berserker",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/a143c9ee-1078-408b-a39e-bd0e2802c3cb/1760735666260_avataralejo.jpg",
+              "chartHash": "7625732c22937630",
+              "score": "100.00",
+              "grade": "Quad",
+              "points": 8462,
+              "delta": 0
+            },
+            {
+              "rank": 3,
+              "userId": "c7013a05-b4a1-41be-8228-d70e75144d49",
+              "userAlias": "RootReducer",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "100.00",
+              "grade": "Quad",
+              "points": 7161,
+              "delta": 0
+            },
+            {
+              "rank": 4,
+              "userId": "27cfc687-8d10-4132-bd29-da3b4ef54dfb",
+              "userAlias": "Wafles",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/27cfc687-8d10-4132-bd29-da3b4ef54dfb/1754053714799_Screenshot 2025-07-31 201944.png",
+              "chartHash": "7625732c22937630",
+              "score": "99.94",
+              "grade": "Tristar",
+              "points": 6059,
+              "delta": 0
+            },
+            {
+              "rank": 5,
+              "userId": "c05a810b-d736-4015-87f8-621105d4d875",
+              "userAlias": "Pocho",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "99.49",
+              "grade": "Tristar",
+              "points": 5127,
+              "delta": 0
+            },
+            {
+              "rank": 6,
+              "userId": "b7dd2dcd-640c-4a9b-9f20-1b207703bca0",
+              "userAlias": "glitchbear",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "98.75",
+              "grade": "Twostar",
+              "points": 4339,
+              "delta": 0
+            },
+            {
+              "rank": 7,
+              "userId": "84e2cf09-86bd-4fe1-a86f-0ddbbb819e03",
+              "userAlias": "SAN!",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "98.16",
+              "grade": "Twostar",
+              "points": 3671,
+              "delta": 0
+            },
+            {
+              "rank": 8,
+              "userId": "6e21367f-1cd3-4de0-82eb-76f2c13c5017",
+              "userAlias": "ddrulox",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "97.98",
+              "grade": "Star",
+              "points": 3107,
+              "delta": 0
+            },
+            {
+              "rank": 9,
+              "userId": "e140c341-04a0-4a68-a9d4-3b2060c93251",
+              "userAlias": "STVB",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "92.75",
+              "grade": "S",
+              "points": 2629,
+              "delta": 0
+            },
+            {
+              "rank": 10,
+              "userId": "34c37f0a-8eac-40dd-b411-448d97ad2d12",
+              "userAlias": "Cathadan",
+              "userProfileImageUrl": "s3://arrow-cloud-assets/profile-images/34c37f0a-8eac-40dd-b411-448d97ad2d12/1760318503329_Twitch-Headshots-1083.jpg",
+              "chartHash": "7625732c22937630",
+              "score": "84.80",
+              "grade": "A",
+              "points": 2225,
+              "delta": 0
+            },
+            {
+              "rank": 11,
+              "userId": "3ac37479-c87f-459c-b3aa-c17e95c1a0d8",
+              "userAlias": "AutoPlayCPU",
+              "userProfileImageUrl": null,
+              "chartHash": "7625732c22937630",
+              "score": "67.95",
+              "grade": "C+",
+              "points": 1882,
+              "delta": 1882
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

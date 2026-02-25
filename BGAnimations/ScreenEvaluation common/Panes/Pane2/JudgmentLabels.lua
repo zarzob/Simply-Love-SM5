@@ -129,6 +129,9 @@ end
 for index, label in ipairs(RadarCategories) do
 	if index == 1 then
 		text = nil
+    local textHardEx = "H.EX"
+		local showHardEX = true
+
 		if SL[pn].ActiveModifiers.ShowExScore then
 			text = "ITG"
 		else
@@ -150,7 +153,25 @@ for index, label in ipairs(RadarCategories) do
 				else
 					self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 				end
-			end
+			  self:playcommand("Marquee")
+			end,
+			MarqueeCommand=function(self)        
+				if not SL[pn].ActiveModifiers.ShowHardEXScore or not SL[pn].ActiveModifiers.ShowExScore then
+					return
+				end
+				if showHardEX then
+					self:settext(textHardEx)
+					self:diffuse(color('#FF00CC'))
+					self:x( (controller == PLAYER_1 and -145) or 105 )
+					showHardEX = false
+				else
+					self:x( (controller == PLAYER_1 and -160) or 90 )
+					self:settext(text)
+					self:diffuse(Color.White)
+					showHardEX = true
+				end
+				self:sleep(2):queuecommand("Marquee")
+      end
 		}
 	end
 

@@ -10,7 +10,7 @@ end
 local n = player==PLAYER_1 and "1" or "2"
 local IsUltraWide = (GetScreenAspectRatio() > 21/9)
 local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
-local NumEntries = 5
+local NumEntries = 7
 
 local style = GAMESTATE:GetCurrentStyle():GetName()
 
@@ -18,8 +18,24 @@ local border = 5
 local width = 162
 local height = 80
 
+-- Rows/spacing/zoom per style: GS/events use 5 rows; Arrow Cloud uses 7 rows
+local GS_ROWS = 5
+local AC_ROWS = 7
+local function RowsForStyle(style)
+	return (style >= 4) and AC_ROWS or GS_ROWS
+end
+local function RowSpacingForStyle(style)
+	return height / RowsForStyle(style)
+end
+local function TextZoomForStyle(style)
+	return (style >= 4) and 0.75 or 0.87
+end
+local function CrownZoomForStyle(style)
+	return (style >= 4) and 0.075 or 0.09
+end
+
 local cur_style = 0
-local num_styles = 4
+local num_styles = 7
 
 local GrooveStatsBlue = color("#007b85")
 local RpgYellow = color("1,0.972,0.792,1")
@@ -31,6 +47,9 @@ local style_color = {
 	[1] = GrooveStatsBlue,  -- Either GrooveStats or GrooveStats EX score
 	[2] = RpgYellow,
 	[3] = ItlPink,
+	[4] = SL.JudgmentColors["FA+"][2], -- AC ITG
+	[5] = SL.JudgmentColors["FA+"][1], -- AC EX
+	[6] = SL.JudgmentColors["FA+"][7], -- AC HardEX
 }
 
 local self_color = color("#a1ff94")
@@ -68,7 +87,6 @@ local ResetAllData = function()
 		all_data[#all_data + 1] = data
 	end
 end
-
 -- Initialize the all_data object.
 ResetAllData()
 
@@ -78,7 +96,7 @@ local HasData = function(idx)
 end
 
 local SetScoreData = function(data_idx, score_idx, rank, name, score, isSelf, isRival, isFail, isEx)
-	if score_idx > 5 then return end
+	if score_idx > NumEntries then return end
 	all_data[data_idx].has_data = true
 
 	local score_data = all_data[data_idx]["scores"][score_idx]
@@ -108,6 +126,60 @@ local SetScoreData = function(data_idx, score_idx, rank, name, score, isSelf, is
 		else
 			if tonumber(score) > SL[pn].Rival.WRScore then
 				SL[pn].Rival.WRScore = tonumber(score)
+			end
+		end
+	end
+end
+
+-- ArrowCloud integration (gameplay) --------------------------------------
+-- Temporary restriction: only enable Arrow Cloud behavior for packs containing "Blue Shift".
+local function ShouldAllowArrowCloudForCurrentPack()
+	local song = GAMESTATE:GetCurrentSong()
+	if not song then return false end
+	local group = song:GetGroupName() or ""
+	return string.find(string.lower(group), "blue shift", 1, true) ~= nil
+end
+
+local ArrowCloudRequestProcessor = function(res)
+	-- Expect res.statusCode and res.body (raw JSON string)
+	if not res then return end
+	if res.statusCode ~= 200 then return end
+	if not res.body then return end
+	local ok, parsed = pcall(JsonDecode, res.body)
+	if not ok or type(parsed) ~= "table" then return end
+	if type(parsed.leaderboards) ~= "table" then return end
+
+	-- Our arrays are 1-based in all_data, but cur_style is 0-based; we use indices 4..6 as 0-based,
+	-- which correspond to all_data[5..7]. Adjust when setting.
+	for _, board in ipairs(parsed.leaderboards) do
+		local zero_based = ({ ITG = 4, EX = 5, HardEX = 6 })[board.type]
+		if zero_based ~= nil then
+			local data_idx = zero_based + 1  -- 1-based for all_data
+			if all_data[data_idx] then
+				local isExType = (board.type == "EX" or board.type == "HardEX")
+				local slot = 1
+				local any = false
+				if type(board.scores) == "table" then
+					for _, entry in ipairs(board.scores) do
+						if slot > NumEntries then break end
+						any = true
+						local rank = tostring(entry.rank or "")
+						local name = tostring(entry.alias or "--")
+						local score = tostring(entry.score or "")
+						local isSelf = not not entry.isSelf
+						local isRival = not not entry.isRival
+						SetScoreData(data_idx, slot, rank, name, score, isSelf, isRival, false, isExType)
+						slot = slot + 1
+					end
+				end
+				if not any then
+					-- Present but empty leaderboard -> show No Scores
+					SetScoreData(data_idx, 1, "", "No Scores", "", false, false, false, isExType)
+					slot = 2
+				end
+				for i=slot, NumEntries do
+					SetScoreData(data_idx, i, "", "", "", false, false, false, isExType)
+				end
 			end
 		end
 	end
@@ -234,7 +306,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=math.max(2,numEntries),5,1 do
+					for i=math.max(2,numEntries),NumEntries,1 do
 						SetScoreData(1, i, "", "", "", "", "", "", true)
 					end
 				end
@@ -260,7 +332,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=math.max(2,numEntries),5,1 do
+					for i=math.max(2,numEntries),NumEntries,1 do
 						SetScoreData(2, i, "", "", "", "", "", "", true)
 					end
 				end
@@ -292,7 +364,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=math.max(2,numEntries),5,1 do
+					for i=math.max(2,numEntries),NumEntries,1 do
 						SetScoreData(3, i, "", "", "", "", "", "", true)
 					end
 				end
@@ -321,7 +393,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=math.max(2,numEntries),5,1 do
+					for i=math.max(2,numEntries),NumEntries,1 do
 						SetScoreData(4, i, "", "", "", "", "", "", true)
 					end
 				end
@@ -400,7 +472,8 @@ local af = Def.ActorFrame{
 			local sendRequest = false
 			local headers = {}
 			local query = {
-				maxLeaderboardResults=NumEntries,
+				-- GS returns 5 rows; AC panes will render up to 7 independently
+				maxLeaderboardResults=GS_ROWS,
 			}
 
 			if SL[pn].ApiKey ~= "" and SL[pn].Streams.Hash ~= "" then
@@ -412,22 +485,45 @@ local af = Def.ActorFrame{
 			-- We technically will send two requests in ultrawide versus mode since
 			-- both players will have their own individual scoreboxes.
 			-- Should be fine though.
+			-- ArrowCloud parallel request (independent of GS)
+			local acEnabled = (SL.ArrowCloud and SL.ArrowCloud.Enabled) or false
+			local acKey = (SL[pn] and SL[pn].ArrowCloudApiKey and #SL[pn].ArrowCloudApiKey > 0) or false
+			local acHash = (SL[pn] and SL[pn].Streams and SL[pn].Streams.Hash and #SL[pn].Streams.Hash > 0) or false
+			local willDoArrowCloud = acEnabled and acKey and acHash
+
+			if willDoArrowCloud and ShouldAllowArrowCloudForCurrentPack() then
+				local ach = SL[pn].Streams.Hash
+				local acHeaders = { Authorization = "Bearer " .. SL[pn].ArrowCloudApiKey }
+				NETWORK:HttpRequest{
+					url = SL.ArrowCloud.BaseURL .. "/v1/chart/" .. ach .. "/leaderboards",
+					method = "GET",
+					headers = acHeaders,
+					connectTimeout = SL.ArrowCloud.RequestTimeout,
+					transferTimeout = SL.ArrowCloud.RequestTimeout,
+					onResponse = function(acres)
+						ArrowCloudRequestProcessor(acres)
+						self:GetParent():queuecommand("CheckScorebox")
+					end
+				}
+			end
+
 			if sendRequest then
-				self:GetParent():GetChild("Name1"):settext("Loading...")
-				self:GetParent():GetChild("Name2"):settext("")
-				self:GetParent():GetChild("Name3"):settext("")
-				self:GetParent():GetChild("Name4"):settext("")
-				self:GetParent():GetChild("Name5"):settext("")
-				self:GetParent():GetChild("Score1"):settext("")
-				self:GetParent():GetChild("Score2"):settext("")
-				self:GetParent():GetChild("Score3"):settext("")
-				self:GetParent():GetChild("Score4"):settext("")
-				self:GetParent():GetChild("Score5"):settext("")
-				self:GetParent():GetChild("Rank1"):diffusealpha(0)
-				self:GetParent():GetChild("Rank2"):settext("")
-				self:GetParent():GetChild("Rank3"):settext("")
-				self:GetParent():GetChild("Rank4"):settext("")
-				self:GetParent():GetChild("Rank5"):settext("")
+				-- Clear all rows; mark first as Loading
+				for i=1,NumEntries do
+					local nameActor = self:GetParent():GetChild("Name"..i)
+					local scoreActor = self:GetParent():GetChild("Score"..i)
+					local rankActor = self:GetParent():GetChild("Rank"..i)
+					if nameActor then nameActor:settext(i==1 and "Loading..." or "") end
+					if scoreActor then scoreActor:settext("") end
+					if rankActor then
+						if i==1 and rankActor.GetTexture then
+							-- crown sprite: fade out
+							rankActor:diffusealpha(0)
+						else
+							rankActor:settext("")
+						end
+					end
+				end
 				self:playcommand("MakeGrooveStatsRequest", {
 					endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
 					method="GET",
@@ -523,11 +619,56 @@ local af = Def.ActorFrame{
 			end
 		end
 	},
+
+	-- ArrowCloud Logo
+	Def.Sprite{
+		Texture=THEME:GetPathG("", "Arrow Cloud/ac logo.png"),
+		Name="ACLogo",
+		InitCommand=function(self)
+			self:diffusealpha(0):zoom(0.08)
+		end,
+		LoopScoreboxCommand=function(self)
+			if cur_style >= 4 then
+				self:sleep(transition_seconds/2):linear(transition_seconds/2):diffusealpha(0.25)
+			else
+				self:linear(transition_seconds/2):diffusealpha(0)
+			end
+		end
+	},
+
+	-- ArrowCloud Mode Text (ITG / EX / H.EX)
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+		Name="ACModeLabel",
+		Text="",
+		InitCommand=function(self)
+			self:diffusealpha(0):zoom(1.0):horizalign(center):vertalign(middle)
+			self:xy(0,0)
+		end,
+		LoopScoreboxCommand=function(self)
+			local label = ""
+			if     cur_style == 4 then label = "ITG"
+			elseif cur_style == 5 then label = "EX"
+			elseif cur_style == 6 then label = "H.EX" end
+			if label ~= "" then
+				if label == "ITG" then
+					self:diffuse(SL.JudgmentColors["FA+"][2])
+				elseif label == "EX" then
+					self:diffuse(SL.JudgmentColors["FA+"][1])
+				elseif label == "H.EX" then
+					self:diffuse(SL.JudgmentColors["FA+"][7])
+				end
+				self:settext(label)
+				self:sleep(transition_seconds/2):linear(transition_seconds/2):diffusealpha(0.65)
+			else
+				self:linear(transition_seconds/2):diffusealpha(0)
+			end
+		end
+	},
 }
 
 for i=1,NumEntries do
-	local y = -height/2 + 16 * i - 8
-	local zoom = 0.87
+	local y = -height/2 + (height/GS_ROWS) * i - ((height/GS_ROWS)/2)
+	local zoom = TextZoomForStyle(0)
 
 	-- Rank 1 gets a crown.
 	if i == 1 then
@@ -535,15 +676,22 @@ for i=1,NumEntries do
 			Name="Rank"..i,
 			Texture=THEME:GetPathG("", "crown.png"),
 			InitCommand=function(self)
-				self:zoom(0.09):xy(-width/2 + 14, y):diffusealpha(0)
+				self:zoom(CrownZoomForStyle(0)):xy(-width/2 + 14, y):diffusealpha(0)
 			end,
 			LoopScoreboxCommand=function(self)
 				self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
 			end,
 			SetScoreboxCommand=function(self)
+				local displayRows = RowsForStyle(cur_style)
+				if i > displayRows then self:visible(false) return end
+				local spacing = RowSpacingForStyle(cur_style)
+				local yy = -height/2 + spacing * i - spacing/2
+				self:y(yy):zoom(CrownZoomForStyle(cur_style)):visible(true)
 				local score = all_data[cur_style+1]["scores"][i]
 				if score.rank ~= "" then
 					self:linear(transition_seconds/2):diffusealpha(1)
+				else
+					self:diffusealpha(0)
 				end
 			end
 		}
@@ -558,6 +706,11 @@ for i=1,NumEntries do
 				self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
 			end,
 			SetScoreboxCommand=function(self)
+				local displayRows = RowsForStyle(cur_style)
+				if i > displayRows then self:visible(false) return end
+				local spacing = RowSpacingForStyle(cur_style)
+				local yy = -height/2 + spacing * i - spacing/2
+				self:y(yy):zoom(TextZoomForStyle(cur_style)):visible(true)
 				local score = all_data[cur_style+1]["scores"][i]
 				local clr = Color.White
 				if score.isSelf then
@@ -581,6 +734,11 @@ for i=1,NumEntries do
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
 		end,
 		SetScoreboxCommand=function(self)
+			local displayRows = RowsForStyle(cur_style)
+			if i > displayRows then self:visible(false) return end
+			local spacing = RowSpacingForStyle(cur_style)
+			local yy = -height/2 + spacing * i - spacing/2
+			self:y(yy):zoom(TextZoomForStyle(cur_style)):visible(true)
 			local score = all_data[cur_style+1]["scores"][i]
 			local clr = Color.White
 			if score.isSelf then
@@ -603,12 +761,21 @@ for i=1,NumEntries do
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
 		end,
 		SetScoreboxCommand=function(self)
+			local displayRows = RowsForStyle(cur_style)
+			if i > displayRows then self:visible(false) return end
+			local spacing = RowSpacingForStyle(cur_style)
+			local yy = -height/2 + spacing * i - spacing/2
+			self:y(yy):zoom(TextZoomForStyle(cur_style)):visible(true)
 			local score = all_data[cur_style+1]["scores"][i]
 			local clr = Color.White
 			if score.isFail then
 				clr = Color.Red
+			elseif cur_style == 6 then
+				-- HardEX pane: render scores in pink
+				clr = SL.JudgmentColors["FA+"][7]
 			elseif score.isEx then
-				clr = SL.JudgmentColors["ITG"][1]
+				-- EX scoring (non-HardEX) in red
+				clr = SL.JudgmentColors["FA+"][1]
 			elseif score.isSelf then
 				clr = self_color
 			elseif score.isRival then

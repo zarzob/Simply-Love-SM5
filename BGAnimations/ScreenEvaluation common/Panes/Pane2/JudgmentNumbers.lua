@@ -102,9 +102,21 @@ end
 
 -- then handle hands/ex, holds, mines, rolls
 for index, RCType in ipairs(RadarCategories.Types) do
-	-- Swap to displaying ITG score if we're showing EX score in gameplay.
+  -- Behavior
+	-- If ShowExScore and not ShowHardEXScore - show ITG score in white 
+	-- If ShowExScore and ShowHardEXScore - marquee between white ITG score and pink H.EX score
+	-- else show EX score in (judgment window color)
 	local percent = nil
-	if SL[pn].ActiveModifiers.ShowExScore then
+	local percentHardEX = nil
+
+	if SL[pn].ActiveModifiers.ShowExScore and SL[pn].ActiveModifiers.ShowHardEXScore then
+		local PercentDP = pss:GetPercentDancePoints()
+		percent = FormatPercentScore(PercentDP):gsub("%%", "")
+		-- Format the Percentage string, removing the % symbol
+		percent = tonumber(percent)
+
+		percentHardEX = CalculateHardExScore(player, counts)
+	elseif SL[pn].ActiveModifiers.ShowExScore then
 		local PercentDP = pss:GetPercentDancePoints()
 		percent = FormatPercentScore(PercentDP):gsub("%%", "")
 		-- Format the Percentage string, removing the % symbol
@@ -114,6 +126,8 @@ for index, RCType in ipairs(RadarCategories.Types) do
 	end
 
 	if index == 1 then
+    local showHardEX = true
+
 		t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 			Name="Percent",
 			Text=("%.2f"):format(percent),
@@ -127,7 +141,25 @@ for index, RCType in ipairs(RadarCategories.Types) do
 				else
 					self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 				end
-			end
+			end,
+			BeginCommand=function(self)
+				self:playcommand("Marquee")
+			end,
+      MarqueeCommand=function(self)
+			if not SL[pn].ActiveModifiers.ShowHardEXScore or not SL[pn].ActiveModifiers.ShowExScore then
+					return
+				end
+			if showHardEX then
+				self:settext(("%.2f"):format(percentHardEX))
+					self:diffuse(color("#FF00CC"))
+				showHardEX = false
+				else
+					self:settext(("%.2f"):format(percent))
+					self:diffuse(Color.White)
+				showHardEX = true
+				end
+				self:sleep(2):queuecommand("Marquee")
+      end
 		}
 	end
 

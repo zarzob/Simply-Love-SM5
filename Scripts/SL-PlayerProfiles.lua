@@ -89,6 +89,7 @@ local permitted_profile_settings = {
 
 	ShowFaPlusWindow     = "boolean",
 	ShowExScore          = "boolean",
+	ShowHardEXScore      = "boolean",
 	ShowFaPlusPane       = "boolean",
 	SmallerWhite     = "boolean",
 
@@ -183,6 +184,10 @@ LoadProfileCustom = function(profile, dir)
 
 		SL[pn]:initialize()
 		ParseGrooveStatsIni(player)
+		-- Load ArrowCloud API key (mirrors GrooveStats ini pattern)
+		if player then
+			ParseArrowCloudIni(player)
+		end
 		ReadItlFile(player)
 
 		SL[pn].Stages = stages
@@ -254,6 +259,7 @@ SaveProfileCustom = function(profile, dir)
 			IniFile.WriteFile( path, {[theme_name]=output} )
 
 			WriteGrooveStatsIni(player)
+			WriteArrowCloudIni(player)
 			-- Write to the ITL file if we need to.
 			-- This is relevant for memory cards.
 			WriteItlFile(player)
@@ -323,4 +329,70 @@ GetPlayerAvatarPath = function(player)
 	local name = PROFILEMAN:GetProfile(player):GetDisplayName()
 
 	return GetAvatarPath(dir, name)
+end
+
+-- -----------------------------------------------------------------------
+-- ArrowCloud ApiKey handling (mirrors GrooveStats ini logic, minimal validation)
+
+ParseArrowCloudIni = function(player)
+	if not player then return end
+
+	local profile_slot = {
+		[PLAYER_1] = "ProfileSlot_Player1",
+		[PLAYER_2] = "ProfileSlot_Player2"
+	}
+	if not profile_slot[player] then return "" end
+
+	local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
+	local pn = ToEnumShortString(player)
+	if not dir or #dir == 0 then return "" end
+
+	local path = dir .. "ArrowCloud.ini"
+
+	if not FILEMAN:DoesFileExist(path) then
+		IniFile.WriteFile(path, {
+			["ArrowCloud"]={
+				["ApiKey"]="",
+				["AllowAutoplay"]="0"
+			}
+		})
+	else
+		local contents = IniFile.ReadFile(path)
+		local section = contents["ArrowCloud"] or {}
+		-- ApiKey
+		SL[pn].ArrowCloudApiKey = section["ApiKey"] or ""
+		-- Preserve/parse AllowAutoplay (default 0). Expose on SL for potential UI/debug.
+		SL[pn].ArrowCloudAllowAutoplay = (section["AllowAutoplay"] == "1")
+		-- Ensure keys exist when writing back (preserve any other unknown keys)
+		section["ApiKey"] = SL[pn].ArrowCloudApiKey
+		if section["AllowAutoplay"] == nil then section["AllowAutoplay"] = "0" end
+		contents["ArrowCloud"] = section
+		IniFile.WriteFile(path, contents)
+	end
+end
+
+WriteArrowCloudIni = function(player)
+	if not player then return end
+	local profile_slot = {
+		[PLAYER_1] = "ProfileSlot_Player1",
+		[PLAYER_2] = "ProfileSlot_Player2"
+	}
+	if not profile_slot[player] then return "" end
+	local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
+	local pn = ToEnumShortString(player)
+	if not dir or #dir == 0 then return "" end
+	local path = dir .. "ArrowCloud.ini"
+	local contents = {}
+	if FILEMAN:DoesFileExist(path) then
+		contents = IniFile.ReadFile(path) or {}
+	end
+	contents["ArrowCloud"] = contents["ArrowCloud"] or {}
+	contents["ArrowCloud"]["ApiKey"] = SL[pn].ArrowCloudApiKey
+	-- If theme code toggled the test flag in memory, persist it; otherwise preserve existing.
+	if SL[pn].ArrowCloudAllowAutoplay ~= nil then
+		contents["ArrowCloud"]["AllowAutoplay"] = SL[pn].ArrowCloudAllowAutoplay and "1" or "0"
+	elseif contents["ArrowCloud"]["AllowAutoplay"] == nil then
+		contents["ArrowCloud"]["AllowAutoplay"] = "0"
+	end
+	IniFile.WriteFile(path, contents)
 end

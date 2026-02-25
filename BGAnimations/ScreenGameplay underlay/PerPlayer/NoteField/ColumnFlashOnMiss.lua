@@ -53,14 +53,20 @@ end
 
 if mods.ColumnFlashOnMiss then
 	local po = GAMESTATE:GetPlayerState(player):GetPlayerOptions('ModsLevel_Preferred')
-	-- Existing logic already accounts for turn mods but not invert.
+	-- Existing logic already accounts for turn mods but not flip or invert.
 	-- Manually try and account for it ourselves here.
+	local flip = po:Flip() > 0
 	local invert = po:Invert() > 0
+	
+	if flip and invert then return end
 
 	-- Only support flip/invert in modes with 4 or 8 columns.
-	if NumColumns ~= 4 and NumColumns ~= 8 and invert then return end
+	if NumColumns ~= 4 and NumColumns ~= 8 and (flip or invert) then return end
 
 	local column_mapping = range((NumColumns==4 or NumColumns==8) and 4 or NumColumns)
+	if flip then
+		column_mapping = {column_mapping[4], column_mapping[3], column_mapping[2], column_mapping[1]}
+	end
 	
 	if invert then
 		column_mapping = {column_mapping[2], column_mapping[1], column_mapping[4], column_mapping[3]}
@@ -69,6 +75,13 @@ if mods.ColumnFlashOnMiss then
 	if NumColumns == 8 then
 		for i=1,4 do
 			column_mapping[4+i] = column_mapping[i] + 4
+		end
+
+		if flip then
+			for i=1,4 do
+				column_mapping[i] = column_mapping[i] + 4
+				column_mapping[i+4] = column_mapping[i+4] - 4
+			end
 		end
 	end
 

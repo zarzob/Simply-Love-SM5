@@ -55,6 +55,7 @@ local PlayerDefaults = {
 
 				ShowFaPlusWindow = false,
 				ShowExScore = false,
+				ShowHardEXScore = false,
 				ShowFaPlusPane = true,
 				
 				RainbowMax = false,
@@ -134,6 +135,8 @@ local PlayerDefaults = {
 			self.GrooveStatsUsername = ""
 			-- Whether or not the player is playing on pad.
 			self.IsPadPlayer = false
+			-- ArrowCloud API key (loaded from ArrowCloud.ini per profile)
+			self.ArrowCloudApiKey = ""
 			self.Favorites = {}
 		end
 	}
@@ -188,8 +191,13 @@ local GlobalDefaults = {
 	}
 }
 
--- "SL" is a general-purpose table that can be accessed from anywhere
--- within the theme and stores info that needs to be passed between screens
+-- Preserve any previously-defined extension tables (like ArrowCloud) that may
+-- have been initialized in helper scripts loaded earlier. Previously we
+-- overwrote SL entirely here which discarded SL.ArrowCloud, causing later
+-- checks like (SL.ArrowCloud and SL.ArrowCloud.Enabled) to evaluate false.
+-- Capture a reference before reassigning SL, then restore it below.
+local _ArrowCloud = SL and SL.ArrowCloud
+
 SL = {
 	P1 = setmetatable( {}, PlayerDefaults),
 	P2 = setmetatable( {}, PlayerDefaults),
@@ -267,7 +275,8 @@ SL = {
 			color("#e29c18"),	-- gold
 			color("#66c955"),	-- green
 			color("#b45cff"),	-- purple (greatly lightened)
-			color("#ff3030")	-- red (slightly lightened)
+			color("#ff3030"),	-- red (slightly lightened)
+      color("#ff00cc")	-- pink (hard ex)
 		},
 	},
 	Preferences = {
@@ -474,6 +483,18 @@ SL = {
 		Held=1,
 		HitMine=-1
 	},
+	HardExWeights = {
+		W010=3.5,
+		W110=3,
+		W2=1,
+		W3=0,
+		W4=0,
+		W5=0,
+		Miss=0,
+		LetGo=0,
+		Held=1,
+		HitMine=-1
+	},
 	-- Fields used to determine whether or not we can connect to the
 	-- GrooveStats services.
 	GrooveStats = {
@@ -526,6 +547,20 @@ SL = {
 	--    ErrorMessage: string, the reasoning for the failure.
 	Downloads = {}
 }
+
+-- Restore preserved ArrowCloud config (if any) or ensure a default table.
+if _ArrowCloud then
+	SL.ArrowCloud = _ArrowCloud
+elseif not SL.ArrowCloud then
+	SL.ArrowCloud = {
+		Enabled = true,
+		BaseURL = "https://api.arrowcloud.dance",
+		RequestTimeout = 5,
+		LogPath = THEME:GetCurrentThemeDirectory() .. "Other/ArrowCloud_Responses.ndjson"
+	}
+end
+
+-- (debug removed) 
 
 
 -- Initialize preferences by calling this method.  We typically do

@@ -1,28 +1,56 @@
--- No need to get GS scores for courses
+-- Abort for courses; ArrowCloud + GS only on song wheel
 if GAMESTATE:IsCourseMode() then return end
 
--- Don't display if Music Wheel GS integration isn't set to Scorebox.
+-- Respect existing preference for where to show a scorebox
 if ThemePrefs.Get("MusicWheelGS") ~= "Scorebox" then return end
 
 local player = ...
 local pn = ToEnumShortString(player)
 
-if (not IsServiceAllowed(SL.GrooveStats.GetScores) or
-		SL[pn].ApiKey == "") then
-	return
-end
+-- Previous logic returned if GrooveStats wasn't available. We now allow
+-- ArrowCloud-only operation. We'll only skip entirely if BOTH services are unusable.
+local gsUnavailable = (not IsServiceAllowed(SL.GrooveStats.GetScores)) or SL[pn].ApiKey == ""
+local arrowcloudUnavailable = (not SL.ArrowCloud) or (not SL.ArrowCloud.Enabled)
+if gsUnavailable and arrowcloudUnavailable then return end
 
 local n = player==PLAYER_1 and "1" or "2"
 local IsNotWide = (GetScreenAspectRatio() < 16/9)
 local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
-local NumEntries = 5
+-- GrooveStats shows 5 rows; ArrowCloud now returns 7. We render 7 rows total
+-- (GS will leave rows 6-7 blank) to keep the layout simple and consistent.
+local NumEntries = 7
 
 local border = 5
 local width = 162
+-- Keep original box height so GS visuals are unchanged; we'll compress text for AC
 local height = 80
 
+-- Row display policy: GS/events show 5 rows; ArrowCloud shows 7 within same height
+local GS_ROWS = 5
+local AC_ROWS = 7
+local function RowsForStyle(style)
+	return (style >= 4) and AC_ROWS or GS_ROWS
+end
+local function RowSpacingForStyle(style)
+	return height / RowsForStyle(style)
+end
+local function TextZoomForStyle(style)
+	return (style >= 4) and 0.75 or 0.87
+end
+local function CrownZoomForStyle(style)
+	return (style >= 4) and 0.075 or 0.09
+end
+
 local cur_style = 0
-local num_styles = 4
+-- We reserve style indices:
+-- 1/2: GrooveStats ITG / EX (ordering dynamic)
+-- 3: RPG (event)
+-- 4: ITL (event)
+-- 5: ArrowCloud ITG
+-- 6: ArrowCloud EX
+-- 7: ArrowCloud HardEX
+-- Rotation logic treats styles with has_data=false as skipped.
+local num_styles = 7
 
 local GrooveStatsBlue = color("#007b85")
 local RpgYellow = color("1,0.972,0.792,1")
@@ -32,10 +60,13 @@ local BoogieStatsPurple = color("#8000ff")
 local currentHash = "nothing"
 
 local style_color = {
-	[0] = GrooveStatsBlue,  -- Either GrooveStats or GrooveStats EX score
-	[1] = GrooveStatsBlue,  -- Either GrooveStats or GrooveStats EX score
+	[0] = GrooveStatsBlue,  -- GS ITG/EX slot A
+	[1] = GrooveStatsBlue,  -- GS ITG/EX slot B
 	[2] = RpgYellow,
 	[3] = ItlPink,
+	[4] = SL.JudgmentColors["FA+"][2], -- AC ITG
+	[5] = SL.JudgmentColors["FA+"][1], -- AC EX
+	[6] = SL.JudgmentColors["FA+"][7], -- AC HardEX
 }
 
 local self_color = color("#a1ff94")
@@ -53,22 +84,18 @@ local ResetAllData = function()
 	SL[pn].Rival.ExScore = 0
 	SL[pn].Rival.WRScore = 0
 	SL[pn].Rival.WRExScore = 0
-	
+
 	for i=1,num_styles do
-		local data = {
-			["has_data"]=false,
-			["scores"]={}
-		}
-		local scores = data["scores"]
-		for i=1,NumEntries do
-			scores[#scores+1] = {
-				["rank"]="",
-				["name"]="",
-				["score"]="",
-				["isSelf"]=false,
-				["isRival"]=false,
-				["isFail"]=false,
-				["isEx"]=false,
+		local data = { has_data=false, scores={} }
+		for j=1,NumEntries do
+			data.scores[j] = {
+				rank="",
+				name="",
+				score="",
+				isSelf=false,
+				isRival=false,
+				isFail=false,
+				isEx=false,
 			}
 		end
 		all_data[i] = data
@@ -84,7 +111,7 @@ local HasData = function(idx)
 end
 
 local SetScoreData = function(data_idx, score_idx, rank, name, score, isSelf, isRival, isFail, isEx)
-	if score_idx > 5 then return end
+	if score_idx > NumEntries then return end
 	all_data[data_idx].has_data = true
 
 	local score_data = all_data[data_idx]["scores"][score_idx]
@@ -210,7 +237,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=math.max(2,numEntries),5,1 do
+					for i=math.max(2,numEntries),NumEntries,1 do
 						SetScoreData(1, i, "", "", "", "", "", "", true)
 					end
 				end
@@ -236,7 +263,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=math.max(2,numEntries),5,1 do
+					for i=math.max(2,numEntries),NumEntries,1 do
 						SetScoreData(2, i, "", "", "", "", "", "", boogie_ex)
 					end
 				end
@@ -263,7 +290,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=math.max(2,numEntries),5,1 do
+					for i=math.max(2,numEntries),NumEntries,1 do
 						SetScoreData(1, i, "", "", "", "", "", "", boogie_ex)
 					end
 				end
@@ -289,7 +316,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=math.max(2,numEntries),5,1 do
+					for i=math.max(2,numEntries),NumEntries,1 do
 						SetScoreData(2, i, "", "", "", "", "", "", true)
 					end
 				end
@@ -321,7 +348,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i=numEntries,NumEntries,1 do
 						SetScoreData(3, i,
 										"",
 										"",
@@ -360,7 +387,7 @@ local LeaderboardRequestProcessor = function(res, master)
 						end
 					end
 					numEntries = numEntries + 1
-					for i=numEntries,5,1 do
+					for i=numEntries,NumEntries,1 do
 						SetScoreData(4, i,
 										"",
 										"",
@@ -375,6 +402,58 @@ local LeaderboardRequestProcessor = function(res, master)
  	end
 	if master ~= nil then
 		master:queuecommand("CheckScorebox")
+	end
+end
+
+-- ArrowCloud integration --------------------------------------------------
+-- Temporary restriction: only enable Arrow Cloud leaderboard behavior for packs containing "Blue Shift".
+local function ShouldAllowArrowCloudForCurrentPack()
+	local song = GAMESTATE:GetCurrentSong()
+	if not song then return false end
+	local group = song:GetGroupName() or ""
+	return string.find(string.lower(group), "blue shift", 1, true) ~= nil
+end
+
+local ArrowCloudRequestProcessor = function(res)
+	-- Expect res.statusCode and res.body (raw JSON string)
+	if not res then return end
+	if res.statusCode ~= 200 then return end
+	if not res.body then return end
+	local ok, parsed = pcall(JsonDecode, res.body)
+	if not ok or type(parsed) ~= "table" then return end
+	if type(parsed.leaderboards) ~= "table" then return end
+
+	-- Map ArrowCloud types to style indices (5..7); only process what the API returned.
+	local index_map = { ITG = 5, EX = 6, HardEX = 7 }
+	for _, board in ipairs(parsed.leaderboards) do
+		local style_index = index_map[board.type]
+		if style_index and all_data[style_index] then
+			local isExType = (board.type == "EX" or board.type == "HardEX")
+			local slot = 1
+			local any = false
+			if type(board.scores) == "table" then
+				for _, entry in ipairs(board.scores) do
+					if slot > NumEntries then break end
+					any = true
+					local rank = tostring(entry.rank or "")
+					local name = tostring(entry.alias or "--")
+					local score = tostring(entry.score or "")
+					local isSelf = not not entry.isSelf
+					local isRival = not not entry.isRival
+					-- ArrowCloud scores are already formatted server-side; pass through.
+					SetScoreData(style_index, slot, rank, name, score, isSelf, isRival, false, isExType)
+					slot = slot + 1
+				end
+			end
+			if not any then
+				-- Present but empty leaderboard -> show No Scores
+				SetScoreData(style_index, 1, "", "No Scores", "", false, false, false, isExType)
+				slot = 2
+			end
+			for i=slot, NumEntries do
+				SetScoreData(style_index, i, "", "", "", false, false, false, isExType)
+			end
+		end
 	end
 end
 
@@ -449,26 +528,19 @@ local af = Def.ActorFrame{
 
 		self:finishtweening()
 		
-		self:GetChild("Name1"):visible(true)
-		self:GetChild("Name2"):visible(true)
-		self:GetChild("Name3"):visible(true)
-		self:GetChild("Name4"):visible(true)
-		self:GetChild("Name5"):visible(true)
-		self:GetChild("Score1"):visible(true)
-		self:GetChild("Score2"):visible(true)
-		self:GetChild("Score3"):visible(true)
-		self:GetChild("Score4"):visible(true)
-		self:GetChild("Score5"):visible(true)
-		self:GetChild("Rank1"):visible(true)
-		self:GetChild("Rank2"):visible(true)
-		self:GetChild("Rank3"):visible(true)
-		self:GetChild("Rank4"):visible(true)
-		self:GetChild("Rank5"):visible(true)
+		for i=1,NumEntries do
+			local show = (i <= RowsForStyle(cur_style))
+			self:GetChild("Name"..i):visible(show)
+			self:GetChild("Score"..i):visible(show)
+			self:GetChild("Rank"..i):visible(show)
+		end
 		self:GetChild("GrooveStatsLogo"):stopeffect()
 		self:GetChild("BoogieStatsLogo"):stopeffect()
 		self:GetChild("BoogieStatsEXLogo"):stopeffect()
 		self:GetChild("SRPGLogo"):visible(true)
 		self:GetChild("ITLLogo"):visible(true)
+    self:GetChild("ACLogo"):visible(true)
+    self:GetChild("ACModeLabel"):visible(true)
 		self:GetChild("Outline"):visible(true)
 		self:GetChild("Background"):linear(transition_seconds/2):diffusealpha(1):visible(true)
 		
@@ -528,8 +600,9 @@ local af = Def.ActorFrame{
 		MakeRequestCommand=function(self)				
 			local sendRequest = false
 			local headers = {}
+			-- GrooveStats remains at 5 results regardless of AC's 7
 			local query = {
-				maxLeaderboardResults=NumEntries,
+				maxLeaderboardResults=GS_ROWS,
 			}
 
 			if SL[pn].ApiKey ~= "" and SL[pn].Streams.Hash ~= "" then
@@ -541,38 +614,66 @@ local af = Def.ActorFrame{
 			-- We technically will send two requests in ultrawide versus mode since
 			-- both players will have their own individual scoreboxes.
 			-- Should be fine though.
-			if sendRequest then
+			-- Break ArrowCloud readiness into explicit booleans so the final value is never nil.
+			local acEnabled = (SL.ArrowCloud and SL.ArrowCloud.Enabled) or false
+			local acKey = (SL[pn] and SL[pn].ArrowCloudApiKey and #SL[pn].ArrowCloudApiKey > 0) or false
+			local acHash = (SL[pn] and SL[pn].Streams and SL[pn].Streams.Hash and #SL[pn].Streams.Hash > 0) or false
+			local willDoArrowCloud = acEnabled and acKey and acHash
+			-- (verbose debug removed)
+			if sendRequest or willDoArrowCloud then
 				if self.IsParsing[1] or self.IsParsing[2] then return end
-				if currentHash == SL[pn].Streams.Hash then 
+				if currentHash == SL[pn].Streams.Hash and not willDoArrowCloud then 
 					self:GetParent():visible(true)
 					self:GetParent():queuecommand("CheckScorebox")
 					return
+				end
+
+				-- ArrowCloud direct request (independent of GS). We perform a separate HTTP call.
+						if willDoArrowCloud and ShouldAllowArrowCloudForCurrentPack() then
+					local ach = SL[pn].Streams.Hash
+					local acHeaders = {}
+					acHeaders["Authorization"] = "Bearer " .. SL[pn].ArrowCloudApiKey
+					-- ArrowCloud HTTP request
+					NETWORK:HttpRequest{
+						url = SL.ArrowCloud.BaseURL .. "/v1/chart/" .. ach .. "/leaderboards",
+						method = "GET",
+						headers = acHeaders,
+						connectTimeout = SL.ArrowCloud.RequestTimeout,
+						transferTimeout = SL.ArrowCloud.RequestTimeout,
+						onResponse = function(acres)
+							-- ArrowCloud response received
+							ArrowCloudRequestProcessor(acres)
+							-- After parsing ArrowCloud results, queue display update
+							self:GetParent():queuecommand("CheckScorebox")
+						end
+					}
 				end
 				
 				RemoveStaleCachedRequests()
 				ResetAllData()
 				
 				self:GetParent():visible(true)
-				self:GetParent():GetChild("Name1"):settext(""):visible(false)
-				self:GetParent():GetChild("Name2"):settext(""):visible(false)
-				self:GetParent():GetChild("Name3"):settext(""):visible(false)
-				self:GetParent():GetChild("Name4"):settext(""):visible(false)
-				self:GetParent():GetChild("Name5"):settext(""):visible(false)
-				self:GetParent():GetChild("Score1"):settext(""):visible(false)
-				self:GetParent():GetChild("Score2"):settext(""):visible(false)
-				self:GetParent():GetChild("Score3"):settext(""):visible(false)
-				self:GetParent():GetChild("Score4"):settext(""):visible(false)
-				self:GetParent():GetChild("Score5"):settext(""):visible(false)
-				self:GetParent():GetChild("Rank1"):diffusealpha(0):visible(false)
-				self:GetParent():GetChild("Rank2"):settext(""):visible(false)
-				self:GetParent():GetChild("Rank3"):settext(""):visible(false)
-				self:GetParent():GetChild("Rank4"):settext(""):visible(false)
-				self:GetParent():GetChild("Rank5"):settext(""):visible(false)
+				for i=1,NumEntries do
+					local parent = self:GetParent()
+					parent:GetChild("Name"..i):settext(""):visible(false)
+					parent:GetChild("Score"..i):settext(""):visible(false)
+					local rankChild = parent:GetChild("Rank"..i)
+					if rankChild then
+						if i == 1 then
+							-- Crown sprite: no settext
+							rankChild:diffusealpha(0):visible(false)
+						else
+							rankChild:settext(""):visible(false)
+						end
+					end
+				end
 				self:GetParent():GetChild("GrooveStatsLogo"):visible(true):diffusealpha(0.5):glowshift({color("#C8FFFF"), color("#6BF0FF")})
 				self:GetParent():GetChild("BoogieStatsLogo"):visible(false)
 				self:GetParent():GetChild("BoogieStatsEXLogo"):visible(false)
 				self:GetParent():GetChild("SRPGLogo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("ITLLogo"):diffusealpha(0):visible(false)
+				self:GetParent():GetChild("ACLogo"):diffusealpha(0):visible(false)
+				self:GetParent():GetChild("ACModeLabel"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("Outline"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("Background"):diffusealpha(0):visible(false)
 				
@@ -581,14 +682,17 @@ local af = Def.ActorFrame{
 				end
 				
 				ResetAllData()
-				self:playcommand("MakeGrooveStatsRequest", {
-					endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
-					method="GET",
-					headers=headers,
-					timeout=10,
-					callback=LeaderboardRequestProcessor,
-					args=self:GetParent(),
-				})
+				if sendRequest then
+					-- GS HTTP request
+					self:playcommand("MakeGrooveStatsRequest", {
+						endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
+						method="GET",
+						headers=headers,
+						timeout=10,
+						callback=LeaderboardRequestProcessor,
+						args=self:GetParent(),
+					})
+				end
 			end
 		end
 	},
@@ -740,6 +844,57 @@ local af = Def.ActorFrame{
 		ResetCommand=function(self) self:stoptweening() end,
 		OffCommand=function(self) self:stoptweening() end
 	},
+
+	-- ArrowCloud Logo
+	Def.Sprite{
+		Texture=THEME:GetPathG("", "Arrow Cloud/ac logo.png"),
+		Name="ACLogo",
+		InitCommand=function(self)
+			-- Reduced scale (was 0.42); 0.14 approximates one-third the previous size
+			self:diffusealpha(0):zoom(0.08):xy(0,0)
+		end,
+		LoopScoreboxCommand=function(self)
+			if cur_style >= 4 then
+				self:sleep(transition_seconds/2):linear(transition_seconds/2):diffusealpha(0.25)
+			else
+				self:linear(transition_seconds/2):diffusealpha(0)
+			end
+		end,
+		ResetCommand=function(self) self:stoptweening() end,
+		OffCommand=function(self) self:stoptweening() end
+	},
+
+	-- ArrowCloud Mode Text (bottom-right ITG / EX / H.EX)
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+		Name="ACModeLabel",
+		Text="",
+		InitCommand=function(self)
+			self:diffusealpha(0):zoom(1.0):horizalign(center):vertalign(middle)
+			self:xy(0,0)
+		end,
+		LoopScoreboxCommand=function(self)
+			local label = ""
+			if     cur_style == 4 then label = "ITG"
+			elseif cur_style == 5 then label = "EX"
+			elseif cur_style == 6 then label = "H.EX" end
+			if label ~= "" then
+				-- Explicit colors per request
+				if label == "ITG" then
+					self:diffuse(SL.JudgmentColors["FA+"][2])
+				elseif label == "EX" then
+					self:diffuse(SL.JudgmentColors["FA+"][1])
+				elseif label == "H.EX" then
+					self:diffuse(SL.JudgmentColors["FA+"][7])
+				end
+				self:settext(label)
+				self:sleep(transition_seconds/2):linear(transition_seconds/2):diffusealpha(0.65)
+			else
+				self:linear(transition_seconds/2):diffusealpha(0)
+			end
+		end,
+		ResetCommand=function(self) self:stoptweening() end,
+		OffCommand=function(self) self:stoptweening() end
+	},
 }
 
 for i=1,NumEntries do
@@ -771,9 +926,16 @@ for i=1,NumEntries do
 				self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
 			end,
 			SetScoreboxCommand=function(self)
+				local displayRows = RowsForStyle(cur_style)
+				if i > displayRows then self:visible(false) return end
+				local spacing = RowSpacingForStyle(cur_style)
+				local yy = -height/2 + spacing * i - spacing/2
+				self:y(yy):zoom(CrownZoomForStyle(cur_style)):visible(true)
 				local score = all_data[cur_style+1]["scores"][i]
 				if score.rank ~= "" then
 					self:linear(transition_seconds/2):diffusealpha(1)
+				else
+					self:diffusealpha(0)
 				end
 			end,
 			ResetCommand=function(self) self:stoptweening() end,
@@ -803,6 +965,11 @@ for i=1,NumEntries do
 				self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
 			end,
 			SetScoreboxCommand=function(self)
+				local displayRows = RowsForStyle(cur_style)
+				if i > displayRows then self:visible(false) return end
+				local spacing = RowSpacingForStyle(cur_style)
+				local yy = -height/2 + spacing * i - spacing/2
+				self:y(yy):zoom(TextZoomForStyle(cur_style)):visible(true)
 				local score = all_data[cur_style+1]["scores"][i]
 				local clr = Color.White
 				if score.isSelf then
@@ -841,6 +1008,11 @@ for i=1,NumEntries do
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
 		end,
 		SetScoreboxCommand=function(self)
+			local displayRows = RowsForStyle(cur_style)
+			if i > displayRows then self:visible(false) return end
+			local spacing = RowSpacingForStyle(cur_style)
+			local yy = -height/2 + spacing * i - spacing/2
+			self:y(yy):zoom(TextZoomForStyle(cur_style)):visible(true)
 			local score = all_data[cur_style+1]["scores"][i]
 			local clr = Color.White
 			if score.isSelf then
@@ -878,11 +1050,20 @@ for i=1,NumEntries do
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
 		end,
 		SetScoreboxCommand=function(self)
+			local displayRows = RowsForStyle(cur_style)
+			if i > displayRows then self:visible(false) return end
+			local spacing = RowSpacingForStyle(cur_style)
+			local yy = -height/2 + spacing * i - spacing/2
+			self:y(yy):zoom(TextZoomForStyle(cur_style)):visible(true)
 			local score = all_data[cur_style+1]["scores"][i]
 			local clr = Color.White
 			if score.isFail then
 				clr = Color.Red
+			elseif cur_style == 6 then
+				-- HardEX pane: render scores in pink
+				clr = SL.JudgmentColors["FA+"][7]
 			elseif score.isEx then
+				-- EX scoring (non-HardEX) in red
 				clr = SL.JudgmentColors["FA+"][1]
 			elseif score.isSelf then
 				clr = self_color
