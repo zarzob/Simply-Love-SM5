@@ -32,6 +32,7 @@ local GetPossibleExScore = function(counts)
 end
 
 local pacemaker = Def.BitmapText{
+	Name="Pacemaker" .. pn,
 	Font=ThemePrefs.Get("ThemeFont") .. " Bold",
 	JudgmentMessageCommand=function(self)
 		self:queuecommand("Update")
