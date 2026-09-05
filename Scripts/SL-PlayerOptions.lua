@@ -980,7 +980,7 @@ local Overrides = {
 	JudgmentAnimation = {
 		LayoutType = "ShowOneInRow",
 		ExportOnChange = true,
-		Choices = GetJudgmentAnimations,
+		Choices = SLCustom.JudgmentAnimations._getItems,
 		SaveSelections = function(self, list, pn)
 			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
 			for i, val in ipairs(self.Choices) do
@@ -993,7 +993,7 @@ local Overrides = {
 	ComboAnimation = {
 		LayoutType = "ShowOneInRow",
 		ExportOnChange = true,
-		Choices = GetComboAnimations,
+		Choices = SLCustom.ComboAnimations._getItems,
 		SaveSelections = function(self, list, pn)
 			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
 			for i, val in ipairs(self.Choices) do

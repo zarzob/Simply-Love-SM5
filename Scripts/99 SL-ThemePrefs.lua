@@ -405,7 +405,7 @@ SL_CustomPrefs.Get = function()
 		ITGDiffColors =
 		{
 			Default = "Simply Love",
-			Choices = { "Simply Love", "ITG", "DDR" }
+			Choices = SLCustom.DiffColors._getItems
 		},
 		AllowScreenSelectPlayMode3 = {
 			Default = true,

@@ -102,7 +102,7 @@ local combo_bmt = LoadFont("_Combo Fonts/" .. combo_font .."/" .. combo_font)..{
 		self:settext( params.Combo or params.Misses or "" )
 		self:playcommand("Color", params)
 		self:finishtweening()
-		ComboAnimations[mods.ComboAnimation](self, 0.75)
+		SLCustom.ComboAnimations[mods.ComboAnimation](self, 0.75)
 	end,
 	JudgmentMessageCommand=function(self, params)
 		if params.Player ~= player then return end
@@ -236,7 +236,7 @@ if combo_font == "Source Code" then
 		self:settext( string.format("%X", tostring(params.Combo or params.Misses or 0)):lower() )
 		self:playcommand("Color", params)
 		self:finishtweening()
-		ComboAnimations[mods.ComboAnimation](self, 0.75)
+		SLCustom.ComboAnimations[mods.ComboAnimation](self, 0.75)
 	end
 end
 
@@ -246,7 +246,7 @@ if combo_font == "Wendy (Cursed)" then
 		self:playcommand("Color", params)
 		if params.Combo then
 			self:finishtweening()
-			ComboAnimations[mods.ComboAnimation](self, 0.75)
+			SLCustom.ComboAnimations[mods.ComboAnimation](self, 0.75)
 		end
 	end
 	combo_bmt.ColorCommand=function(self, params)

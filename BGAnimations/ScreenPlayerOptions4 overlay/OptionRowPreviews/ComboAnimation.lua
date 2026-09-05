@@ -30,7 +30,7 @@ for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 		end,
 		ComboAnimationCommand=function(self)
 			self:finishtweening()
-			ComboAnimations[SL[pn].ActiveModifiers.ComboAnimation](self, 1)
+			SLCustom.ComboAnimations[SL[pn].ActiveModifiers.ComboAnimation](self, 1)
 		end,
 		LoopCommand=function(self)
 			if PlayerOnComboAnimationOptRow(player) then

@@ -32,7 +32,7 @@ for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 				end
 			end,
 			JudgmentAnimationCommand=function(self)
-				JudgmentAnimations[SL[pn].ActiveModifiers.JudgmentAnimation](self, "W0", 1, 1)
+				SLCustom.JudgmentAnimations[SL[pn].ActiveModifiers.JudgmentAnimation](self, "W0", 1, 1)
 			end
 		}
 end
