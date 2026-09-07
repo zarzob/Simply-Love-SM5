@@ -223,6 +223,7 @@ for player in ivalues(PlayerNumber) do
 						textColor = color(SL.SRPG8.TextColor)
 						shadowLength = 0.4
 					end
+				end
 			end
 
 			self:visible( bShow )
