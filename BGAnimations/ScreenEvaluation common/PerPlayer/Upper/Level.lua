@@ -39,16 +39,20 @@ if ThemePrefs.Get("EnableLevelSystem") > 0 and SL.Global.GameMode ~= "Casual" th
 	SL[pn].TotalEXP = GetPlayerEXP(player, true) + earnExp
 
 	return Def.ActorFrame{
+		Def.Quad{
+			Name="ExpBG",
+			InitCommand=function(self)
+				local c1 = ThemePrefs.Get("RainbowMode") and not HolidayCheer() and Color.White or Color.Black
+				local c2 = earnExp > 0 and SL.JudgmentColors.ITG[earnExp >= maxExp and 2 or 3] or c1
+				self:align(0.5, 0.5):zoom(0.75):xy(70 * (player==PLAYER_1 and -1 or 1), _screen.cy - 168):diffuseshift():effectperiod(3):effectcolor1(c1):effectcolor2(lerp_color(0.5, c1, c2)):diffusealpha(0.7)
+			end
+		},
 		LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 			InitCommand=function(self)
-				self:xy(0, _screen.cy - 60):align(player==PLAYER_1 and 1 or 0, 1):zoom(0.8):settext("+" .. (earnExp == 69 and ThemePrefs.Get("nice") > 0 and "nice" or earnExp) .. " EXP")
-				if ThemePrefs.Get("RainbowMode") then
-					self:diffuse(Color.Black)
-				end
-				if ThemePrefs.Get("VisualStyle") == "Transistor" then
-					self:diffuse(color(SL.SRPG8.TextColor))
-					self:shadowlength(0.4)
-				end
+				local bg = self:GetParent():GetChild("ExpBG")
+				self:align(0.5, 0.5):zoom(bg:GetZoom()):xy(bg:GetX(), bg:GetY()):maxwidth(100):maxheight(15):settext("+" .. (earnExp == 69 and ThemePrefs.Get("nice") > 0 and "nice" or earnExp) .. " EXP"):diffuse(Color.White)
+				if ThemePrefs.Get("RainbowMode") and not HolidayCheer() then self:diffuse(Color.Black) end
+				bg:SetWidth(math.min(100,self:GetWidth())+16):SetHeight(math.min(15,self:GetHeight())+3):fadeleft(0.1):faderight(0.1)
 			end
 		}
 	}
