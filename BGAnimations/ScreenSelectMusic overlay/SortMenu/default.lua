@@ -524,7 +524,7 @@ local t = Def.ActorFrame {
 		DirectInputToEngine(self)
 
 		-- Then add the ScreenSelectProfile on top.
-		SCREENMAN:AddNewScreenToTop("ScreenSelectProfile")
+		SCREENMAN:AddNewScreenToTop("ScreenSwitchProfile")
 	end,
 
 	AssessAvailableChoicesCommand=function(self)

@@ -149,6 +149,9 @@ local PlayerDefaults = {
 			-- Whether or not the player is playing on pad.
 			self.IsPadPlayer = false
 			self.Favorites = {}
+			-- Level System
+			self.StyleEXP = 0
+			self.TotalEXP = 0
 		end
 	}
 }

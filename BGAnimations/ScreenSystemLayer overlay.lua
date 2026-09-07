@@ -29,7 +29,12 @@ local function CreditsText( player )
 				str = SL[pn].GrooveStatsUsername
 			end
 
-			self:settext(str)
+			self:settext(str):y(THEME:GetMetric("ScreenSystemLayer", "Credits"..pn.."Y"))
+			
+			local screenName = SCREENMAN:GetTopScreen() and SCREENMAN:GetTopScreen():GetName() or "ScreenLogo"
+			if SL.Global.GameMode ~= "Casual" and screenName ~= "ScreenTitleMenu" and screenName ~= "ScreenTitleJoin" and screenName ~= "ScreenLogo" and screenName ~= "ScreenSelectProfile" then
+				self:addy(ThemePrefs.Get("EnableLevelSystem") > 0 and GAMESTATE:IsHumanPlayer(pn) and 4 or 0)
+			end
 		end,
 		SetCreditsTextMessageCommand=function(self, params)
 			if params.pn == ToEnumShortString(player) then
@@ -119,6 +124,111 @@ for player in ivalues(PlayerNumber) do
 				end
 			end
 		end,
+	}
+	
+	-- if leveling is enabled, add current level and experience
+	t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+		ScreenChangedMessageCommand=function(self)
+			if ThemePrefs.Get("EnableLevelSystem") > 0 then
+				self:playcommand("UpdateVisible")
+				if SL.Global.GameMode ~= "Casual" then
+					local screenName = SCREENMAN:GetTopScreen() and SCREENMAN:GetTopScreen():GetName() or ""
+					if screenName == "ScreenSelectMusic" or screenName == "ScreenGameplay" or screenName == "ScreenEvaluationStage" or screenName == "ScreenEvaluationNonstop" then
+						self:sleep(0.1):queuecommand("Update")
+					end
+				end
+			else
+				self:visible(false)
+			end
+		end,
+		PlayerJoinedMessageCommand=function(self, params)
+			if params.Player==player then
+				self:playcommand("UpdateVisible")
+				if ThemePrefs.Get("EnableLevelSystem") > 0 and SL.Global.GameMode ~= "Casual" then self:sleep(0.1):queuecommand("Update") else self:visible(false) end
+			end
+		end,
+		PlayerUnjoinedMessageCommand=function(self, params)
+			if params.Player==player then
+				self:playcommand("UpdateVisible")
+				if ThemePrefs.Get("EnableLevelSystem") > 0 and SL.Global.GameMode ~= "Casual" then self:sleep(0.1):queuecommand("Update") else self:visible(false) end
+			end
+		end,
+		PlayerProfileSetMessageCommand=function(self, params)
+			if params.Player==player then
+				self:playcommand("UpdateVisible")
+				if ThemePrefs.Get("EnableLevelSystem") > 0 and SL.Global.GameMode ~= "Casual" then self:sleep(0.1):queuecommand("Update") else self:visible(false) end
+			end
+		end,
+		VisualStyleSelectedMessageCommand=function(self) if ThemePrefs.Get("EnableLevelSystem") > 0 then self:playcommand("UpdateVisible") end end,
+		UpdateCommand=function(self)
+			local pn = ToEnumShortString(player)
+			local e = nil
+			if ThemePrefs.Get("EnableLevelSystem") > 0 and GAMESTATE:IsPlayerEnabled(pn) then
+				if SCREENMAN:GetTopScreen():GetName() == "ScreenEvaluationStage" or SCREENMAN:GetTopScreen():GetName() == "ScreenEvaluationNonstop" then
+					e = ThemePrefs.Get("EnableLevelSystem") > 1 and SL[pn].TotalEXP or SL[pn].StyleEXP
+				else
+					e = GetPlayerEXP(player, ThemePrefs.Get("EnableLevelSystem") > 1) or 0
+				end
+			end
+			
+			if e == nil then
+				self:diffusealpha(0):visible(false)
+				return
+			else
+				local style = ""
+				local styleString = ""
+				if ThemePrefs.Get("EnableLevelSystem") <= 1 and GAMESTATE:GetCurrentGame() and (GAMESTATE:GetCurrentSteps(player) or GAMESTATE:GetCurrentStyle()) then
+					style = GAMESTATE:GetCurrentSteps(player) ~= nil and GAMESTATE:GetCurrentSteps(player):GetStepsType() or GAMESTATE:GetCurrentStyle():GetStepsType()
+					style = style:gsub("%w+_%w+_", ""):lower()
+					styleString = THEME:GetString("StepsType", ("%s-%s"):format(GAMESTATE:GetCurrentGame():GetName(), style))
+					styleString = ("%s"):format(styleString).." "
+				end
+				
+				local calcLevel=function(x)
+					local l = 0
+					local s = 2
+					while true do if x < math.pow(s,l+1) or l >= 99 then break else l = l + 1 end end
+					return l
+				end
+				
+				self:xy(THEME:GetMetric("ScreenSystemLayer", "Credits"..pn.."X") or WideScale(38, 45), (THEME:GetMetric("ScreenSystemLayer", "Credits"..pn.."Y") or _screen.h-9)-11):align(player==PLAYER_1 and 0 or 1,1):zoom(0.6):settext(styleString.."Level "..calcLevel(e).."  ·  "..e.." EXP")
+			end
+		end,
+		UpdateVisibleCommand=function(self)
+			local screen = SCREENMAN:GetTopScreen()
+			local bShow = true
+
+			local textColor = Color.White
+			local shadowLength = 0
+
+			if screen then
+				bShow = THEME:GetMetric( screen:GetName(), "ShowCreditDisplay" )
+
+				local screenName = screen:GetName()
+				if SL.Global.GameMode == "Casual" or screenName == "ScreenTitleMenu" or screenName == "ScreenTitleJoin" or screenName == "ScreenLogo" or screenName == "ScreenSelectProfile" then
+					bShow = false
+				elseif (screen:GetName() == "ScreenEvaluationStage") or (screen:GetName() == "ScreenEvaluationNonstop") or (screen:GetName() == Branch.GameplayScreen()) then
+					-- ignore ShowCreditDisplay metric for ScreenEval
+					-- only show this BitmapText actor on Evaluation if the player is joined
+					bShow = GAMESTATE:IsHumanPlayer(player)
+					--        I am not human^
+					--        today, but there's always hope
+					--        I'll see tomorrow
+
+					-- dark text for RainbowMode
+					if ThemePrefs.Get("RainbowMode") then
+						textColor = Color.Black
+					end
+					if ThemePrefs.Get("VisualStyle") == "Transistor" then
+						textColor = color(SL.SRPG8.TextColor)
+						shadowLength = 0.4
+					end
+			end
+
+			self:visible( bShow )
+			self:diffuse(textColor)
+			self:shadowlength(shadowLength)
+		end
 	}
 end
 

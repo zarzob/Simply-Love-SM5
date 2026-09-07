@@ -195,48 +195,52 @@ LoadProfileCustom = function(profile, dir)
 		SL[pn].Stages = stages
 	end
 
-	if pn and FILEMAN:DoesFileExist(path) then
-		filecontents = IniFile.ReadFile(path)[theme_name]
+	if pn then
+		if FILEMAN:DoesFileExist(path) then
+			filecontents = IniFile.ReadFile(path)[theme_name]
 
-		-- for each key/value pair read in from the player's profile
-		for k,v in pairs(filecontents) do
-			-- ensure that the key has a corresponding key in permitted_profile_settings
-			if permitted_profile_settings[k]
-			--  ensure that the datatype of the value matches the datatype specified in permitted_profile_settings
-			and type(v)==permitted_profile_settings[k] then
-				-- if the datatype is string and this key corresponds with an OptionRow in ScreenPlayerOptions
-				-- ensure that the string read in from the player's profile
-				-- is a valid value (or choice) for the corresponding OptionRow
-				if type(v) == "string" and CustomOptionRow(k) and FindInTable(v, CustomOptionRow(k).Values or CustomOptionRow(k).Choices)
-				or type(v) ~= "string" then
-					SL[pn].ActiveModifiers[k] = v
-				end
+			-- for each key/value pair read in from the player's profile
+			for k,v in pairs(filecontents) do
+				-- ensure that the key has a corresponding key in permitted_profile_settings
+				if permitted_profile_settings[k]
+				--  ensure that the datatype of the value matches the datatype specified in permitted_profile_settings
+				and type(v)==permitted_profile_settings[k] then
+					-- if the datatype is string and this key corresponds with an OptionRow in ScreenPlayerOptions
+					-- ensure that the string read in from the player's profile
+					-- is a valid value (or choice) for the corresponding OptionRow
+					if type(v) == "string" and CustomOptionRow(k) and FindInTable(v, CustomOptionRow(k).Values or CustomOptionRow(k).Choices)
+					or type(v) ~= "string" then
+						SL[pn].ActiveModifiers[k] = v
+					end
 
-				-- special-case PlayerOptionsString for now
-				-- it is saved to and read from profile as a string, but doesn't have a corresponding
-				-- OptionRow in ScreenPlayerOptions, so it will fail validation above
-				-- we want engine-defined mods (e.g. dizzy) to be applied as well, not just SL-defined mods
-				if k=="PlayerOptionsString" and type(v)=="string" then
-					-- v here is the comma-delimited set of modifiers the engine's PlayerOptions interface understands
+					-- special-case PlayerOptionsString for now
+					-- it is saved to and read from profile as a string, but doesn't have a corresponding
+					-- OptionRow in ScreenPlayerOptions, so it will fail validation above
+					-- we want engine-defined mods (e.g. dizzy) to be applied as well, not just SL-defined mods
+					if k=="PlayerOptionsString" and type(v)=="string" then
+						-- v here is the comma-delimited set of modifiers the engine's PlayerOptions interface understands
 
-					-- use the engine's SetPlayerOptions() method to set a whole bunch of mods in the engine all at once
-					GAMESTATE:GetPlayerState(player):SetPlayerOptions("ModsLevel_Preferred", v)
-					-- Special case timing windows as they're not controllable in SL.
-					GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Preferred"):ResetDisabledTimingWindows()
+						-- use the engine's SetPlayerOptions() method to set a whole bunch of mods in the engine all at once
+						GAMESTATE:GetPlayerState(player):SetPlayerOptions("ModsLevel_Preferred", v)
+						-- Special case timing windows as they're not controllable in SL.
+						GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Preferred"):ResetDisabledTimingWindows()
 
-					-- However! It's quite likely that a FailType mod could be in that^ string, meaning a player could
-					-- have their own setting for FailType saved to their profile.  I think it makes more sense to let
-					-- machine operators specify a default FailType at a global/machine level, so use this opportunity to
-					-- use the PlayerOptions interface to set FailSetting() using the default FailType setting from
-					-- the operator menu's Advanced Options
-					GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Preferred"):FailSetting( GetDefaultFailType() )
-					
-					-- Finally extract out the PlayerOptionsString by the fetching it from the engine
-					-- Update the SL table so that this PlayerOptionsString value is easily accessible throughout the theme
-					SL[pn].PlayerOptionsString = GAMESTATE:GetPlayerState(player):GetPlayerOptionsString("ModsLevel_Preferred")
+						-- However! It's quite likely that a FailType mod could be in that^ string, meaning a player could
+						-- have their own setting for FailType saved to their profile.  I think it makes more sense to let
+						-- machine operators specify a default FailType at a global/machine level, so use this opportunity to
+						-- use the PlayerOptions interface to set FailSetting() using the default FailType setting from
+						-- the operator menu's Advanced Options
+						GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Preferred"):FailSetting( GetDefaultFailType() )
+						
+						-- Finally extract out the PlayerOptionsString by the fetching it from the engine
+						-- Update the SL table so that this PlayerOptionsString value is easily accessible throughout the theme
+						SL[pn].PlayerOptionsString = GAMESTATE:GetPlayerState(player):GetPlayerOptionsString("ModsLevel_Preferred")
+					end
 				end
 			end
 		end
+		SL[pn].StyleEXP = GetPlayerEXP(player, false)
+		SL[pn].TotalEXP = GetPlayerEXP(player, true)
 	end
 
 	return true
@@ -267,6 +271,21 @@ SaveProfileCustom = function(profile, dir)
 			-- Write to the ITL file if we need to.
 			-- This is relevant for memory cards.
 			WriteItlFile(player)
+
+			if ThemePrefs.Get("EnableLevelSystem") > 0 and not SL.Global.FastProfileSwitchInProgress and SL.Global.GameMode ~= "Casual" then
+				local lv = {}
+				if FILEMAN:DoesFileExist(dir .. "DATA.ini") then
+					lv = IniFile.ReadFile(dir .. "DATA.ini")
+				end
+				
+				if lv[GAMESTATE:GetCurrentStyle():GetStepsType()]==nil then lv[GAMESTATE:GetCurrentStyle():GetStepsType()]={} end
+				lv[GAMESTATE:GetCurrentStyle():GetStepsType()].EXP=SL[pn].StyleEXP
+				
+				if lv["AllStepsTypes"]==nil then lv["AllStepsTypes"]={} end
+				lv["AllStepsTypes"].EXP=SL[pn].TotalEXP
+				
+				IniFile.WriteFile( dir .. "DATA.ini", lv )
+			end
 			break
 		end
 	end
@@ -333,4 +352,30 @@ GetPlayerAvatarPath = function(player)
 	local name = PROFILEMAN:GetProfile(player):GetDisplayName()
 
 	return GetAvatarPath(dir, name)
+end
+
+-- -----------------------------------------------------------------------
+-- returns player's current experience points per style or between all styles
+
+GetPlayerEXP = function(player, shared)
+	if not player then return 0 end
+	
+	local profile_slot = {
+		[PLAYER_1] = "ProfileSlot_Player1",
+		[PLAYER_2] = "ProfileSlot_Player2"
+	}
+	if not profile_slot[player] then return 0 end
+	
+	local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
+	local fx = FILEMAN:DoesFileExist(dir .. "DATA.ini") and IniFile.ReadFile(dir .. "DATA.ini") or {}
+	local fxs = fx[shared and "AllStepsTypes" or (GAMESTATE:GetCurrentStyle() and GAMESTATE:GetCurrentStyle():GetStepsType())] or {}
+	local xp = fxs.EXP ~= nil and fxs.EXP or 0
+	
+	if shared and fx ~= {} and fx["AllStepsTypes"] == nil then
+		for k,v in pairs(fx) do
+			xp = xp + v.EXP
+		end
+	end
+	
+	return xp
 end

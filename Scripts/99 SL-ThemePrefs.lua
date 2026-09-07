@@ -391,6 +391,11 @@ SL_CustomPrefs.Get = function()
 			Choices = { THEME:GetString("ThemePrefs","Wendy"), THEME:GetString("ThemePrefs", "Mega"), THEME:GetString("ThemePrefs", "Unprofessional") },
 			Values = { "Common", "Mega", "Unprofessional" }
 		},
+		EnableLevelSystem = {
+			Default = 0,
+			Choices =  { "Shared", "Per-Style", "Off" },
+			Values  = { 2, 1, 0 }
+		},
 		MusicWheelGS =
 		{
 			Default = "Scorebox",

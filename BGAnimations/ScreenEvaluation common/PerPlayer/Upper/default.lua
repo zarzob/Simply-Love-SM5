@@ -31,5 +31,8 @@ return Def.ActorFrame{
 	LoadActor("./RecordTexts.lua", player),
 
 	-- Event Progress Box
-	LoadActor("./EventProgress.lua", player)
+	LoadActor("./EventProgress.lua", player),
+
+	-- Level System
+	LoadActor("./Level.lua", player)
 }
