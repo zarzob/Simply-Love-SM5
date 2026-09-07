@@ -159,6 +159,23 @@ return Def.ActorFrame{
 						frame = frame + 1
 					end
 				end
+			elseif (sprite:GetNumStates() == 11 or sprite:GetNumStates() == 22) then
+				-- Project OutFox's Advanced timing window, with eleven judgments
+				frame = frame + 5
+				local advOffset = math.abs(param.TapNoteOffset)
+				if ToEnumShortString(param.TapNoteScore) == "W1" then
+					if advOffset <= 0.000671875 then
+						frame = 0
+					elseif advOffset <= 0.00134375 then
+						frame = 1
+					elseif advOffset <= 0.00226785 then
+						frame = 2
+					elseif advOffset <= 0.005375 then
+						frame = 3
+					elseif advOffset <= 0.01075 then
+						frame = 4
+					end
+				end
 			end
 
 			self:playcommand("Reset")
@@ -166,7 +183,7 @@ return Def.ActorFrame{
 			-- most judgment sprite sheets have 12 or 14 frames; 6/7 for early judgments, 6/7 for late judgments
 			-- some (the original 3.9 judgment sprite sheet for example) do not visibly distinguish
 			-- early/late judgments, and thus only have 6/7 frames
-			if sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 then
+			if sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 or sprite:GetNumStates() == 22 then
 				frame = frame * 2
 			end
 
@@ -243,13 +260,29 @@ return Def.ActorFrame{
 					frame = frame + 1
 				end
 			end
+		elseif (sprite:GetNumStates() == 11 or sprite:GetNumStates() == 22) then
+			frame = frame + 5
+			local advOffset = math.abs(param.TapNoteOffset)
+			if tns == "W1" then
+				if advOffset <= 0.000671875 then
+					frame = 0
+				elseif advOffset <= 0.00134375 then
+					frame = 1
+				elseif advOffset <= 0.00226785 then
+					frame = 2
+				elseif advOffset <= 0.005375 then
+					frame = 3
+				elseif advOffset <= 0.01075 then
+					frame = 4
+				end
+			end
 		end
 
 
 		-- most judgment sprite sheets have 12 or 14 frames; 6/7 for early judgments, 6/7 for late judgments
 		-- some (the original 3.9 judgment sprite sheet for example) do not visibly distinguish
 		-- early/late judgments, and thus only have 6/7 frames
-		if sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 then
+		if sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 or sprite:GetNumStates() == 22 then
 			frame = frame * 2
 			if not param.Early then frame = frame + 1 end
 		end
@@ -270,7 +303,7 @@ return Def.ActorFrame{
 				end
 			end
 			
-			if isHeld and (sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14) then frame = frame - 1 end
+			if isHeld and (sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 or sprite:GetNumStates() == 22) then frame = frame - 1 end
 		end
 
 		self:playcommand("Reset")
