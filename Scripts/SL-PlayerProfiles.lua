@@ -123,6 +123,7 @@ local permitted_profile_settings = {
 	TimerMode            = "string",
 	JudgmentAnimation    = "string",
 	ComboAnimation       = "string",
+	GradeDesign          = "string",
 	RailBalance          = "string",
 	
 	JudgmentBack         = "boolean",

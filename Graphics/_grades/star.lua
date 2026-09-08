@@ -1,10 +1,6 @@
-local pss = ...
+local pss, starPath = unpack(...)
+if starPath == nil then starPath = "./assets/star.png" end
 local t = Def.ActorFrame{}
-
-local starPath = "./assets/star.png"
-if ThemePrefs.Get("OutlineGrade") then
-	starPath = "./assets/outlined/star.png"
-end
 
 -- flag (all fantastics except 1 ex): stars
 t[#t+1] = LoadActor(starPath)..{

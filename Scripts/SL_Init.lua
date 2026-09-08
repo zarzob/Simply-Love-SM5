@@ -91,6 +91,7 @@ local PlayerDefaults = {
 				TimerMode = "Time",
 				JudgmentAnimation = "Default",
 				ComboAnimation = "Still",
+				GradeDesign = ThemePrefs.Get("OutlineGrade") == true and "Default (Outlined)" or "Default",
 				RailBalance = "No",
 
 				NoteFieldOffsetX = 0,

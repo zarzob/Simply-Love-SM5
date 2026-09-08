@@ -602,6 +602,36 @@ end
 
 
 -- -----------------------------------------------------------------------
+
+GetGradeDesigns = function()
+	local path = THEME:GetCurrentThemeDirectory().."Graphics/_grades/"
+	local dirs = FILEMAN:GetDirListing(path, true, false)
+	local grades = {}
+
+	for directory_name in ivalues(dirs) do
+		if directory_name ~= "assets" and directory_name ~= "Default" and directory_name ~= "Default (Outlined)" then
+			local files = FILEMAN:GetDirListing(path..directory_name.."/")
+			local has_png = false
+
+			for filename in ivalues(files) do
+				if filename:match(".png") then
+					has_png = true
+					break
+				end
+			end
+
+			if has_png then table.insert(grades, directory_name) end
+		end
+	end
+
+	table.insert(grades, 1, "Default (Outlined)")
+	table.insert(grades, 1, "Default")
+	
+	return grades
+end
+
+
+-- -----------------------------------------------------------------------
 IsHumanPlayer = function(player)
 	return GAMESTATE:GetPlayerState(player):GetPlayerController() == "PlayerController_Human"
 end

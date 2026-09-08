@@ -33,7 +33,7 @@ end
 
 local af = Def.ActorFrame{
 	OnCommand=function(self)
-		LetterGradesAF = self:GetParent():GetParent():GetChild("LetterGradesAF")
+		LetterGradesAF = self:GetParent():GetParent():GetChild(player == PLAYER_1 and "LetterGradesAF_P1" or "LetterGradesAF_P2")
 	end,
 	DrawStageCommand=function(self, params)
 		playerStats = SL[ToEnumShortString(player)].Stages.Stats[params.StageNum]

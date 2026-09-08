@@ -133,7 +133,7 @@ for player in ivalues(PlayerNumber) do
 				self:playcommand("UpdateVisible")
 				if SL.Global.GameMode ~= "Casual" then
 					local screenName = SCREENMAN:GetTopScreen() and SCREENMAN:GetTopScreen():GetName() or ""
-					if screenName == "ScreenSelectMusic" or screenName == "ScreenGameplay" or screenName == "ScreenEvaluationStage" or screenName == "ScreenEvaluationNonstop" then
+					if screenName == "ScreenSelectMusic" or screenName == "ScreenSelectCourse" or screenName == "ScreenGameplay" or screenName == "ScreenEvaluationStage" or screenName == "ScreenEvaluationNonstop" then
 						self:sleep(0.1):queuecommand("Update")
 					end
 				end

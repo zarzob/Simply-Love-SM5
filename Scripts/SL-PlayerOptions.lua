@@ -1003,6 +1003,10 @@ local Overrides = {
 		end
 	},
 	-------------------------------------------------------------------------
+	GradeDesign = {
+		Choices = function() return GetGradeDesigns() end
+	},
+	-------------------------------------------------------------------------
 	RailBalance = {
 		Values = { "No", "What" }
 	},
