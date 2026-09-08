@@ -90,6 +90,8 @@ local PlayerDefaults = {
 				ComboMode = "FullCombo",
 				TimerMode = "Time",
 				JudgmentAnimation = "Default",
+				ComboAnimation = "Still",
+				GradeDesign = ThemePrefs.Get("OutlineGrade") == true and "Default (Outlined)" or "Default",
 				RailBalance = "No",
 
 				NoteFieldOffsetX = 0,
@@ -148,6 +150,9 @@ local PlayerDefaults = {
 			-- Whether or not the player is playing on pad.
 			self.IsPadPlayer = false
 			self.Favorites = {}
+			-- Level System
+			self.StyleEXP = 0
+			self.TotalEXP = 0
 		end
 	}
 }
@@ -237,23 +242,6 @@ SL = {
 		"#FFFF00",
 		"#FFBE00",
 		"#FF7D00",
-	},
-	-- Colors used by ITG for difficulties
-	ITGDiffColors = {
-		"#a355b8", --beginner
-		"#1ec51d", --easy
-		"#d6db41", --medium
-		"#ba3049",
-		"#2691c5",
-		"#F7F7F7", --edit
-	},
-	DDRDiffColors = {
-		"#2dccef", --beginner
-		"#eaa910", --basic
-		"#ff344d", --difficult
-		"#30d81e", --expert
-		"#e900ff", --challenge
-		"#F7F7F7", --edit
 	},
 	-- These are the original SL colors. They're used for decorative (non-text) elements, like the background hearts:
 	DecorativeColors = {

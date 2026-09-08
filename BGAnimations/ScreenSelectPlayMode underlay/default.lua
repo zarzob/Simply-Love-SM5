@@ -7,6 +7,7 @@ local ScreenName = "ScreenSelectPlayMode"
 local cursor = {
 	h = 40,
 	index = 0,
+	previousIndex = "Marathon",
 	-- the width of the cursor will be clamped to exist between these two values
 	min_w = 90, max_w = 170,
 }
@@ -14,13 +15,14 @@ local cursor = {
 local Update = function(af, delta)
 	local index = TopScreen:GetSelectionIndex( GAMESTATE:GetMasterPlayerNumber() )
 	if index ~= cursor.index then
+		cursor.previousIndex = cursor.index
 		cursor.index = index
 
 		-- queue the appropriate command to the faux playfield, if needed
-		if ScreenName=="ScreenSelectPlayMode2" then
+		if ScreenName~="ScreenSelectPlayMode" then
 			if choices[cursor.index+1] == "Marathon" then
 				af:queuecommand("FirstLoopMarathon")
-			else
+			elseif choices[cursor.previousIndex+1] == "Marathon" then
 				af:queuecommand("FirstLoopRegular")
 			end
 		end
@@ -36,8 +38,8 @@ local InputHandler = function(event)
 
 	if event.type == "InputEventType_FirstPress" then
 		if event.GameButton == "Start" then
-			if ScreenName=="ScreenSelectPlayMode" or ScreenName=="ScreenSelectPlayModeThonk" then
-				SL.Global.GameMode = choices[cursor.index+1]
+			if ScreenName=="ScreenSelectPlayMode" or ScreenName=="ScreenSelectPlayMode3" or ScreenName=="ScreenSelectPlayModeThonk" or ScreenName=="ScreenSelectPlayMode3Thonk" then
+				SL.Global.GameMode = choices[cursor.index+1]=="Casual" and "Casual" or "ITG"
 				-- now that a GameMode has been selected, set related preferences
 				SetGameModePreferences()
 				-- and reload the theme's Metrics
@@ -136,6 +138,8 @@ local t = Def.ActorFrame{
 			-- to match the value of ThemePrefs.Get("DefaultGameMode") in the choices table
 			if ScreenName == "ScreenSelectPlayMode" then
 				cursor.index = (FindInTable(ThemePrefs.Get("DefaultGameMode"), choices) or 2) - 1
+			elseif ScreenName == "ScreenSelectPlayMode3" then
+				cursor.index = ThemePrefs.Get("DefaultGameMode") == "Casual" and 0 or 1
 			end
 			self:x(-150):y( -60 + (cursor.h * cursor.index) )
 		end,
@@ -164,7 +168,7 @@ local t = Def.ActorFrame{
 		end,
 		OffCommand=function(self) self:sleep(0.4):linear(0.2):diffusealpha(0) end,
 		UpdateCommand=function(self)
-			if ScreenName == "ScreenSelectPlayMode" then
+			if ScreenName ~= "ScreenSelectPlayMode2" then
 				if choices[cursor.index+1] == "Casual" then
 					self:stoptweening():linear(0.25):diffusealpha(0)
 				else
@@ -184,8 +188,8 @@ local t = Def.ActorFrame{
 		InitCommand=function(self) self:diffusealpha(0) end,
 		OffCommand=function(self) self:sleep(0.4):linear(0.2):diffusealpha(0) end,
 		UpdateCommand=function(self)
-			if ScreenName == "ScreenSelectPlayMode" then
-				if choices[cursor.index+1] == "ITG" then
+			if ScreenName ~= "ScreenSelectPlayMode2" then
+				if choices[cursor.index+1] ~= "Casual" then
 					self:stoptweening():linear(0.25):diffusealpha(1)
 				else
 					self:stoptweening():linear(0.25):diffusealpha(0)

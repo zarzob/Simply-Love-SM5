@@ -966,11 +966,11 @@ local Overrides = {
 	},
 	-------------------------------------------------------------------------
 	ComboColors = {
-		Choices = { "Glow", "Solid", "Rainbow", "RainbowScroll", "None" }
+		Choices = { "Glow", "Beat", "Solid", "Rainbow", "RainbowScroll", "None" }
 	},
 	-------------------------------------------------------------------------
 	ComboMode = {
-		Values = { "FullCombo", "CurrentCombo" }
+		Values = { "FullCombo", "CurrentCombo", "MaxCombo" }
 	},
 	-------------------------------------------------------------------------
 	TimerMode = {
@@ -978,7 +978,33 @@ local Overrides = {
 	},
 	-------------------------------------------------------------------------
 	JudgmentAnimation = {
-		Choices = { "Default", "Still", "ITG" }
+		LayoutType = "ShowOneInRow",
+		ExportOnChange = true,
+		Choices = SLCustom.JudgmentAnimations._getItems,
+		SaveSelections = function(self, list, pn)
+			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
+			for i, val in ipairs(self.Choices) do
+				if list[i] then mods.JudgmentAnimation = val; break end
+			end
+			MESSAGEMAN:Broadcast("RefreshActorProxy", {Player=pn, Name="JudgmentAnimation", Value=""})
+		end
+	},
+	-------------------------------------------------------------------------
+	ComboAnimation = {
+		LayoutType = "ShowOneInRow",
+		ExportOnChange = true,
+		Choices = SLCustom.ComboAnimations._getItems,
+		SaveSelections = function(self, list, pn)
+			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
+			for i, val in ipairs(self.Choices) do
+				if list[i] then mods.ComboAnimation = val; break end
+			end
+			MESSAGEMAN:Broadcast("RefreshActorProxy", {Player=pn, Name="ComboAnimation", Value=""})
+		end
+	},
+	-------------------------------------------------------------------------
+	GradeDesign = {
+		Choices = function() return GetGradeDesigns() end
 	},
 	-------------------------------------------------------------------------
 	RailBalance = {
@@ -1122,6 +1148,8 @@ local OptionRowDefault = {
 					"JudgmentGraphic",
 					"ComboFont",
 					"HoldJudgment",
+					"JudgmentAnimation",
+					"ComboAnimation",
 				}
 				if not FindInTable(name, list) then
 					self.OneChoiceForAllPlayers = true

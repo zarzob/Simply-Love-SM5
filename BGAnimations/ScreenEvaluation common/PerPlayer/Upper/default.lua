@@ -18,6 +18,9 @@ return Def.ActorFrame{
 	-- nice
 	LoadActor("./nice.lua", player),
 
+	-- Level System
+	LoadActor("./Level.lua", player),
+
 	-- stream info
 	LoadActor("./StreamInfo.lua", player),
 	
@@ -31,5 +34,5 @@ return Def.ActorFrame{
 	LoadActor("./RecordTexts.lua", player),
 
 	-- Event Progress Box
-	LoadActor("./EventProgress.lua", player)
+	LoadActor("./EventProgress.lua", player),
 }

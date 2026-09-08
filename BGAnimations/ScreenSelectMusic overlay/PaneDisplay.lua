@@ -623,7 +623,7 @@ for player in ivalues(PlayerNumber) do
 	}
 
 	-- Chart Difficulty Meter
-	af2[#af2+1] = LoadFont("Wendy/_wendy small")..{
+	af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 		Name="DifficultyMeter",
 		InitCommand=function(self)
 			self:horizalign(right):diffuse(Color.Black)

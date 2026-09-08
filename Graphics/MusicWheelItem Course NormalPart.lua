@@ -35,7 +35,34 @@ local af =  Def.ActorFrame{
 				end
 			end
 		end,
-    }
+    },
+	Def.BitmapText {
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
+		InitCommand=function(self)
+			self:halign(0):xy(WideScale(47, 78),0):zoom(0.85):maxwidth(WideScale(245,350)):diffuse(ThemePrefs.Get("RainbowMode") and color("#0a141b") or Color.White)
+		end,
+		SetCommand=function(self, params)
+			if params.Song then
+				self:settext(params.Song:GetDisplayMainTitle() or ""):y((params.Song:GetDisplaySubTitle() or "")~="" and -6 or 0)
+				if params.Song:GetMainTitle()=="DVNO" then self:diffuse(1,0.8,0,1) end
+			elseif params.Course then
+				self:settext(params.Course:GetDisplayFullTitle() or ""):diffuse(params.Color):x(WideScale(32,71)):maxwidth(WideScale(270,350))
+			end
+		end,
+	},
+	Def.BitmapText {
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
+		InitCommand=function(self)
+			self:halign(0):xy(WideScale(47, 78),6):zoom(0.7):maxwidth(WideScale(245,350)):diffuse(ThemePrefs.Get("RainbowMode") and color("#0a141b") or Color.White)
+		end,
+		SetCommand=function(self, params)
+			if params.Song then
+				self:settext(params.Song:GetDisplaySubTitle() or ""):visible(self:GetText() ~= "")
+			else
+				self:visible(false)
+			end
+		end,
+	}
 }
 
 

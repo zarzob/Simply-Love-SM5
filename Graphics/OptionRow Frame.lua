@@ -114,7 +114,7 @@ t[#t+1] = Def.Quad {
 -- in the hours to implement a proper fix and the community will surely be better for it. :)
 -- -----------------------------------------------------------------------
 
-local rows_with_proxies = { "NoteSkin", "NoteSkinVariant", "JudgmentGraphic", "HeldGraphic", "ComboFont", "HoldJudgment", "MusicRate" }
+local rows_with_proxies = { "NoteSkin", "NoteSkinVariant", "JudgmentGraphic", "HeldGraphic", "ComboFont", "HoldJudgment", "JudgmentAnimation", "ComboAnimation", "MusicRate" }
 
 for player in ivalues( GAMESTATE:GetHumanPlayers() ) do
 	local pn = ToEnumShortString(player)
@@ -151,6 +151,8 @@ for player in ivalues( GAMESTATE:GetHumanPlayers() ) do
 				--     ./BGA/ScreenPlayerOptions overlay/OptionRowPreviews/MusicRate.lua
 				-- with "P1_" or "P2_"
 				offscreen_actor_name = ("%s_%s_%s"):format(pn, params.Name, params.Value)
+			elseif params.Name=="JudgmentAnimation" or params.Name=="ComboAnimation" then
+				offscreen_actor_name = ("%s_%s"):format(pn, params.Name)
 			else
 				offscreen_actor_name = ("%s_%s"):format(params.Name, params.Value)
 			end

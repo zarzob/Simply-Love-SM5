@@ -77,7 +77,7 @@ local function mods_randomize_positions(power,skew)
 		end
 	end
 
-	if SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode2" then
+	if SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode2" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode3" then
 
 		for k,v in pairs(ss_playmode_items) do
 
@@ -166,7 +166,7 @@ local function mods_shuffle_lr(strength)
 		end
 	end
 
-	if SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode2" then
+	if SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode2" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode3" then
 
 		for k,v in pairs(ss_playmode_items) do
 
@@ -253,7 +253,7 @@ local function mods_shuffle_ud(strength)
 		end
 	end
 
-	if SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode2" then
+	if SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode2" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode3" then
 
 		for k,v in pairs(ss_playmode_items) do
 
@@ -834,7 +834,7 @@ local Update = function(self, delta)
 		end
 	end
 
-	if SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode2" then
+	if SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode2" or SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode3" then
 
 
 		local radius = 0
@@ -872,6 +872,8 @@ local Update = function(self, delta)
 		local items = {"IconChoiceCasual","IconChoiceITG"}
 		if SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode2" then
 			items = {"IconChoiceRegular","IconChoiceMarathon"}
+		elseif SCREENMAN:GetTopScreen():GetName() == "ScreenSelectPlayMode3" then
+			items = {"IconChoiceCasual","IconChoiceRegular","IconChoiceMarathon"}
 		end
 
 		local zm = 1

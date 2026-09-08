@@ -928,7 +928,7 @@ for player in ivalues(PlayerNumber) do
 		},
 
 		-- Header Text
-		LoadFont(ThemePrefs.Get("ThemeFont") == "Common" and "Wendy/_wendy small" or "Mega/_mega font").. {
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold").. {
 			Name="Header",
 			Text="Stamina RPG",
 			InitCommand=function(self)
@@ -938,7 +938,7 @@ for player in ivalues(PlayerNumber) do
 		},
 
 		-- EX Score text (if applicable)
-		LoadFont(ThemePrefs.Get("ThemeFont") == "Common" and "Wendy/_wendy small" or "Mega/_mega font").. {
+		LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold").. {
 			Name="EX",
 			Text="EX",
 			InitCommand=function(self)

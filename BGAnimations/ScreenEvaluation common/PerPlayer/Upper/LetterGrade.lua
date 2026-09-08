@@ -23,10 +23,6 @@ local grade = playerStats:GetGrade()
 local award = AwardMap[playerStats:GetStageAward()]
 local hasStream = false
 
--- "I passd with a q though."
-local title = GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
-if title == "D" then grade = "Grade_Tier99" end
-
 -- QUINT
 local ex = CalculateExScore(player, GetExJudgmentCounts(player))
 if ex == 100 then grade = "Grade_Tier00" end
@@ -44,7 +40,7 @@ end
 
 local t = Def.ActorFrame{}
 
-t[#t+1] = LoadActor(THEME:GetPathG("", "_grades/"..grade..".lua"), playerStats)..{
+t[#t+1] = LoadActor(THEME:GetPathG("", "_grades/grade.lua"), {grade, SL[ToEnumShortString(player)].ActiveModifiers.GradeDesign, playerStats})..{
 	InitCommand=function(self)
 		self:x(70 * (player==PLAYER_1 and -1 or 1))
 		self:y(_screen.cy-144)

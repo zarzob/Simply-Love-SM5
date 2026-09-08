@@ -90,7 +90,7 @@ return Def.ActorFrame{
 		Name="BackgroundQuad",
 		InitCommand=function(self) 
 			self:diffuse(color("#000000"))
-			if #GAMESTATE:GetHumanPlayers() == 1 then
+			if #GAMESTATE:GetHumanPlayers() == 1 and ThemePrefs.Get("PreferredStyle") ~= "auto" then
 				self:zoomto(190, _screen.h/8):x(120):y(18)
 			else
 				self:zoomto(175, _screen.h/28):x(113):y(0)
@@ -98,7 +98,7 @@ return Def.ActorFrame{
 		end,
 		ResetCommand=function(self)
 			local StepsOrTrail = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player) or GAMESTATE:GetCurrentSteps(player)
-			if #GAMESTATE:GetHumanPlayers() == 1 then
+			if #GAMESTATE:GetHumanPlayers() == 1 and ThemePrefs.Get("PreferredStyle") ~= "auto" then
 				self:zoomto(190, _screen.h/8):x(120):y(18)
 			else
 				self:zoomto(175, _screen.h/28):x(113):y(0)
@@ -107,7 +107,7 @@ return Def.ActorFrame{
 				local difficulty = StepsOrTrail:GetDifficulty()
 				self:diffuse( DifficultyColor(difficulty) )
 				text_table = GetStepsCredit(player)
-				if #GAMESTATE:GetHumanPlayers() == 1 then 
+				if #GAMESTATE:GetHumanPlayers() == 1 and ThemePrefs.Get("PreferredStyle") ~= "auto" then 
 					if #text_table == 3 then
 						self:fadebottom(0)
 					elseif #text_table == 2 then
@@ -143,7 +143,7 @@ return Def.ActorFrame{
 				self:x(60):maxwidth(138)
 			else
 				self:x(70):diffuse(color("#000000"))
-				if #GAMESTATE:GetHumanPlayers() == 1 then 
+				if #GAMESTATE:GetHumanPlayers() == 1 and ThemePrefs.Get("PreferredStyle") ~= "auto" then 
 					self:maxwidth(175)
 				else
 					self:maxwidth(160)
@@ -169,7 +169,7 @@ return Def.ActorFrame{
 				if not GAMESTATE:IsCourseMode() then
 					-- only queue a Marquee if there are things in the text_table to display
 					self:x(70):diffuse(color("#000000"))
-					if #GAMESTATE:GetHumanPlayers() == 1 then 
+					if #GAMESTATE:GetHumanPlayers() == 1 and ThemePrefs.Get("PreferredStyle") ~= "auto" then 
 						self:maxwidth(175)
 					else
 						self:maxwidth(160)

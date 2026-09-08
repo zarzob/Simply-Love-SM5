@@ -127,6 +127,23 @@ return Def.ActorFrame{
                     -- Don't need to shift in that case.
 					frame = frame + 1
 				end
+			elseif (sprite:GetNumStates() == 11 or sprite:GetNumStates() == 22) then
+				-- Project OutFox's Advanced timing window, with eleven judgments
+				frame = frame + 5
+				local advOffset = math.abs(param.TapNoteOffset)
+				if ToEnumShortString(param.TapNoteScore) == "W1" then
+					if advOffset <= 0.000671875 then
+						frame = 0
+					elseif advOffset <= 0.00134375 then
+						frame = 1
+					elseif advOffset <= 0.00226785 then
+						frame = 2
+					elseif advOffset <= 0.005375 then
+						frame = 3
+					elseif advOffset <= 0.01075 then
+						frame = 4
+					end
+				end
 			end
 
 			self:playcommand("Reset")
@@ -134,7 +151,7 @@ return Def.ActorFrame{
 			-- most judgment sprite sheets have 12 or 14 frames; 6/7 for early judgments, 6/7 for late judgments
 			-- some (the original 3.9 judgment sprite sheet for example) do not visibly distinguish
 			-- early/late judgments, and thus only have 6/7 frames
-			if sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 then
+			if sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 or sprite:GetNumStates() == 22 then
 				frame = frame * 2
 			end
 
@@ -161,16 +178,8 @@ return Def.ActorFrame{
 				SCREENMAN:GetTopScreen():GetChild("Player"..ToEnumShortString(player)):GetChild("NoteField"):rotationz(direction * offset)
 			end
 			
-			if mods.JudgmentAnimation == 'Default' then
-				-- this should match the custom JudgmentTween() from SL for 3.95
-				sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-			elseif mods.JudgmentAnimation == 'Still' then
-				-- this should match the behaviour of Etterna
-				sprite:zoom(0.75):sleep(0.9):linear(0):zoom(0)
-			elseif mods.JudgmentAnimation == 'ITG' then
-				-- this should match the behaviour of ITG2/ITG3
-				sprite:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-			end
+			sprite:finishtweening():diffusealpha(1):zoom(0.75)
+			SLCustom.JudgmentAnimations[mods.JudgmentAnimation](sprite, ((not mods.ShowFaPlusWindow and ToEnumShortString(param.TapNoteScore) == "W1") or (mods.ShowFaPlusWindow and (IsW010Judgment(param, player) or ((not mods.SmallerWhite or mods.SplitWhites) and IsW0Judgment(param, player))))) and "W0" or ToEnumShortString(param.TapNoteScore), 0.75, 1)
 		end
 	end,
 	JudgmentMessageCommand=function(self, param)
@@ -223,13 +232,29 @@ return Def.ActorFrame{
 				-- In that case, we need to shift the Way Off down to a Miss
 				frame = frame + 1
 			end
+		elseif (sprite:GetNumStates() == 11 or sprite:GetNumStates() == 22) then
+			frame = frame + 5
+			local advOffset = math.abs(param.TapNoteOffset)
+			if tns == "W1" then
+				if advOffset <= 0.000671875 then
+					frame = 0
+				elseif advOffset <= 0.00134375 then
+					frame = 1
+				elseif advOffset <= 0.00226785 then
+					frame = 2
+				elseif advOffset <= 0.005375 then
+					frame = 3
+				elseif advOffset <= 0.01075 then
+					frame = 4
+				end
+			end
 		end
 
 
 		-- most judgment sprite sheets have 12 or 14 frames; 6/7 for early judgments, 6/7 for late judgments
 		-- some (the original 3.9 judgment sprite sheet for example) do not visibly distinguish
 		-- early/late judgments, and thus only have 6/7 frames
-		if sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 then
+		if sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 or sprite:GetNumStates() == 22 then
 			frame = frame * 2
 			if not param.Early then frame = frame + 1 end
 		end
@@ -250,7 +275,7 @@ return Def.ActorFrame{
 				end
 			end
 			
-			if isHeld and (sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14) then frame = frame - 1 end
+			if isHeld and (sprite:GetNumStates() == 12 or sprite:GetNumStates() == 14 or sprite:GetNumStates() == 22) then frame = frame - 1 end
 		end
 
 		self:playcommand("Reset")
@@ -286,16 +311,8 @@ return Def.ActorFrame{
 			SCREENMAN:GetTopScreen():GetChild("Player"..ToEnumShortString(player)):GetChild("NoteField"):rotationz(direction * offset)
 		end
 		
-		if mods.JudgmentAnimation == 'Default' then
-			-- this should match the custom JudgmentTween() from SL for 3.95
-			sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-		elseif mods.JudgmentAnimation == 'Still' then
-			-- this should match the behaviour of Etterna
-			sprite:zoom(0.75):sleep(0.9):linear(0):zoom(0)
-		elseif mods.JudgmentAnimation == 'ITG' then
-			-- this should match the behaviour of ITG2/ITG3
-			sprite:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-		end
+		sprite:finishtweening():diffusealpha(1):zoom(0.75)
+		SLCustom.JudgmentAnimations[mods.JudgmentAnimation](sprite, ((not mods.ShowFaPlusWindow and tns == "W1") or (mods.ShowFaPlusWindow and (IsW010Judgment(param, player) or ((not mods.SmallerWhite or mods.SplitWhites) and IsW0Judgment(param, player))))) and "W0" or tns, 0.75, 1)
 		
 		if mods.SplitWhites and mods.ShowFaPlusWindow and tns == "W1" and not IsW010Judgment(param, player) and not IsAutoplay(player) then
 			local splitFrame = 1
@@ -303,31 +320,12 @@ return Def.ActorFrame{
 				splitFrame = splitFrame * 2
 				if not param.Early then splitFrame = splitFrame + 1 end
 			end
-			spriteGhost:visible(true):setstate(splitFrame):diffusealpha(0.5):finishtweening()
-			if mods.JudgmentAnimation == 'Default' then
-				-- this should match the custom JudgmentTween() from SL for 3.95
-				spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-			elseif mods.JudgmentAnimation == 'Still' then
-				-- this should match the behaviour of Etterna
-				spriteGhost:zoom(0.75):sleep(0.9):linear(0):zoom(0)
-			elseif mods.JudgmentAnimation == 'ITG' then
-				-- this should match the behaviour of ITG2/ITG3
-				spriteGhost:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-			end
+			spriteGhost:visible(true):setstate(splitFrame):finishtweening():diffusealpha(0.5):zoom(0.75)
+			SLCustom.JudgmentAnimations[mods.JudgmentAnimation](spriteGhost, "W1", 0.75, 0.5)
 		elseif tns == "W4" or tns == "W5" and mods.GhostFault then
 			self:playcommand("ResetFault")
-			spriteGhost:visible(true):setstate(frame)
-			spriteGhost:diffusealpha(0.5)
-			if mods.JudgmentAnimation == 'Default' then
-				-- this should match the custom JudgmentTween() from SL for 3.95
-				spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-			elseif mods.JudgmentAnimation == 'Still' then
-				-- this should match the behaviour of Etterna
-				spriteGhost:zoom(0.75):sleep(0.9):linear(0):zoom(0)
-			elseif mods.JudgmentAnimation == 'ITG' then
-				-- this should match the behaviour of ITG2/ITG3
-				spriteGhost:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
-			end
+			spriteGhost:visible(true):setstate(frame):finishtweening():diffusealpha(0.5):zoom(0.75)
+			SLCustom.JudgmentAnimations[mods.JudgmentAnimation](spriteGhost, tns, 0.75, 0.5)
 		else
 			spriteGhost:visible(false):finishtweening()
 		end

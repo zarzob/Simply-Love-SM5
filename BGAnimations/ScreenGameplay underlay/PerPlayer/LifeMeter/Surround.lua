@@ -1,6 +1,26 @@
 local player = ...
 local pn = ToEnumShortString(player)
 
+local height = _screen.h - 80
+local _x = _screen.cx + (player==PLAYER_1 and -1 or 1) * SL_WideScale(302, 400)
+local oldlife = 0
+
+-- if double
+if GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides"
+-- or center1player preference is enabled and only one player is playing
+or PREFSMAN:GetPreference("Center1Player") and #GAMESTATE:GetHumanPlayers() == 1 then
+	_x =  _screen.cx + ((GetNotefieldWidth()/2 + 10) * (player==PLAYER_1 and -1 or 1))
+
+-- for the highly-specific scenario where aspect ratio is ultrawide or wider
+-- and both players are joined, and this player wants both a vertical lifemeter
+-- and step stats, move their vertical lifemeter to the inside of the notefield
+elseif GetScreenAspectRatio() > 21/9
+and #GAMESTATE:GetHumanPlayers() > 1
+and SL[pn].ActiveModifiers.DataVisualizations == "Step Statistics"
+then
+	_x = _screen.cx + (player==PLAYER_1 and -1 or 1) * 60
+end
+
 local af = Def.ActorFrame{
 	Name="LifeMeter_"..ToEnumShortString(player),
 	InitCommand=function(self)
@@ -88,5 +108,121 @@ else
 		end
 	}
 end
+
+
+af[#af+1] = Def.Quad { -- frame
+	InitCommand=function(self)
+		self:visible(SL[pn].ActiveModifiers.ShowLifePercent)
+		self:zoomto(44, 18):diffuse(PlayerColor(player,true)):horizalign("left")
+		if player==PLAYER_1 then
+			self:x(_x+10)
+		else
+			self:x(_x-11):horizalign("right")
+		end
+	end,
+	HealthStateChangedMessageCommand=function(self,params)
+		if params.PlayerNumber == player then
+			if params.HealthState == 'HealthState_Hot' then
+				self:finishtweening()
+				self:zoomto(52, 18)
+				self:accelerate(1)
+				self:diffusealpha(0)
+			else
+				-- ~~man's~~ lifebar's not hot
+				self:zoomto(44, 18):finishtweening():diffusealpha(1)
+			end
+		end
+	end,
+	-- check life (LifeMeterBar)
+	LifeChangedMessageCommand=function(self,params)
+		if params.Player == player then
+			local life = params.LifeMeter:GetLife() * 100
+			if life < 100 then
+				self:finishtweening()
+			end
+			if oldlife ~= 250 or life ~= 100 then
+				self:bouncebegin(0.1):y(math.max(89,71+height-(life*(height/100))))
+			else
+				self:y(math.max(89,71+height-(life*(height/100))))
+			end
+		end
+	end,
+}
+
+-- percent
+af[#af+1] = Def.Quad {
+	InitCommand=function(self)
+		self:visible(SL[pn].ActiveModifiers.ShowLifePercent)
+		self:zoomto(42, 16):diffuse(0,0,0,1):horizalign("left")
+		if player==PLAYER_1 then
+			self:x(_x+11)
+		else
+			self:x(_x-12):horizalign("right")
+		end
+	end,
+	HealthStateChangedMessageCommand=function(self,params)
+		if params.PlayerNumber == player then
+			if params.HealthState == 'HealthState_Hot' then
+				self:finishtweening()
+				self:zoomto(50, 16)
+				self:accelerate(1)
+				self:diffusealpha(0)
+			else
+				-- ~~man's~~ lifebar's not hot
+				self:zoomto(42, 16):finishtweening():diffusealpha(1)
+			end
+		end
+	end,
+	-- check life (LifeMeterBar)
+	LifeChangedMessageCommand=function(self,params)
+		if params.Player == player then
+			local life = params.LifeMeter:GetLife() * 100
+			if life < 100 then
+				self:finishtweening()
+			end
+			if oldlife ~= 250 or life ~= 100 then
+				self:bouncebegin(0.1):y(math.max(89,71+height-(life*(height/100))))
+			else
+				self:y(math.max(89,71+height-(life*(height/100))))
+			end
+		end
+	end,
+}
+
+af[#af+1] = Def.BitmapText {
+	Font=ThemePrefs.Get("ThemeFont") .. " Normal",
+	InitCommand=function(self)
+		self:visible(SL[pn].ActiveModifiers.ShowLifePercent)
+		self:diffuse(PlayerColor(player,true)):horizalign("left")
+		if player==PLAYER_1 then
+			self:x(_x+12)
+		else
+			self:x(_x-13):horizalign("right")
+		end
+	end,
+	HealthStateChangedMessageCommand=function(self,params)
+		if params.PlayerNumber == player then
+			if params.HealthState == 'HealthState_Hot' then
+				self:accelerate(1):diffusealpha(0)
+			else
+				-- ~~man's~~ lifebar's not hot
+				self:finishtweening():diffusealpha(1)
+			end
+		end
+	end,
+	-- check life (LifeMeterBar)
+	LifeChangedMessageCommand=function(self,params)
+		if params.Player == player then
+			local life = params.LifeMeter:GetLife() * 100
+			if life < 100 then
+				self:finishtweening()
+			end
+			if oldlife ~= 250 or life ~= 100 then
+				self:bouncebegin(0.1):y(math.max(89,71+height-(life*(height/100))))
+			end
+			self:settext(("%.1f%%"):format(life))
+		end
+	end,
+}
 
 return af

@@ -189,7 +189,7 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	Text="",
 	InitCommand=function(self)
 		self:zoom(0.8)
-		if #GAMESTATE:GetHumanPlayers() == 1 then 
+		if #GAMESTATE:GetHumanPlayers() == 1 and ThemePrefs.Get("PreferredStyle") ~= "auto" then 
 			self:settext(peakNPSText..": \nPeak eBPM: ")
 			self:horizalign(left)
 			self:y(-50)
@@ -212,7 +212,7 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		self:diffuse((ThemePrefs.Get("RainbowMode") and not HolidayCheer()) and {0, 0, 0, 1} or {1, 1, 1, 1})
 	end,
 	HideCommand=function(self)
-		if #GAMESTATE:GetHumanPlayers() == 1 then 
+		if #GAMESTATE:GetHumanPlayers() == 1 and ThemePrefs.Get("PreferredStyle") ~= "auto" then 
 			self:settext(peakNPSText..": \nPeak eBPM: ")
 		else
 			self:settext(peakNPSText..": ")
@@ -223,7 +223,7 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 		if leaving_screen then return end
 		if SL[pn].Streams.PeakNPS ~= 0 then
 			local nps = SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate
-			if #GAMESTATE:GetHumanPlayers() == 1 then 
+			if #GAMESTATE:GetHumanPlayers() == 1 and ThemePrefs.Get("PreferredStyle") ~= "auto" then 
 				self:horizalign("left")
 				self:y(-50)
 				if player == PLAYER_1 then
@@ -251,7 +251,7 @@ af2[#af2+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
 	end,
 	MarqueeCommand=function(self)
 		marquee_index = (marquee_index % #text_table) + 1
-		if #GAMESTATE:GetHumanPlayers() > 1 then 
+		if #GAMESTATE:GetHumanPlayers() > 1 or ThemePrefs.Get("PreferredStyle") == "auto" then 
 			self:settext(text_table[marquee_index])
 			self:sleep(2):queuecommand("Marquee")
 		end

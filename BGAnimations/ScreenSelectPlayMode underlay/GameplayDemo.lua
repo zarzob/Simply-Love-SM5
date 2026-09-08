@@ -98,7 +98,7 @@ local function YieldStepPattern(i, dir)
 		OnCommand=function(self) self:queuecommand("FirstLoopRegular") end,
 		UpdateCommand=function(self)
 			self:visible(true)
-			if ScreenName == "ScreenSelectPlayMode" and TopScreen:GetSelectionIndex(MPN) == 0 and i % 3 ~= 0 then
+			if ScreenName ~= "ScreenSelectPlayMode2" and TopScreen:GetSelectionIndex(MPN) == 0 and i % 3 ~= 0 then
 				self:visible(false)
 			end
 		end,

@@ -1,0 +1,1 @@
+return LoadActor("star.png")..{OnCommand=function(self) self:bob():effectmagnitude(0,12,0):effectoffset(math.random()*3.6):effecttiming(1.8) end}

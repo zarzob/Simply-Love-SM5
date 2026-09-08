@@ -94,7 +94,7 @@ local af = Def.ActorFrame {
 						:diffuse(1,1,1,1)
 						:xy(_screen.cx, _screen.cy)
 						:zoomto(_screen.h * 16 / 9 * 1.2, _screen.h * 1)
-				elseif screen:GetName() == "ScreenSelectStyle" or screen:GetName() == "ScreenSelectPlayMode" or screen:GetName() == "ScreenSelectPlayMode2" or screen:GetName() == "ScreenProfileLoad" then
+				elseif screen:GetName() == "ScreenSelectStyle" or screen:GetName() == "ScreenSelectPlayMode" or screen:GetName() == "ScreenSelectPlayMode2" or screen:GetName() == "ScreenSelectPlayMode3" or screen:GetName() == "ScreenProfileLoad" then
 					self:Load(THEME:GetPathG("", "_VisualStyles/Transistor/bgs/running.png"))
 						:blend("BlendMode_Normal")
 						:diffusealpha(0.8)

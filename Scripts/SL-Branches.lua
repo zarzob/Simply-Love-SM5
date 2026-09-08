@@ -138,7 +138,9 @@ Branch.AfterScreenSelectColor = function()
 end
 
 Branch.AllowScreenSelectPlayMode = function()
-	if ThemePrefs.Get("AllowScreenSelectPlayMode") then
+	if ThemePrefs.Get("AllowScreenSelectPlayMode3") and ThemePrefs.Get("AllowScreenSelectPlayMode") then
+		return "ScreenSelectPlayMode3"
+	elseif ThemePrefs.Get("AllowScreenSelectPlayMode") then
 		return "ScreenSelectPlayMode"
 	else
 		return Branch.AllowScreenSelectPlayMode2()
@@ -150,11 +152,17 @@ Branch.AllowScreenSelectPlayMode2 = function()
 	SetGameModePreferences()
 	-- and reload the theme's Metrics
 	THEME:ReloadMetrics()
-	if SL.Global.GameMode == "ITG" and ThemePrefs.Get("AllowScreenSelectPlayMode2") then
+	if SL.Global.GameMode == "ITG" and ThemePrefs.Get("AllowScreenSelectPlayMode2") and not ThemePrefs.Get("AllowScreenSelectPlayMode3") then
 		return "ScreenSelectPlayMode2"
 	else
 		return "ScreenProfileLoad"
 	end
+end
+
+Branch.AfterSelectPlayMode3 = function()
+	SetGameModePreferences()
+	THEME:ReloadMetrics()
+	return "ScreenProfileLoad"
 end
 
 Branch.AfterEvaluationStage = function()

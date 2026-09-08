@@ -16,9 +16,9 @@ local alphabet_character_mt = {
 				HideCommand=function(self) self:linear(0.25):diffusealpha(0) end,
 
 				Def.BitmapText{
-					Font=ThemePrefs.Get("ThemeFont") == "Common" and "Wendy/_wendy white" 
-							or ThemePrefs.Get("ThemeFont") == "Mega" and "Mega/_mega font"
-							or ThemePrefs.Get("ThemeFont") == "Unprofessional" and "Unprofessional/_unprofessional white",
+					Font=ThemePrefs.Get("ThemeFont") == "Mega" and "Mega/_mega font"
+							or ThemePrefs.Get("ThemeFont") == "Unprofessional" and "Unprofessional/_unprofessional white"
+							or "Wendy/_wendy white",
 					InitCommand=function(subself)
 						self.bmt = subself
 						subself:zoom(ThemePrefs.Get("ThemeFont") ~= "Mega" and 0.5 or 0.812)

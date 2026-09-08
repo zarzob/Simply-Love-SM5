@@ -8,7 +8,6 @@ local item_width = _screen.w / 2.125
 local af = Def.ActorFrame{
 	-- the MusicWheel is centered via metrics under [ScreenSelectMusic]; offset by a slight amount to the right here
 	InitCommand=function(self) self:x(WideScale(28,33)) end,
-
 	Def.Quad{
 		InitCommand=function(self) 
 			self:horizalign(left):diffuse(color("#000000")):zoomto(item_width, _screen.h/num_visible_items)
@@ -24,6 +23,30 @@ local af = Def.ActorFrame{
 				self:diffusealpha(0.5)
 			end
 		end
+	},
+	Def.BitmapText {
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
+		InitCommand=function(self)
+			self:halign(0):xy(41,0):maxwidth(WideScale(210,310))
+		end,
+		SetCommand=function(self, params)
+			self:settext(params.Text):diffuse(params.Color)
+			DiffuseEmojis(self)
+		end,
+	},
+	Def.BitmapText {
+		Font=ThemePrefs.Get("ThemeFont") .. " Normal",
+		InitCommand=function(self)
+			self:halign(1):xy(_screen.w/2 - WideScale(37, 43),0):zoom(0.75)
+		end,
+		SetCommand=function(self, params)
+			if (not params.Song or params.Course) then
+				local count = #SONGMAN:GetSongsInGroup(params.Text) or 0
+				self:settext((ThemePrefs.Get("nice")>0 and count==69) and "nice" or count)
+			else
+				self:settext("")
+			end
+		end,
 	},
 	Def.ActorFrame{
 		Name="FolderStack",

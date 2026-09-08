@@ -88,7 +88,8 @@ t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 }
 
 
-t[#t+1] = LoadActor("./LetterGrades.lua")
+t[#t+1] = LoadActor("./LetterGrades.lua", PLAYER_1)
+t[#t+1] = LoadActor("./LetterGrades.lua", PLAYER_2)
 
 -- -----------------------------------------------------------------------
 -- 4 rows

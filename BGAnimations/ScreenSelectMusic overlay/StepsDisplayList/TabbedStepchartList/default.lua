@@ -83,7 +83,7 @@ for i=0,num_tabs-1 do
    }
 
    -- difficulty meter
-   tab[#tab+1] = LoadFont("Common Bold")..{
+   tab[#tab+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
       InitCommand=function(self)
          self:zoom(0.4):diffuse(0,0,0,1):y(10)
 
@@ -109,7 +109,7 @@ for i=0,num_tabs-1 do
       end
    }
    -- In very small text the first letter of the steps type
-   tab[#tab+1] = LoadFont("Common Normal")..{
+   tab[#tab+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
       InitCommand=function(self)
          self:zoom(0.4):diffuse(0,0,0,1):y(4)
          if not IsUsingWideScreen() then
@@ -138,7 +138,7 @@ for i=0,num_tabs-1 do
    }
 
    -- style string
-   tab[#tab+1] = LoadFont("Common Normal")..{
+   tab[#tab+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
       InitCommand=function(self)
          self:vertspacing(-10):zoom(0.8):diffuse(0,0,0,1)
          self:x(tab_width-WideScale(35, 50)):y(10.5)

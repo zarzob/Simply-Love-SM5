@@ -87,9 +87,7 @@ end
 for index, label in ipairs(RadarCategories) do
 	-- Replace hands with the Routine Score if we're in routine mode
 	if index == 1 and (styletype == "TwoPlayersSharedSides") then
-		t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") == "Common" and "Wendy/_wendy small"
-						or ThemePrefs.Get("ThemeFont") == "Mega" and "Mega/_mega font"
-						or ThemePrefs.Get("ThemeFont") == "Unprofessional" and "Unprofessional/_unprofessional small")..{
+		t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 			Text=controller == PLAYER_1 and "P1" or "P2",
 			InitCommand=function(self) self:zoom(0.5):horizalign(right) end,
 			BeginCommand=function(self)
