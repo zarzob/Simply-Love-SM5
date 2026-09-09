@@ -176,7 +176,7 @@ return Def.ActorFrame{
 					end
 
 					if #text_table > 0 then
-						if #GAMESTATE:GetHumanPlayers() > 1 then self:queuecommand("Marquee") end
+						if #GAMESTATE:GetHumanPlayers() > 1 or ThemePrefs.Get("PreferredStyle") == "auto" then self:queuecommand("Marquee") end
 						local fulldesc = ""
 						for i=1,#text_table do
 							local curText = text_table[i]

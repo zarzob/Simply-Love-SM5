@@ -163,7 +163,7 @@ for player in ivalues(PlayerNumber) do
 		UpdateCommand=function(self)
 			local pn = ToEnumShortString(player)
 			local e = nil
-			if ThemePrefs.Get("EnableLevelSystem") > 0 and GAMESTATE:IsPlayerEnabled(pn) then
+			if ThemePrefs.Get("EnableLevelSystem") > 0 and PROFILEMAN:IsPersistentProfile(player) then
 				if SCREENMAN:GetTopScreen():GetName() == "ScreenEvaluationStage" or SCREENMAN:GetTopScreen():GetName() == "ScreenEvaluationNonstop" then
 					e = ThemePrefs.Get("EnableLevelSystem") > 1 and SL[pn].TotalEXP or SL[pn].StyleEXP
 				else
