@@ -33,7 +33,7 @@ local function CreditsText( player )
 			
 			local screenName = SCREENMAN:GetTopScreen() and SCREENMAN:GetTopScreen():GetName() or "ScreenLogo"
 			if SL.Global.GameMode ~= "Casual" and screenName ~= "ScreenTitleMenu" and screenName ~= "ScreenTitleJoin" and screenName ~= "ScreenLogo" and screenName ~= "ScreenSelectProfile" then
-				self:addy(ThemePrefs.Get("EnableLevelSystem") > 0 and GAMESTATE:IsHumanPlayer(pn) and 4 or 0)
+				self:addy(ThemePrefs.Get("EnableLevelSystem") > 0 and PROFILEMAN:IsPersistentProfile(player) and 4 or 0)
 			end
 		end,
 		SetCreditsTextMessageCommand=function(self, params)
@@ -131,9 +131,9 @@ for player in ivalues(PlayerNumber) do
 		ScreenChangedMessageCommand=function(self)
 			if ThemePrefs.Get("EnableLevelSystem") > 0 then
 				self:playcommand("UpdateVisible")
-				if SL.Global.GameMode ~= "Casual" then
+				if PROFILEMAN:IsPersistentProfile(player) and SL.Global.GameMode ~= "Casual" then
 					local screenName = SCREENMAN:GetTopScreen() and SCREENMAN:GetTopScreen():GetName() or ""
-					if screenName == "ScreenSelectMusic" or screenName == "ScreenSelectCourse" or screenName == "ScreenGameplay" or screenName == "ScreenEvaluationStage" or screenName == "ScreenEvaluationNonstop" then
+					if screenName == "ScreenSelectMusic" or screenName == "ScreenSelectCourse" or screenName == "ScreenGameplay" or screenName == "ScreenGameplayShared" or screenName == "ScreenEvaluationStage" or screenName == "ScreenEvaluationNonstop" then
 						self:sleep(0.1):queuecommand("Update")
 					end
 				end
@@ -144,19 +144,19 @@ for player in ivalues(PlayerNumber) do
 		PlayerJoinedMessageCommand=function(self, params)
 			if params.Player==player then
 				self:playcommand("UpdateVisible")
-				if ThemePrefs.Get("EnableLevelSystem") > 0 and SL.Global.GameMode ~= "Casual" then self:sleep(0.1):queuecommand("Update") else self:visible(false) end
+				if ThemePrefs.Get("EnableLevelSystem") > 0 and PROFILEMAN:IsPersistentProfile(player) and SL.Global.GameMode ~= "Casual" then self:sleep(0.1):queuecommand("Update") else self:visible(false) end
 			end
 		end,
 		PlayerUnjoinedMessageCommand=function(self, params)
 			if params.Player==player then
 				self:playcommand("UpdateVisible")
-				if ThemePrefs.Get("EnableLevelSystem") > 0 and SL.Global.GameMode ~= "Casual" then self:sleep(0.1):queuecommand("Update") else self:visible(false) end
+				if ThemePrefs.Get("EnableLevelSystem") > 0 and PROFILEMAN:IsPersistentProfile(player) and SL.Global.GameMode ~= "Casual" then self:sleep(0.1):queuecommand("Update") else self:visible(false) end
 			end
 		end,
 		PlayerProfileSetMessageCommand=function(self, params)
 			if params.Player==player then
 				self:playcommand("UpdateVisible")
-				if ThemePrefs.Get("EnableLevelSystem") > 0 and SL.Global.GameMode ~= "Casual" then self:sleep(0.1):queuecommand("Update") else self:visible(false) end
+				if ThemePrefs.Get("EnableLevelSystem") > 0 and PROFILEMAN:IsPersistentProfile(player) and SL.Global.GameMode ~= "Casual" then self:sleep(0.1):queuecommand("Update") else self:visible(false) end
 			end
 		end,
 		VisualStyleSelectedMessageCommand=function(self) if ThemePrefs.Get("EnableLevelSystem") > 0 then self:playcommand("UpdateVisible") end end,
@@ -181,7 +181,7 @@ for player in ivalues(PlayerNumber) do
 					style = GAMESTATE:GetCurrentSteps(player) ~= nil and GAMESTATE:GetCurrentSteps(player):GetStepsType() or GAMESTATE:GetCurrentStyle():GetStepsType()
 					style = style:gsub("%w+_%w+_", ""):lower()
 					styleString = THEME:GetString("StepsType", ("%s-%s"):format(GAMESTATE:GetCurrentGame():GetName(), style))
-					styleString = ("%s"):format(styleString).." "
+					styleString = ("%s"):format(styleString):gsub("\n", " ").." "
 				end
 				
 				local calcLevel=function(x)

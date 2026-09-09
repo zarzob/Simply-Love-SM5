@@ -1148,8 +1148,10 @@ local OptionRowDefault = {
 					"JudgmentGraphic",
 					"ComboFont",
 					"HoldJudgment",
+					"HeldGraphic",
 					"JudgmentAnimation",
 					"ComboAnimation",
+					"GradeDesign",
 				}
 				if not FindInTable(name, list) then
 					self.OneChoiceForAllPlayers = true

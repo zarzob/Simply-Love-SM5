@@ -4,6 +4,7 @@
 if ThemePrefs.Get("EnableLevelSystem") > 0 and SL.Global.GameMode ~= "Casual" then 
 	local player = ...
 	local pn = ToEnumShortString(player)
+	if not PROFILEMAN:IsPersistentProfile(pn) then return end
 
 	local stats = STATSMAN:GetCurStageStats()
 	if ToEnumShortString(GAMESTATE:GetCurrentStyle():GetStyleType()) == "TwoPlayersSharedSides" then
@@ -26,12 +27,20 @@ if ThemePrefs.Get("EnableLevelSystem") > 0 and SL.Global.GameMode ~= "Casual" th
 	local step = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player) or GAMESTATE:GetCurrentSteps(player)
 	local length = GAMESTATE:IsCourseMode() and TotalCourseLength(player) * SL.Global.ActiveModifiers.MusicRate or math.max(0.01,song:GetLastSecond() - song:GetFirstSecond())
 	local nps = 0
-	if GAMESTATE:IsCourseMode() then
-		for te in ivalues(step:GetTrailEntries()) do nps = nps + te:GetSteps():GetRadarValues(pn):GetValue("RadarCategory_Notes") end
+	if ToEnumShortString(GAMESTATE:GetCurrentStyle():GetStyleType()) == "TwoPlayersSharedSides" then
+		if GAMESTATE:IsCourseMode() then
+			for te in ivalues(step:GetTrailEntries()) do nps = nps + math.max(te:GetSteps():GetRadarValues("P1"):GetValue("RadarCategory_Notes"), te:GetSteps():GetRadarValues("P2"):GetValue("RadarCategory_Notes")) end
+		else
+			nps = math.max(step:GetRadarValues("P1"):GetValue("RadarCategory_Notes"), step:GetRadarValues("P2"):GetValue("RadarCategory_Notes"))
+		end
 	else
-		nps = step:GetRadarValues(pn):GetValue("RadarCategory_Notes") -- this means jumps count as double and so on
+		if GAMESTATE:IsCourseMode() then
+			for te in ivalues(step:GetTrailEntries()) do nps = nps + te:GetSteps():GetRadarValues(pn):GetValue("RadarCategory_Notes") end
+		else
+			nps = step:GetRadarValues(pn):GetValue("RadarCategory_Notes")
+		end
 	end
-	if nps ~= 0 then nps = nps / length * SL.Global.ActiveModifiers.MusicRate end
+	if nps ~= 0 then nps = nps / length * SL.Global.ActiveModifiers.MusicRate end -- using RadarCategory_Notes means jumps count as double and so on
 
 	local maxExp = math.floor(nps * length / 1.2)
 	local earnExp = math.max(0,math.floor(stats:GetPercentDancePoints() * maxExp * earn))

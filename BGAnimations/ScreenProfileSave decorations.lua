@@ -8,6 +8,10 @@ return Def.ActorFrame{
 				SL.NewDownloadsCompleted = false
 				SCREENMAN:GetTopScreen():SetNextScreenName("ScreenReloadSongsSSM")
 			end
+			if SCREENMAN:GetTopScreen():GetNextScreenName() == "ScreenSelectMusic" or SCREENMAN:GetTopScreen():GetNextScreenName() == "ScreenSelectCourse" then
+				SaveProfileEXP(PLAYER_1)
+				SaveProfileEXP(PLAYER_2)
+			end
 			SCREENMAN:GetTopScreen():Continue()
 		end
 	}

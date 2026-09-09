@@ -272,21 +272,6 @@ SaveProfileCustom = function(profile, dir)
 			-- Write to the ITL file if we need to.
 			-- This is relevant for memory cards.
 			WriteItlFile(player)
-
-			if ThemePrefs.Get("EnableLevelSystem") > 0 and not SL.Global.FastProfileSwitchInProgress and SL.Global.GameMode ~= "Casual" then
-				local lv = {}
-				if FILEMAN:DoesFileExist(dir .. "DATA.ini") then
-					lv = IniFile.ReadFile(dir .. "DATA.ini")
-				end
-				
-				if lv[GAMESTATE:GetCurrentStyle():GetStepsType()]==nil then lv[GAMESTATE:GetCurrentStyle():GetStepsType()]={} end
-				lv[GAMESTATE:GetCurrentStyle():GetStepsType()].EXP=SL[pn].StyleEXP
-				
-				if lv["AllStepsTypes"]==nil then lv["AllStepsTypes"]={} end
-				lv["AllStepsTypes"].EXP=SL[pn].TotalEXP
-				
-				IniFile.WriteFile( dir .. "DATA.ini", lv )
-			end
 			break
 		end
 	end
@@ -369,7 +354,7 @@ GetPlayerEXP = function(player, shared)
 	
 	local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
 	local fx = FILEMAN:DoesFileExist(dir .. "DATA.ini") and IniFile.ReadFile(dir .. "DATA.ini") or {}
-	local fxs = fx[shared and "AllStepsTypes" or (GAMESTATE:GetCurrentStyle() and GAMESTATE:GetCurrentStyle():GetStepsType())] or {}
+	local fxs = fx[shared and "AllStepsTypes" or GAMESTATE:GetCurrentSteps(player) ~= nil and GAMESTATE:GetCurrentSteps(player):GetStepsType() or (GAMESTATE:GetCurrentStyle() and GAMESTATE:GetCurrentStyle():GetStepsType())] or {}
 	local xp = fxs.EXP ~= nil and fxs.EXP or 0
 	
 	if shared and fx ~= {} and fx["AllStepsTypes"] == nil then
@@ -379,4 +364,35 @@ GetPlayerEXP = function(player, shared)
 	end
 	
 	return xp
+end
+
+-- -----------------------------------------------------------------------
+-- saves a player's current experience
+
+SaveProfileEXP = function(player)
+	if not player then return false end
+	if ThemePrefs.Get("EnableLevelSystem") <= 0 or SL.Global.FastProfileSwitchInProgress or SL.Global.GameMode == "Casual" then return false end
+	
+	local pn = ToEnumShortString(player)
+	local profile_slot = {
+		[PLAYER_1] = "ProfileSlot_Player1",
+		[PLAYER_2] = "ProfileSlot_Player2"
+	}
+	if not profile_slot[player] or not PROFILEMAN:IsPersistentProfile(pn) then return false end
+	
+	local dir = PROFILEMAN:GetProfileDir(profile_slot[player])
+	local lv = {}
+	if FILEMAN:DoesFileExist(dir .. "DATA.ini") then
+		lv = IniFile.ReadFile(dir .. "DATA.ini")
+	end
+	
+	local lt = GAMESTATE:GetCurrentSteps(player) ~= nil and GAMESTATE:GetCurrentSteps(player):GetStepsType() or (GAMESTATE:GetCurrentStyle() and GAMESTATE:GetCurrentStyle():GetStepsType())
+	if lv[lt]==nil then lv[lt]={} end
+	lv[lt].EXP=SL[pn].StyleEXP
+	
+	if lv["AllStepsTypes"]==nil then lv["AllStepsTypes"]={} end
+	lv["AllStepsTypes"].EXP=SL[pn].TotalEXP
+	
+	IniFile.WriteFile( dir .. "DATA.ini", lv )
+	return true
 end
