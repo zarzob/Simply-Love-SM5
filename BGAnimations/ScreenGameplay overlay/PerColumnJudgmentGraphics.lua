@@ -155,6 +155,9 @@ for columnIndex=1,numColumns do
 					frame = frame + 1
 				end
 
+				if judgment_sprite:GetNumStates() == 11 or judgment_sprite:GetNumStates() == 22 then
+					frame = frame + 5
+				end
 
 				-- most judgment sprite sheets have 12 or 14 frames; 6/7 for early judgments, 6/7 for late judgments
 				-- some (the original 3.9 judgment sprite sheet for example) do not visibly distinguish

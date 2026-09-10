@@ -127,7 +127,7 @@ return Def.ActorFrame{
                     -- Don't need to shift in that case.
 					frame = frame + 1
 				end
-			elseif (sprite:GetNumStates() == 11 or sprite:GetNumStates() == 22) then
+			elseif sprite:GetNumStates() == 11 or sprite:GetNumStates() == 22 then
 				-- Project OutFox's Advanced timing window, with eleven judgments
 				frame = frame + 5
 				local advOffset = math.abs(param.TapNoteOffset)
