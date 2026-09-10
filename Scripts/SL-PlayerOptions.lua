@@ -990,6 +990,32 @@ local Overrides = {
 		end
 	},
 	-------------------------------------------------------------------------
+	HoldAnimation = {
+		LayoutType = "ShowOneInRow",
+		ExportOnChange = true,
+		Choices = SLCustom.JudgmentAnimations._getItems,
+		SaveSelections = function(self, list, pn)
+			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
+			for i, val in ipairs(self.Choices) do
+				if list[i] then mods.HoldAnimation = val; break end
+			end
+			MESSAGEMAN:Broadcast("RefreshActorProxy", {Player=pn, Name="HoldAnimation", Value=""})
+		end
+	},
+	-------------------------------------------------------------------------
+	HeldAnimation = {
+		LayoutType = "ShowOneInRow",
+		ExportOnChange = true,
+		Choices = SLCustom.JudgmentAnimations._getItems,
+		SaveSelections = function(self, list, pn)
+			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
+			for i, val in ipairs(self.Choices) do
+				if list[i] then mods.HeldAnimation = val; break end
+			end
+			MESSAGEMAN:Broadcast("RefreshActorProxy", {Player=pn, Name="HeldAnimation", Value=""})
+		end
+	},
+	-------------------------------------------------------------------------
 	ComboAnimation = {
 		LayoutType = "ShowOneInRow",
 		ExportOnChange = true,
@@ -1150,6 +1176,8 @@ local OptionRowDefault = {
 					"HoldJudgment",
 					"HeldGraphic",
 					"JudgmentAnimation",
+					"HoldAnimation",
+					"HeldAnimation",
 					"ComboAnimation",
 					"GradeDesign",
 				}

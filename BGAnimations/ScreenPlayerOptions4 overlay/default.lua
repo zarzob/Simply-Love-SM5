@@ -7,6 +7,8 @@ local t = Def.ActorFrame{
 }
 
 LoadActor("./OptionRowPreviews/JudgmentAnimation.lua", t)
+LoadActor("./OptionRowPreviews/HoldAnimation.lua", t)
+LoadActor("./OptionRowPreviews/HeldAnimation.lua", t)
 LoadActor("./OptionRowPreviews/ComboAnimation.lua", t)
 
 t[#t+1] = LoadActor(THEME:GetPathB("ScreenPlayerOptions", "common"))

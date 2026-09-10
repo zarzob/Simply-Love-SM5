@@ -344,7 +344,7 @@ return Def.ActorFrame{
 		
 		if mods.SplitWhites and mods.ShowFaPlusWindow and tns == "W1" and not IsW010Judgment(param, player) and not IsAutoplay(player) then
 			local splitFrame = 1
-			if spriteGhost:GetNumStates() == 12 or spriteGhost:GetNumStates() == 14 then
+			if spriteGhost:GetNumStates() == 12 or spriteGhost:GetNumStates() == 14 or spriteGhost:GetNumStates() == 22 then
 				splitFrame = splitFrame * 2
 				if not param.Early then splitFrame = splitFrame + 1 end
 			end

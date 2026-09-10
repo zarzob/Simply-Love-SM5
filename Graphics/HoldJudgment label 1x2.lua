@@ -24,5 +24,18 @@ return Def.Sprite{
 		label = label or "None 1x2.png"
 
 		self:Load(THEME:GetPathG("", "_HoldJudgments/" .. label))
+	end,
+	HoldJudgmentOnCommand=function(self, params)
+		local anim = nil
+		local playerAf = self:GetParent() and self:GetParent():GetParent()
+		for _, player in ipairs(PlayerNumber) do
+			local pn = ToEnumShortString(player)
+			if playerAf and playerAf == GetPlayerAF(pn) then
+				anim = SL[pn].ActiveModifiers.HoldAnimation
+				break
+			end
+		end
+		self:finishtweening():diffusealpha(1):zoom(0.5)
+		SLCustom.JudgmentAnimations[anim or "Hold"](self, params.j, 0.5, 1)
 	end
 }

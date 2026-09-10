@@ -105,6 +105,10 @@ for columnIndex=1,numColumns do
 			local kids = self:GetChildren()
 			held_sprite = kids.HeldMiss
 			judgment_sprite = kids.Judgment
+			
+			local mini = mods.Mini:gsub("%%","") / 100
+			held_sprite:SetHeight(held_sprite:GetHeight() * (1 - mini/2))
+			judgment_sprite:SetHeight(judgment_sprite:GetHeight() * (1 - mini/2))
 		end,
 		JudgmentMessageCommand=function(self, param)
 			if param.Player ~= player then return end
@@ -123,7 +127,7 @@ for columnIndex=1,numColumns do
 							held_sprite:finishtweening():stopeffect()
 							-- this should match the custom JudgmentTween() from SL for 3.95
 							local mini = mods.Mini:gsub("%%","") / 100
-							held_sprite:zoom(0.8):zoomy(0.75 * (1 - mini/2)):decelerate(0.1):zoom(0.75):zoomy(0.75 * (1 - mini/2)):sleep(0.2):accelerate(0.2):zoom(0)
+							SLCustom.JudgmentAnimations[SL[pn].ActiveModifiers.HeldAnimation](held_sprite, "HeldMiss", 0.75, 1)
 						end
 					end
 				end
@@ -155,7 +159,7 @@ for columnIndex=1,numColumns do
 				-- most judgment sprite sheets have 12 or 14 frames; 6/7 for early judgments, 6/7 for late judgments
 				-- some (the original 3.9 judgment sprite sheet for example) do not visibly distinguish
 				-- early/late judgments, and thus only have 6/7 frames
-				if judgment_sprite:GetNumStates() == 12 or judgment_sprite:GetNumStates() == 14 then
+				if judgment_sprite:GetNumStates() == 12 or judgment_sprite:GetNumStates() == 14 or judgment_sprite:GetNumStates() == 22 then
 					frame = frame * 2
 				end
 				
@@ -165,7 +169,11 @@ for columnIndex=1,numColumns do
 					judgment_sprite:finishtweening():stopeffect()
 					-- this should match the custom JudgmentTween() from SL for 3.95
 					local mini = mods.Mini:gsub("%%","") / 100
-					judgment_sprite:zoom(0.4):zoomy(0.325 * (1 - mini/2)):decelerate(0.1):zoom(0.325):zoomy(0.325 * (1 - mini/2)):sleep(0.2):accelerate(0.2):zoom(0)
+					if SL[pn].ActiveModifiers.JudgmentAnimation == "Default" then
+						judgment_sprite:zoom(0.325):zoomx(0.4):decelerate(0.1):zoomx(0.325):sleep(0.2):accelerate(0.2):zoom(0)
+					else
+						SLCustom.JudgmentAnimations[SL[pn].ActiveModifiers.JudgmentAnimation](judgment_sprite, tns, 0.325, 1)
+					end
 				end
 			end
 		end,

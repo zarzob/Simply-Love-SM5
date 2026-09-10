@@ -15,7 +15,7 @@ for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 	local pn = ToEnumShortString(player)
 	local prev_anim = nil
 	
-	t[#t+1] = LoadActor( THEME:GetPathG("", "_judgments/" .. SL[pn].ActiveModifiers.JudgmentGraphic) )..{
+	t[#t+1] = LoadActor( THEME:GetPathG("", "_judgments/" .. (SL[pn].ActiveModifiers.JudgmentGraphic ~= "None" and SL[pn].ActiveModifiers.JudgmentGraphic or "Love 2x7 (doubleres).png")) )..{
 			Name=(pn.."_JudgmentAnimation"),
 			InitCommand=function(self)
 				self:visible(false):animate(false)

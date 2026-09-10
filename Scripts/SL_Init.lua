@@ -90,6 +90,8 @@ local PlayerDefaults = {
 				ComboMode = "FullCombo",
 				TimerMode = "Time",
 				JudgmentAnimation = "Default",
+				HoldAnimation = "Hold",
+				HeldAnimation = "Held Miss",
 				ComboAnimation = "Still",
 				GradeDesign = ThemePrefs.Get("OutlineGrade") == true and "Default (Outlined)" or "Default",
 				RailBalance = "No",

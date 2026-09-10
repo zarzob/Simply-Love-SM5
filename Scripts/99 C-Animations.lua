@@ -1,5 +1,5 @@
 -- -----------------------------------------------------------------------
--- Judgment animations (tap only)
+-- Judgment animations
 
 SLCustom.JudgmentAnimations = SLCustom.InitTable({ -- t,j,z,a = target,judgment,zoom,alpha
 	{
@@ -17,6 +17,14 @@ SLCustom.JudgmentAnimations = SLCustom.InitTable({ -- t,j,z,a = target,judgment,
 	{
 		name = "Hold",
 		custom = function(t,j,z) t:zoom(z*0.8):linear(0.3):zoom(z):sleep(0.5):linear(0):zoom(0) end
+	},
+	{
+		name = "Held Miss",
+		custom = function(t,j,z) t:zoom(z):zoomx(z*16/15):decelerate(0.1):zoomx(z):sleep(0.2):accelerate(0.2):zoom(0) end
+	},
+	{
+		name = "Held Miss (Vertical)",
+		custom = function(t,j,z) t:zoom(z):zoomy(z*16/15):decelerate(0.1):zoomy(z):sleep(0.2):accelerate(0.2):zoom(0) end
 	},
 	{
 		name = "Fade",
@@ -40,6 +48,12 @@ SLCustom.JudgmentAnimations = SLCustom.InitTable({ -- t,j,z,a = target,judgment,
 				t:effectcolor1(color("#c9855e00")):effectcolor2(color("#c9855e"))
 			elseif j == "Miss" then
 				t:effectcolor1(color("#ff303000")):effectcolor2(color("#ff3030"))
+			elseif j == "Held" then -- Yeah
+				t:effectcolor1(color("#00b1dd00")):effectcolor2(color("#00b1dd"))
+			elseif j == "LetGo" then -- Bad
+				t:effectcolor1(color("#6d000000")):effectcolor2(color("#6d0000"))
+			elseif j == "HeldMiss" then
+				t:effectcolor1(color("#81000000")):effectcolor2(color("#810000"))
 			end
 			t:zoom(z*16/15):decelerate(0.1):zoom(z):sleep(0.6):accelerate(0.2):zoom(0)
 		end
