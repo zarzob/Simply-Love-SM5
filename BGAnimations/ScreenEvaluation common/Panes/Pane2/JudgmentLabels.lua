@@ -92,8 +92,8 @@ for i=1, #TapNoteScores.Types do
 		}
 		if i==1 and SL[pn].ActiveModifiers.SmallerWhite then
 			local show15 = false
-			t[#t+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-				Text="10ms",
+			t[#t+1] = LoadFont("ThemeFont") .. " Normal")..{
+				Text="12ms",
 				InitCommand=function(self) self:zoom(0.6):horizalign(right):maxwidth(76) end,
 				BeginCommand=function(self)
 					self:x( (controller == PLAYER_1 and 28) or -28 )
